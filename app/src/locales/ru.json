@@ -30,6 +30,11 @@
   "common": {
     "loading": "Загрузка…"
   },
+  "theme": {
+    "light": "Светлая",
+    "dark": "Тёмная",
+    "toggleLabel": "Переключить тему"
+  },
   "contact": {
     "title": "Контакты",
     "description": "Расскажите коротко о задаче — отвечу на email.",

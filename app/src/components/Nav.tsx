@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useLocale } from '@/hooks/useLocale'
 import { LocaleSwitcher } from '@/components/LocaleSwitcher'
+import { ThemeToggle } from '@/components/ThemeToggle'
 import { cn } from '@/lib/utils'
 
 export function Nav() {
@@ -35,7 +36,10 @@ export function Nav() {
             </NavLink>
           ))}
         </div>
-        <LocaleSwitcher />
+        <div className="flex items-center gap-3">
+          <ThemeToggle />
+          <LocaleSwitcher />
+        </div>
       </nav>
     </header>
   )

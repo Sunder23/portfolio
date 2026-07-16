@@ -30,6 +30,11 @@
   "common": {
     "loading": "Loading…"
   },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "toggleLabel": "Toggle theme"
+  },
   "contact": {
     "title": "Contact",
     "description": "Tell me briefly about your project — I'll reply by email.",
