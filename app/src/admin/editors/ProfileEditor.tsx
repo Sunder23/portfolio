@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { LocalizedField } from '@/admin/LocalizedField'
+import { ImageUploadField } from '@/admin/ImageUploadField'
 import { useAdminSave } from '@/admin/useAdminSave'
 import { useAdminAuth } from '@/admin/AdminAuthContext'
 import { getFile } from '@/admin/github'
@@ -59,10 +60,7 @@ export default function ProfileEditor() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <Label>avatar</Label>
-        <Input value={profile.avatar} onChange={(e) => update('avatar', e.target.value)} />
-      </div>
+      <ImageUploadField label="avatar" value={profile.avatar} onChange={(path) => update('avatar', path)} />
 
       <div className="flex flex-col gap-1.5">
         <Label>socials</Label>

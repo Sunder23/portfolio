@@ -41,8 +41,8 @@
 
 ### Phase 3 — Wiring
 
-- [ ] 6. **Wire cover + gallery image upload into ProjectsEditor** — `app/src/admin/editors/ProjectsEditor.tsx` (blocked by 4, 5)
-- [ ] 7. **Wire avatar image upload into ProfileEditor** — `app/src/admin/editors/ProfileEditor.tsx` (blocked by 4)
+- [x] 6. **Wire cover + gallery image upload into ProjectsEditor** — `app/src/admin/editors/ProjectsEditor.tsx` (blocked by 4, 5)
+- [x] 7. **Wire avatar image upload into ProfileEditor** — `app/src/admin/editors/ProfileEditor.tsx` (blocked by 4)
 
 Полные описания задач с точными сигнатурами, требованиями к логированию и деталями по файлам — в списке задач (`TaskList` / `/tasks`), задачи #1–#7.
 

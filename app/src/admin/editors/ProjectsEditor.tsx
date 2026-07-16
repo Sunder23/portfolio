@@ -16,6 +16,8 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { LocalizedField } from '@/admin/LocalizedField'
+import { ImageUploadField } from '@/admin/ImageUploadField'
+import { GalleryUploadField } from '@/admin/GalleryUploadField'
 import { useAdminSave } from '@/admin/useAdminSave'
 import { useAdminAuth } from '@/admin/AdminAuthContext'
 import { getFile } from '@/admin/github'
@@ -166,12 +168,6 @@ function ProjectForm({
     setForm((prev) => ({ ...prev, [key]: value }))
   }
 
-  function updateGalleryItem(index: number, value: string) {
-    const next = [...form.gallery]
-    next[index] = value
-    update('gallery', next)
-  }
-
   return (
     <div className="flex flex-col gap-3">
       <h2 className="text-lg font-medium">{project.id ? 'Редактировать проект' : 'Новый проект'}</h2>
@@ -238,28 +234,11 @@ function ProjectForm({
         <Input value={form.url} onChange={(e) => update('url', e.target.value)} />
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <Label>cover</Label>
-        <Input value={form.cover} onChange={(e) => update('cover', e.target.value)} />
-      </div>
+      <ImageUploadField label="cover" value={form.cover} onChange={(path) => update('cover', path)} />
 
       <div className="flex flex-col gap-1.5">
         <Label>gallery</Label>
-        {form.gallery.map((item, index) => (
-          <div key={index} className="flex gap-2">
-            <Input value={item} onChange={(e) => updateGalleryItem(index, e.target.value)} />
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => update('gallery', form.gallery.filter((_, i) => i !== index))}
-            >
-              Убрать
-            </Button>
-          </div>
-        ))}
-        <Button variant="outline" size="sm" onClick={() => update('gallery', [...form.gallery, ''])}>
-          Добавить в галерею
-        </Button>
+        <GalleryUploadField value={form.gallery} onChange={(paths) => update('gallery', paths)} />
       </div>
 
       <div className="grid grid-cols-2 gap-3">
