@@ -55,8 +55,8 @@
 
 ### Phase 3 — Wiring
 
-- [ ] 13. **Create admin/registry.ts** — `app/src/admin/registry.ts` (blocked by 10, 11, 12)
-- [ ] 14. **Wire admin routes and lazy-load the admin module** — `app/src/pages/Admin.tsx`, `app/src/App.tsx` (blocked by 13, 6)
+- [x] 13. **Create admin/registry.ts** — `app/src/admin/registry.ts` (blocked by 10, 11, 12)
+- [x] 14. **Wire admin routes and lazy-load the admin module** — `app/src/pages/Admin.tsx`, `app/src/App.tsx` (blocked by 13, 6)
 
 Full task descriptions with exact APIs, logging requirements, and file-level detail are tracked in the task list (`TaskList` / `/tasks`), tasks #1–#14.
 

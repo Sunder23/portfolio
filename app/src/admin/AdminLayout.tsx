@@ -5,13 +5,7 @@ import { Toaster } from '@/components/ui/sonner'
 import { useAdminAuth } from '@/admin/AdminAuthContext'
 import { validateToken } from '@/admin/github'
 import TokenGate from '@/admin/TokenGate'
-
-// TODO(task 13): replace with the real editorRegistry from '@/admin/registry'
-const navPlaceholder = [
-  { id: 'projects', label: 'Проекты' },
-  { id: 'profile', label: 'Профиль' },
-  { id: 'skills', label: 'Скиллы' },
-]
+import { editorRegistry } from '@/admin/registry'
 
 export default function AdminLayout() {
   const { token, logout } = useAdminAuth()
@@ -69,7 +63,7 @@ export default function AdminLayout() {
   return (
     <div className="flex min-h-svh">
       <nav className="flex w-48 shrink-0 flex-col gap-1 border-r p-3">
-        {navPlaceholder.map((item) => (
+        {editorRegistry.map((item) => (
           <Link key={item.id} to={`/admin/${item.id}`} className="rounded-lg px-2.5 py-1.5 text-sm hover:bg-muted">
             {item.label}
           </Link>

@@ -1,7 +1,29 @@
+import { Navigate, Route, Routes, useParams } from 'react-router-dom'
+import { AdminAuthProvider } from '@/admin/AdminAuthContext'
+import AdminLayout from '@/admin/AdminLayout'
+import { editorRegistry } from '@/admin/registry'
+
+function EditorRouter() {
+  const { entityId } = useParams<{ entityId: string }>()
+  const entry = editorRegistry.find((e) => e.id === entityId)
+
+  if (!entry) {
+    return <Navigate to={`/admin/${editorRegistry[0].id}`} replace />
+  }
+
+  const Editor = entry.Editor
+  return <Editor />
+}
+
 export default function Admin() {
   return (
-    <div className="flex min-h-svh items-center justify-center">
-      <h1 className="text-2xl font-medium">Admin</h1>
-    </div>
+    <AdminAuthProvider>
+      <Routes>
+        <Route element={<AdminLayout />}>
+          <Route index element={<Navigate to={editorRegistry[0].id} replace />} />
+          <Route path=":entityId" element={<EditorRouter />} />
+        </Route>
+      </Routes>
+    </AdminAuthProvider>
   )
 }
