@@ -13,8 +13,14 @@
   "location": "Odesa",
   "email": "sunder123@gmail.com",
   "socials": [
-    { "platform": "GitHub", "url": "https://github.com/Sunder23" },
-    { "platform": "LinkedIn", "url": "https://linkedin.com" }
+    {
+      "platform": "GitHub",
+      "url": "https://github.com/Sunder23"
+    },
+    {
+      "platform": "LinkedIn",
+      "url": "https://linkedin.com"
+    }
   ],
-  "avatar": ""
+  "avatar": "/portfolio/uploads/e6c14baa-8736-416c-ac37-1a672d8f2460.webp"
 }
