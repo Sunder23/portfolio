@@ -12,6 +12,7 @@ export function Nav() {
     { to: `/${locale}`, label: t('nav.home'), end: true },
     { to: `/${locale}/projects`, label: t('nav.projects'), end: false },
     { to: `/${locale}/about`, label: t('nav.about'), end: false },
+    { to: `/${locale}/contact`, label: t('nav.contact'), end: false },
   ]
 
   return (

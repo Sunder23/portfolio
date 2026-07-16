@@ -41,8 +41,8 @@
 
 ### Phase 3 — Wiring
 
-- [ ] 5. **Wire /contact route and nav link** — `app/src/App.tsx`, `app/src/components/Nav.tsx` (blocked by 4)
-- [ ] 6. **Mount Toaster in PublicLayout** — `app/src/components/PublicLayout.tsx` (blocked by 4)
+- [x] 5. **Wire /contact route and nav link** — `app/src/App.tsx`, `app/src/components/Nav.tsx` (blocked by 4)
+- [x] 6. **Mount Toaster in PublicLayout** — `app/src/components/PublicLayout.tsx` (blocked by 4)
 
 Полные описания задач с точными сигнатурами и требованиями — в списке задач (`TaskList` / `/tasks`), задачи #1–#6.
 

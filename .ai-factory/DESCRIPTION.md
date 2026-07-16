@@ -25,6 +25,7 @@
 - **Роутинг:** React Router в режиме `HashRouter` (без 404-хака на GitHub Pages)
 - **UI:** Tailwind + shadcn/ui (компоненты копируются в `src/components/ui/`, используются и в публичной части, и в админке)
 - **i18n:** react-i18next
+- **Формы:** react-hook-form + zod (клиентская валидация, `pages/Contact.tsx`)
 - **Markdown:** `marked` — рендер превью markdown-полей (`description`, `bio`) в админке; на публичной части ещё не используется (страницы пока заглушки, Этап 1)
 - **State management:** отсутствует — React Context + fetch/import JSON
 - **База данных:** отсутствует — JSON-файлы в `/data/` как единственный источник данных
