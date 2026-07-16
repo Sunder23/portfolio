@@ -41,7 +41,7 @@ Rationale: единственный незавершённый пункт роа
 <!-- Commit checkpoint: tasks 4-7 -->
 
 ### Phase 3: Lighthouse ≥90 и финал
-- [ ] Task 8: Прогнать Lighthouse по всем публичным страницам (light+dark), зафиксировать baseline-оценки (depends on 3, 7)
-- [ ] Task 9: Исправить найденные проблемы (контраст .dark-токенов, alt/aria-label, viewport/lang, lazy-loading) до ≥90 по всем категориям на всех страницах (depends on 8)
-- [ ] Task 10: Финальная сквозная проверка (тема + локаль на всех страницах, admin не сломан) + обязательный docs-чекпоинт через /aif-docs (depends on 9)
+- [x] Task 8: Прогнать Lighthouse по всем публичным страницам (light+dark), зафиксировать baseline-оценки (depends on 3, 7) — проверено вручную пользователем через Chrome DevTools, оценки в норме
+- [x] Task 9: Исправить найденные проблемы (контраст .dark-токенов, alt/aria-label, viewport/lang, lazy-loading) до ≥90 по всем категориям на всех страницах (depends on 8) — правок не потребовалось, все категории уже ≥90
+- [x] Task 10: Финальная сквозная проверка (тема + локаль на всех страницах, admin не сломан) + обязательный docs-чекпоинт через /aif-docs (depends on 9)
 <!-- Commit checkpoint: tasks 8-10 -->

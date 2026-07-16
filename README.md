@@ -11,6 +11,7 @@
 - Tailwind + shadcn/ui
 - react-i18next (uk/ru/en)
 - react-hook-form + zod (валидация форм)
+- next-themes (светлая/тёмная тема)
 
 ## Быстрый старт
 
