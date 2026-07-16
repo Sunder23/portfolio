@@ -2,7 +2,8 @@
   "nav": {
     "home": "Главная",
     "projects": "Проекты",
-    "about": "Обо мне"
+    "about": "Обо мне",
+    "contact": "Контакты"
   },
   "home": {
     "viewProjects": "Смотреть проекты",
@@ -28,5 +29,21 @@
   },
   "common": {
     "loading": "Загрузка…"
+  },
+  "contact": {
+    "title": "Контакты",
+    "description": "Расскажите коротко о задаче — отвечу на email.",
+    "name": "Имя",
+    "email": "Email",
+    "message": "Сообщение",
+    "namePlaceholder": "Ваше имя",
+    "emailPlaceholder": "you@example.com",
+    "messagePlaceholder": "Коротко опишите задачу",
+    "nameError": "Имя должно содержать минимум 2 символа",
+    "emailError": "Введите корректный email",
+    "messageError": "Сообщение должно содержать минимум 10 символов",
+    "submit": "Отправить",
+    "successTitle": "Спасибо за обращение!",
+    "successDescription": "Форма пока не подключена к отправке — напишите мне напрямую на email, я отвечу как можно скорее."
   }
 }

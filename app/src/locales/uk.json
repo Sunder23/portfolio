@@ -2,7 +2,8 @@
   "nav": {
     "home": "Головна",
     "projects": "Проєкти",
-    "about": "Про мене"
+    "about": "Про мене",
+    "contact": "Контакти"
   },
   "home": {
     "viewProjects": "Переглянути проєкти",
@@ -28,5 +29,21 @@
   },
   "common": {
     "loading": "Завантаження…"
+  },
+  "contact": {
+    "title": "Контакти",
+    "description": "Розкажіть коротко про задачу — відповім на email.",
+    "name": "Ім'я",
+    "email": "Email",
+    "message": "Повідомлення",
+    "namePlaceholder": "Ваше ім'я",
+    "emailPlaceholder": "you@example.com",
+    "messagePlaceholder": "Коротко опишіть задачу",
+    "nameError": "Ім'я має містити щонайменше 2 символи",
+    "emailError": "Введіть коректний email",
+    "messageError": "Повідомлення має містити щонайменше 10 символів",
+    "submit": "Надіслати",
+    "successTitle": "Дякую за звернення!",
+    "successDescription": "Форма поки не підключена до відправки — напишіть мені напряму на email, я відповім якнайшвидше."
   }
 }

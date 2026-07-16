@@ -2,7 +2,8 @@
   "nav": {
     "home": "Home",
     "projects": "Projects",
-    "about": "About"
+    "about": "About",
+    "contact": "Contact"
   },
   "home": {
     "viewProjects": "View projects",
@@ -28,5 +29,21 @@
   },
   "common": {
     "loading": "Loading…"
+  },
+  "contact": {
+    "title": "Contact",
+    "description": "Tell me briefly about your project — I'll reply by email.",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "namePlaceholder": "Your name",
+    "emailPlaceholder": "you@example.com",
+    "messagePlaceholder": "Briefly describe your project",
+    "nameError": "Name must be at least 2 characters",
+    "emailError": "Enter a valid email address",
+    "messageError": "Message must be at least 10 characters",
+    "submit": "Send",
+    "successTitle": "Thanks for reaching out!",
+    "successDescription": "The form isn't wired up to send yet — email me directly and I'll get back to you as soon as possible."
   }
 }
