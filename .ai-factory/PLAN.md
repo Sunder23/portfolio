@@ -20,9 +20,9 @@ Rationale: Первый майлстоун ROADMAP.md — этот план ре
 ## Tasks
 
 ### Phase 1: Каркас и UI-база
-- [ ] Task 1: Инициализировать Vite + React 19 + TS проект
-- [ ] Task 2: Настроить Tailwind CSS + базовую инициализацию shadcn/ui (depends on 1)
-- [ ] Task 3: Настроить React Router (HashRouter) и страницы-заглушки (depends on 1)
+- [x] Task 1: Инициализировать Vite + React 19 + TS проект
+- [x] Task 2: Настроить Tailwind CSS + базовую инициализацию shadcn/ui (depends on 1)
+- [x] Task 3: Настроить React Router (HashRouter) и страницы-заглушки (depends on 1)
 <!-- Commit checkpoint: tasks 1-3 -->
 
 ### Phase 2: Данные и локализация
