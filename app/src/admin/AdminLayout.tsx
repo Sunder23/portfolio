@@ -31,8 +31,15 @@ export default function AdminLayout() {
           logout()
         }
       })
-      .catch(() => {
-        if (!cancelled) setValid(false)
+      .catch((err) => {
+        if (cancelled) return
+        // fetch() throwing (offline, blocked request, DNS) means we couldn't reach GitHub at
+        // all — it says nothing about whether the stored token is actually valid. Treating it
+        // the same as a definitive 401 forces a working session back to TokenGate on every
+        // transient network hiccup. Only a real 401 (handled in .then above and in
+        // useAdminSave.ts) should log the user out.
+        console.error('[FIX:admin-session-network-error] could not verify stored token (network error), keeping existing session', err)
+        setValid(true)
       })
       .finally(() => {
         if (!cancelled) setChecking(false)

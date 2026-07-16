@@ -15,19 +15,23 @@ export default function TokenGate() {
     event.preventDefault()
     setError(null)
     setValidating(true)
+    // Trim before use: a trailing newline/space from copy-paste (common when a PAT is copied
+    // from a password manager or terminal) makes fetch() throw when building the Authorization
+    // header, which previously surfaced as a misleading "network error".
+    const token = value.trim()
     console.info('[admin/TokenGate] validating token')
 
     try {
-      const ok = await validateToken(value)
+      const ok = await validateToken(token)
       if (ok) {
         console.info('[admin/TokenGate] validation succeeded')
-        setToken(value)
+        setToken(token)
       } else {
         console.warn('[admin/TokenGate] validation failed')
         setError('Неверный токен или нет доступа к репозиторию')
       }
-    } catch {
-      console.warn('[admin/TokenGate] validation failed (network error)')
+    } catch (err) {
+      console.error('[FIX:admin-token-validation] validation failed (network error)', err)
       setError('Не удалось проверить токен. Проверьте соединение и попробуйте снова')
     } finally {
       setValidating(false)
