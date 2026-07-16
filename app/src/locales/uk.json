@@ -1,1 +1,32 @@
-{}
+{
+  "nav": {
+    "home": "Головна",
+    "projects": "Проєкти",
+    "about": "Про мене"
+  },
+  "home": {
+    "viewProjects": "Переглянути проєкти",
+    "viewAbout": "Про мене",
+    "contactMe": "Написати мені"
+  },
+  "projects": {
+    "title": "Проєкти",
+    "empty": "Проєктів поки немає"
+  },
+  "projectDetail": {
+    "back": "Усі проєкти",
+    "role": "Роль",
+    "year": "Рік",
+    "stack": "Стек",
+    "visitProject": "Перейти на сайт",
+    "notFound": "Проєкт не знайдено"
+  },
+  "about": {
+    "title": "Про мене",
+    "skills": "Навички",
+    "contact": "Контакти"
+  },
+  "common": {
+    "loading": "Завантаження…"
+  }
+}
