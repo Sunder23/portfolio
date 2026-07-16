@@ -1,9 +1,17 @@
 {
-  "name": "",
-  "title": { "uk": "" },
-  "bio": { "uk": "" },
-  "location": "",
-  "email": "",
+  "name": "Max Kravchuk",
+  "title": {
+    "uk": "Портфоліо",
+    "ru": "Портфолио",
+    "en": "Portfolio"
+  },
+  "bio": {
+    "uk": "Max BIO UA",
+    "ru": "Max BIO RU",
+    "en": "Max BIO EN"
+  },
+  "location": "Odesa",
+  "email": "sunder123@gmail.com",
   "socials": [],
   "avatar": ""
 }
