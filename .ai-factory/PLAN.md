@@ -32,7 +32,7 @@ Rationale: Первый майлстоун ROADMAP.md — этот план ре
 <!-- Commit checkpoint: tasks 4-6 -->
 
 ### Phase 3: Деплой
-- [ ] Task 7: Настроить деплой на GitHub Pages через GitHub Actions (depends on 1)
+- [x] Task 7: Настроить деплой на GitHub Pages через GitHub Actions (depends on 1)
 <!-- Commit checkpoint: task 7 -->
 
 ## Критерий готовности этапа
