@@ -1,12 +1,15 @@
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { HashRouter, Navigate, Outlet, Route, Routes, useParams } from 'react-router-dom'
 import Home from '@/pages/Home'
 import Projects from '@/pages/Projects'
 import ProjectDetail from '@/pages/ProjectDetail'
 import About from '@/pages/About'
-import Admin from '@/pages/Admin'
 import { DEFAULT_LOCALE, getStoredLocale, isLocale, storeLocale } from '@/lib/locale'
+
+// Lazy-loaded so the GitHub client, marked, sonner, and every editor never
+// ship in the public bundle — only pulled in when /#/admin is visited.
+const Admin = lazy(() => import('@/pages/Admin'))
 
 function RootRedirect() {
   return <Navigate to={`/${getStoredLocale() ?? DEFAULT_LOCALE}`} replace />
@@ -42,7 +45,20 @@ function App() {
           <Route path="projects/:slug" element={<ProjectDetail />} />
           <Route path="about" element={<About />} />
         </Route>
-        <Route path="admin" element={<Admin />} />
+        <Route
+          path="admin/*"
+          element={
+            <Suspense
+              fallback={
+                <div className="flex min-h-svh items-center justify-center">
+                  <p className="text-sm text-muted-foreground">Загрузка…</p>
+                </div>
+              }
+            >
+              <Admin />
+            </Suspense>
+          }
+        />
         <Route path="*" element={<RootRedirect />} />
       </Routes>
     </HashRouter>
