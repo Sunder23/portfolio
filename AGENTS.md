@@ -54,7 +54,9 @@
 | Документ | Путь | Описание |
 |----------|------|----------|
 | PLAN | PLAN.md | Первичная детальная спецификация проекта |
-| README | README.md | Пока не создан — сгенерировать через `/aif-docs` |
+| README | README.md | Landing page: обзор, стек, быстрый старт, ссылки на docs/ |
+| Dev workflow | docs/dev-workflow.md | Локальная разработка, проверка сборки, деплой, git-pull gotcha |
+| Admin workflow | docs/admin-workflow.md | Редактирование контента через админку, картинки, обработка ошибок |
 
 ## AI Context Files
 
