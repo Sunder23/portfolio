@@ -49,9 +49,9 @@
 
 ### Phase 2 — Editors
 
-- [ ] 10. **Build ProjectsEditor (CRUD)** — `app/src/admin/editors/ProjectsEditor.tsx` (blocked by 6, 7, 8, 9)
-- [ ] 11. **Build ProfileEditor** — `app/src/admin/editors/ProfileEditor.tsx` (blocked by 6, 7, 9)
-- [ ] 12. **Build SkillsEditor** — `app/src/admin/editors/SkillsEditor.tsx` (blocked by 6, 9)
+- [x] 10. **Build ProjectsEditor (CRUD)** — `app/src/admin/editors/ProjectsEditor.tsx` (blocked by 6, 7, 8, 9)
+- [x] 11. **Build ProfileEditor** — `app/src/admin/editors/ProfileEditor.tsx` (blocked by 6, 7, 9)
+- [x] 12. **Build SkillsEditor** — `app/src/admin/editors/SkillsEditor.tsx` (blocked by 6, 9)
 
 ### Phase 3 — Wiring
 
