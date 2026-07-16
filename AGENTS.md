@@ -21,17 +21,26 @@
 
 ```
 /
-├── data/                     # profile.json, projects.json, skills.json — источник контента
-├── public/uploads/            # изображения проектов (webp), пишутся из админки
-├── src/
-│   ├── pages/                 # Home, Projects, ProjectDetail, About, Admin
-│   ├── components/             # переиспользуемые UI-компоненты (+ components/ui из shadcn)
-│   ├── admin/                  # весь код админки: TokenGate, github.ts, editors/, registry.ts
-│   ├── lib/                    # data.ts — загрузка и типизация JSON
-│   └── locales/                 # словари react-i18next (uk, ru, en)
+├── app/                        # всё приложение: код + build-конфиг (npm run * запускается отсюда)
+│   ├── data/                     # profile.json, projects.json, skills.json — источник контента
+│   ├── public/uploads/            # изображения проектов (webp), пишутся из админки
+│   ├── src/
+│   │   ├── pages/                 # Home, Projects, ProjectDetail, About, Admin
+│   │   ├── components/             # переиспользуемые UI-компоненты (+ components/ui из shadcn)
+│   │   ├── admin/                  # весь код админки: TokenGate, github.ts, editors/, registry.ts
+│   │   ├── lib/                    # data.ts — загрузка и типизация JSON
+│   │   └── locales/                 # словари react-i18next (uk, ru, en)
+│   ├── index.html
+│   ├── package.json
+│   ├── vite.config.ts
+│   └── tsconfig*.json
+├── .ai-factory/                # конфигурация и артефакты AI Factory (dev-tooling, не часть приложения)
+├── .claude/                    # skills/agents для Claude Code
 ├── .github/workflows/deploy.yml
 └── PLAN.md
 ```
+
+`.ai-factory/`, `.ai-factory.json`, `.claude/`, `.github/`, `.mcp.json`, `skills-lock.json`, `AGENTS.md`, `PLAN.md` остаются в истинном корне репозитория — это dev/AI-tooling файлы, которые сами инструменты (git, GitHub Actions, Claude Code, AI Factory CLI) ищут только там.
 
 ## Ключевые точки входа
 

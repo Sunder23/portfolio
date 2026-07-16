@@ -26,25 +26,30 @@
 
 ```
 /
-├── data/
-│   ├── profile.json        # имя, титул, био, контакты, соцсети
-│   ├── projects.json       # массив проектов
-│   └── skills.json         # стек, категории
-├── public/
-│   └── uploads/            # картинки проектов (webp)
-├── src/
-│   ├── pages/              # Home, Projects, ProjectDetail, About, Admin
-│   ├── components/
-│   ├── admin/              # всё, что относится к админке
-│   │   ├── AdminLayout.tsx
-│   │   ├── TokenGate.tsx   # ввод/проверка PAT
-│   │   ├── editors/        # формы редактирования каждой сущности
-│   │   └── github.ts       # клиент Contents API
-│   ├── lib/
-│   │   └── data.ts         # загрузка и типизация JSON
-│   └── types.ts
-├── .github/workflows/deploy.yml
-└── PLAN.md                 # этот файл
+├── app/                     # приложение целиком (npm run * запускается отсюда)
+│   ├── data/
+│   │   ├── profile.json        # имя, титул, био, контакты, соцсети
+│   │   ├── projects.json       # массив проектов
+│   │   └── skills.json         # стек, категории
+│   ├── public/
+│   │   └── uploads/            # картинки проектов (webp)
+│   ├── src/
+│   │   ├── pages/              # Home, Projects, ProjectDetail, About, Admin
+│   │   ├── components/
+│   │   ├── admin/              # всё, что относится к админке
+│   │   │   ├── AdminLayout.tsx
+│   │   │   ├── TokenGate.tsx   # ввод/проверка PAT
+│   │   │   ├── editors/        # формы редактирования каждой сущности
+│   │   │   └── github.ts       # клиент Contents API
+│   │   ├── lib/
+│   │   │   └── data.ts         # загрузка и типизация JSON
+│   │   └── types.ts
+│   ├── index.html
+│   ├── package.json
+│   ├── vite.config.ts
+│   └── tsconfig*.json
+├── .github/workflows/deploy.yml   # working-directory: app, path: app/dist
+└── PLAN.md                 # этот файл (остаётся в корне репозитория)
 ```
 
 ## Схема данных

@@ -35,27 +35,30 @@
 
 ```
 /
-├── data/
-│   ├── profile.json        # имя, титул, био, контакты, соцсети
-│   ├── projects.json       # массив проектов
-│   └── skills.json         # стек, категории
-├── public/
-│   └── uploads/             # картинки проектов (webp)
-├── src/
-│   ├── pages/               # Home, Projects, ProjectDetail, About, Admin
-│   ├── components/
-│   ├── admin/                # всё, что относится к админке
-│   │   ├── AdminLayout.tsx
-│   │   ├── TokenGate.tsx     # ввод/проверка PAT
-│   │   ├── editors/          # формы редактирования каждой сущности
-│   │   ├── registry.ts       # реестр редакторов (для масштабирования)
-│   │   └── github.ts         # клиент Contents API
-│   ├── lib/
-│   │   └── data.ts           # загрузка и типизация JSON
-│   ├── locales/               # словари react-i18next (uk, ru, en)
-│   └── types.ts
-└── .github/workflows/deploy.yml
+├── app/                     # приложение целиком: код + build-конфиг (package.json, vite.config.ts, tsconfig*)
+│   ├── data/
+│   │   ├── profile.json        # имя, титул, био, контакты, соцсети
+│   │   ├── projects.json       # массив проектов
+│   │   └── skills.json         # стек, категории
+│   ├── public/
+│   │   └── uploads/             # картинки проектов (webp)
+│   └── src/
+│       ├── pages/               # Home, Projects, ProjectDetail, About, Admin
+│       ├── components/
+│       ├── admin/                # всё, что относится к админке
+│       │   ├── AdminLayout.tsx
+│       │   ├── TokenGate.tsx     # ввод/проверка PAT
+│       │   ├── editors/          # формы редактирования каждой сущности
+│       │   ├── registry.ts       # реестр редакторов (для масштабирования)
+│       │   └── github.ts         # клиент Contents API
+│       ├── lib/
+│       │   └── data.ts           # загрузка и типизация JSON
+│       ├── locales/               # словари react-i18next (uk, ru, en)
+│       └── types.ts
+└── .github/workflows/deploy.yml   # working-directory: app, path: app/dist
 ```
+
+`.ai-factory/`, `.claude/`, `.github/`, `.mcp.json`, `AGENTS.md`, `PLAN.md`, `skills-lock.json` остаются в истинном корне репозитория (dev/AI-tooling — сами инструменты ищут их только там), `app/` — единственная папка продукта.
 
 ## Архитектурные заметки
 
