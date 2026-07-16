@@ -37,9 +37,9 @@
 
 ### Phase 2 — Общие компоненты
 
-- [ ] 5. **Создать `Nav` и `LocaleSwitcher`** — `app/src/components/Nav.tsx`, `app/src/components/LocaleSwitcher.tsx` (blocked by 1)
-- [ ] 6. **Создать `ProjectCard`** — `app/src/components/ProjectCard.tsx` (blocked by 2)
-- [ ] 7. **Создать `PublicLayout` и подключить в `App.tsx`** — `app/src/components/PublicLayout.tsx`, `app/src/App.tsx` (blocked by 5)
+- [x] 5. **Создать `Nav` и `LocaleSwitcher`** — `app/src/components/Nav.tsx`, `app/src/components/LocaleSwitcher.tsx` (blocked by 1)
+- [x] 6. **Создать `ProjectCard`** — `app/src/components/ProjectCard.tsx` (blocked by 2)
+- [x] 7. **Создать `PublicLayout` и подключить в `App.tsx`** — `app/src/components/PublicLayout.tsx`, `app/src/App.tsx` (blocked by 5)
 
 **Commit checkpoint 2** — после задач 5–7: `feat: add public layout, nav, and project card components`
 
