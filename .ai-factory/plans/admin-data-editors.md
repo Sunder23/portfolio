@@ -43,9 +43,9 @@
 - [x] 4. **Create AdminAuthContext + useAdminAuth hook** — `app/src/admin/AdminAuthContext.tsx` (blocked by 2, 3)
 - [x] 5. **Build TokenGate.tsx** — `app/src/admin/TokenGate.tsx` (blocked by 1, 3, 4)
 - [x] 6. **Build AdminLayout.tsx** — `app/src/admin/AdminLayout.tsx` (blocked by 4, 5)
-- [ ] 7. **Build reusable LocalizedField** — `app/src/admin/LocalizedField.tsx` (blocked by 1)
-- [ ] 8. **Add markdown preview** — `app/src/admin/MarkdownPreview.tsx`, `app/package.json` (blocked by 1)
-- [ ] 9. **Build shared useAdminSave hook** — `app/src/admin/useAdminSave.ts` (blocked by 3, 4)
+- [x] 7. **Build reusable LocalizedField** — `app/src/admin/LocalizedField.tsx` (blocked by 1)
+- [x] 8. **Add markdown preview** — `app/src/admin/MarkdownPreview.tsx`, `app/package.json` (blocked by 1)
+- [x] 9. **Build shared useAdminSave hook** — `app/src/admin/useAdminSave.ts` (blocked by 3, 4)
 
 ### Phase 2 — Editors
 
