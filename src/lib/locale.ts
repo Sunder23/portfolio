@@ -18,3 +18,9 @@ export function getStoredLocale(): Locale | null {
 export function storeLocale(locale: Locale): void {
   localStorage.setItem(LOCALE_STORAGE_KEY, locale)
 }
+
+export function getInitialLocale(): Locale {
+  const hashLocale = window.location.hash.split('/')[1]
+  if (isLocale(hashLocale)) return hashLocale
+  return getStoredLocale() ?? DEFAULT_LOCALE
+}

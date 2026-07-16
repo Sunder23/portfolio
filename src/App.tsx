@@ -1,11 +1,12 @@
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { HashRouter, Navigate, Outlet, Route, Routes, useParams } from 'react-router-dom'
 import Home from '@/pages/Home'
 import Projects from '@/pages/Projects'
 import ProjectDetail from '@/pages/ProjectDetail'
 import About from '@/pages/About'
 import Admin from '@/pages/Admin'
-import { DEFAULT_LOCALE, getStoredLocale, isLocale } from '@/lib/locale'
+import { DEFAULT_LOCALE, getStoredLocale, isLocale, storeLocale } from '@/lib/locale'
 
 function RootRedirect() {
   return <Navigate to={`/${getStoredLocale() ?? DEFAULT_LOCALE}`} replace />
@@ -13,14 +14,19 @@ function RootRedirect() {
 
 function LocaleLayout() {
   const { locale } = useParams<{ locale: string }>()
-
-  if (!isLocale(locale)) {
-    return <Navigate to={`/${DEFAULT_LOCALE}`} replace />
-  }
+  const valid = isLocale(locale)
+  const { i18n } = useTranslation()
 
   useEffect(() => {
+    if (!valid) return
     document.documentElement.lang = locale
-  }, [locale])
+    i18n.changeLanguage(locale)
+    storeLocale(locale)
+  }, [locale, valid, i18n])
+
+  if (!valid) {
+    return <Navigate to={`/${DEFAULT_LOCALE}`} replace />
+  }
 
   return <Outlet />
 }

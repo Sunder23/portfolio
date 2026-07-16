@@ -26,9 +26,9 @@ Rationale: Первый майлстоун ROADMAP.md — этот план ре
 <!-- Commit checkpoint: tasks 1-3 -->
 
 ### Phase 2: Данные и локализация
-- [ ] Task 4: Настроить react-i18next с пустыми словарями uk/ru/en (depends on 3)
-- [ ] Task 5: Создать схему данных и валидные пустые data/*.json (depends on 1)
-- [ ] Task 6: Реализовать lib/data.ts как единственную точку чтения JSON (depends on 5, 4)
+- [x] Task 4: Настроить react-i18next с пустыми словарями uk/ru/en (depends on 3)
+- [x] Task 5: Создать схему данных и валидные пустые data/*.json (depends on 1)
+- [x] Task 6: Реализовать lib/data.ts как единственную точку чтения JSON (depends on 5, 4)
 <!-- Commit checkpoint: tasks 4-6 -->
 
 ### Phase 3: Деплой
