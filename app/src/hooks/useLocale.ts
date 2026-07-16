@@ -1,7 +1,10 @@
-import { useParams } from 'react-router-dom'
-import { DEFAULT_LOCALE, isLocale, type Locale } from '@/lib/locale'
+import { createContext, useContext } from 'react'
+import { DEFAULT_LOCALE, type Locale } from '@/lib/locale'
+
+const LocaleContext = createContext<Locale>(DEFAULT_LOCALE)
+
+export const LocaleProvider = LocaleContext.Provider
 
 export function useLocale(): Locale {
-  const { locale } = useParams<{ locale: string }>()
-  return isLocale(locale) ? locale : DEFAULT_LOCALE
+  return useContext(LocaleContext)
 }

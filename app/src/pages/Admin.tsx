@@ -8,6 +8,7 @@ function EditorRouter() {
   const entry = editorRegistry.find((e) => e.id === entityId)
 
   if (!entry) {
+    console.info('[FIX:admin-locale-redirect] unknown entityId', entityId, '-> redirecting to', editorRegistry[0].id)
     return <Navigate to={`/admin/${editorRegistry[0].id}`} replace />
   }
 
