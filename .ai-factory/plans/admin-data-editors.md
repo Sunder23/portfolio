@@ -40,9 +40,9 @@
 - [x] 1. **Add shadcn/ui primitives and mount point for Toaster** — `app/src/components/ui/*`
 - [x] 2. **Create PAT localStorage module** — `app/src/admin/pat.ts`
 - [x] 3. **Build GitHub Contents API client** — `app/src/admin/github.ts`
-- [ ] 4. **Create AdminAuthContext + useAdminAuth hook** — `app/src/admin/AdminAuthContext.tsx` (blocked by 2, 3)
-- [ ] 5. **Build TokenGate.tsx** — `app/src/admin/TokenGate.tsx` (blocked by 1, 3, 4)
-- [ ] 6. **Build AdminLayout.tsx** — `app/src/admin/AdminLayout.tsx` (blocked by 4, 5)
+- [x] 4. **Create AdminAuthContext + useAdminAuth hook** — `app/src/admin/AdminAuthContext.tsx` (blocked by 2, 3)
+- [x] 5. **Build TokenGate.tsx** — `app/src/admin/TokenGate.tsx` (blocked by 1, 3, 4)
+- [x] 6. **Build AdminLayout.tsx** — `app/src/admin/AdminLayout.tsx` (blocked by 4, 5)
 - [ ] 7. **Build reusable LocalizedField** — `app/src/admin/LocalizedField.tsx` (blocked by 1)
 - [ ] 8. **Add markdown preview** — `app/src/admin/MarkdownPreview.tsx`, `app/package.json` (blocked by 1)
 - [ ] 9. **Build shared useAdminSave hook** — `app/src/admin/useAdminSave.ts` (blocked by 3, 4)
