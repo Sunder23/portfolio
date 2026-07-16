@@ -36,8 +36,8 @@
 
 ### Phase 2 — UI-компоненты
 
-- [ ] 4. **Build ImageUploadField component (single image)** — `app/src/admin/ImageUploadField.tsx` (blocked by 3)
-- [ ] 5. **Build GalleryUploadField component (multi-image)** — `app/src/admin/GalleryUploadField.tsx` (blocked by 4)
+- [x] 4. **Build ImageUploadField component (single image)** — `app/src/admin/ImageUploadField.tsx` (blocked by 3)
+- [x] 5. **Build GalleryUploadField component (multi-image)** — `app/src/admin/GalleryUploadField.tsx` (blocked by 4)
 
 ### Phase 3 — Wiring
 
