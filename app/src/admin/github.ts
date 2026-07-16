@@ -44,6 +44,18 @@ function base64ToUtf8(base64: string): string {
   return new TextDecoder().decode(bytes)
 }
 
+// Binary-safe base64 (raw bytes, no JSON/UTF-8-text assumption like utf8ToBase64 above).
+// Chunked to avoid blowing the call stack on String.fromCharCode(...bytes) for large images.
+async function blobToBase64(blob: Blob): Promise<string> {
+  const bytes = new Uint8Array(await blob.arrayBuffer())
+  const chunkSize = 0x8000
+  let binary = ''
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize))
+  }
+  return btoa(binary)
+}
+
 async function fetchContents(path: string, token: string): Promise<{ sha: string; content: string }> {
   const response = await fetch(`${API_BASE}/repos/${OWNER}/${REPO}/contents/${path}`, {
     headers: authHeaders(token),
@@ -125,5 +137,49 @@ export async function saveFile<T>(path: string, content: T, message: string, tok
     const { sha } = await fetchContents(path, token)
     await putFile(path, content, message, token, sha)
     console.info(`[admin/github] save success after retry ${path}`)
+  }
+}
+
+async function putBinary(path: string, base64Content: string, message: string, token: string): Promise<{ sha: string }> {
+  const response = await fetch(`${API_BASE}/repos/${OWNER}/${REPO}/contents/${path}`, {
+    method: 'PUT',
+    headers: { ...authHeaders(token), 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message, content: base64Content }),
+  })
+
+  if (response.status === 401) {
+    throw new GithubAuthError()
+  }
+  if (response.status === 409) {
+    throw new GithubConflictError()
+  }
+  if (!response.ok) {
+    throw new Error(`GitHub API error uploading ${path}: ${response.status}`)
+  }
+
+  const json = await response.json()
+  return { sha: json.content.sha }
+}
+
+// New-file create for binary assets (images) — unlike putFile/saveFile, no sha is fetched or
+// sent since uploads always target a fresh, uniquely-named path (see useImageUpload).
+export async function uploadImage(path: string, blob: Blob, message: string, token: string): Promise<{ sha: string }> {
+  console.info(`[admin/github] upload start ${path} (${blob.size} bytes)`)
+  const base64Content = await blobToBase64(blob)
+
+  try {
+    const result = await putBinary(path, base64Content, message, token)
+    console.info(`[admin/github] upload success ${path}`)
+    return result
+  } catch (err) {
+    if (!(err instanceof GithubConflictError)) {
+      console.error(`[admin/github] upload failed ${path}`, err)
+      throw err
+    }
+
+    console.warn(`[admin/github] upload conflict on ${path}, retrying once`)
+    const result = await putBinary(path, base64Content, message, token)
+    console.info(`[admin/github] upload success after retry ${path}`)
+    return result
   }
 }
