@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "category": "Frontend",
+    "items": ["React", "TypeScript", "Vite", "Tailwind CSS", "React Router"]
+  },
+  {
+    "category": "Backend",
+    "items": ["Node.js", "Express", "REST API"]
+  },
+  {
+    "category": "Tools",
+    "items": ["Git", "GitHub Actions", "Figma"]
+  }
+]

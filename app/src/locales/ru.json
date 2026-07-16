@@ -1,1 +1,32 @@
-{}
+{
+  "nav": {
+    "home": "Главная",
+    "projects": "Проекты",
+    "about": "Обо мне"
+  },
+  "home": {
+    "viewProjects": "Смотреть проекты",
+    "viewAbout": "Обо мне",
+    "contactMe": "Написать мне"
+  },
+  "projects": {
+    "title": "Проекты",
+    "empty": "Проектов пока нет"
+  },
+  "projectDetail": {
+    "back": "Все проекты",
+    "role": "Роль",
+    "year": "Год",
+    "stack": "Стек",
+    "visitProject": "Перейти на сайт",
+    "notFound": "Проект не найден"
+  },
+  "about": {
+    "title": "Обо мне",
+    "skills": "Навыки",
+    "contact": "Контакты"
+  },
+  "common": {
+    "loading": "Загрузка…"
+  }
+}

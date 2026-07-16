@@ -1,1 +1,32 @@
-{}
+{
+  "nav": {
+    "home": "Home",
+    "projects": "Projects",
+    "about": "About"
+  },
+  "home": {
+    "viewProjects": "View projects",
+    "viewAbout": "About me",
+    "contactMe": "Contact me"
+  },
+  "projects": {
+    "title": "Projects",
+    "empty": "No projects yet"
+  },
+  "projectDetail": {
+    "back": "All projects",
+    "role": "Role",
+    "year": "Year",
+    "stack": "Stack",
+    "visitProject": "Visit site",
+    "notFound": "Project not found"
+  },
+  "about": {
+    "title": "About me",
+    "skills": "Skills",
+    "contact": "Contact"
+  },
+  "common": {
+    "loading": "Loading…"
+  }
+}

@@ -1,17 +1,20 @@
 {
   "name": "Max Kravchuk",
   "title": {
-    "uk": "Портфоліо",
-    "ru": "Портфолио",
-    "en": "Portfolio"
+    "uk": "Fullstack розробник",
+    "ru": "Fullstack разработчик",
+    "en": "Fullstack developer"
   },
   "bio": {
-    "uk": "Max BIO UA",
-    "ru": "Max BIO RU",
-    "en": "Max BIO EN"
+    "uk": "Розробляю веб-застосунки на React та Node.js. Люблю прості рішення без зайвих залежностей.",
+    "ru": "Разрабатываю веб-приложения на React и Node.js. Люблю простые решения без лишних зависимостей.",
+    "en": "I build web applications with React and Node.js. I like simple solutions without unnecessary dependencies."
   },
   "location": "Odesa",
   "email": "sunder123@gmail.com",
-  "socials": [],
+  "socials": [
+    { "platform": "GitHub", "url": "https://github.com/Sunder23" },
+    { "platform": "LinkedIn", "url": "https://linkedin.com" }
+  ],
   "avatar": ""
 }

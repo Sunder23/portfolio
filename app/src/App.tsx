@@ -7,6 +7,7 @@ import ProjectDetail from '@/pages/ProjectDetail'
 import About from '@/pages/About'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, getStoredLocale, storeLocale, type Locale } from '@/lib/locale'
 import { LocaleProvider } from '@/hooks/useLocale'
+import { PublicLayout } from '@/components/PublicLayout'
 
 // Lazy-loaded so the GitHub client, marked, sonner, and every editor never
 // ship in the public bundle — only pulled in when /#/admin is visited.
@@ -43,10 +44,12 @@ function App() {
         <Route index element={<RootRedirect />} />
         {SUPPORTED_LOCALES.map((locale) => (
           <Route key={locale} path={locale} element={<LocaleLayout locale={locale} />}>
-            <Route index element={<Home />} />
-            <Route path="projects" element={<Projects />} />
-            <Route path="projects/:slug" element={<ProjectDetail />} />
-            <Route path="about" element={<About />} />
+            <Route element={<PublicLayout />}>
+              <Route index element={<Home />} />
+              <Route path="projects" element={<Projects />} />
+              <Route path="projects/:slug" element={<ProjectDetail />} />
+              <Route path="about" element={<About />} />
+            </Route>
           </Route>
         ))}
         <Route

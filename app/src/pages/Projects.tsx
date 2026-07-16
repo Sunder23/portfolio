@@ -1,7 +1,36 @@
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { ProjectCard } from '@/components/ProjectCard'
+import { getProjects } from '@/lib/data'
+import type { Project } from '@/types'
+
 export default function Projects() {
+  const { t } = useTranslation()
+  const [projects, setProjects] = useState<Project[] | null>(null)
+
+  useEffect(() => {
+    console.info('[pages/Projects] loading projects')
+    getProjects().then(setProjects)
+  }, [])
+
+  if (!projects) {
+    return <p className="text-sm text-muted-foreground">{t('common.loading')}</p>
+  }
+
+  const published = projects.filter((p) => p.published).sort((a, b) => a.order - b.order)
+
   return (
-    <div className="flex min-h-svh items-center justify-center">
-      <h1 className="text-2xl font-medium">Projects</h1>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-2xl font-medium">{t('projects.title')}</h1>
+      {published.length === 0 ? (
+        <p className="text-sm text-muted-foreground">{t('projects.empty')}</p>
+      ) : (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {published.map((project) => (
+            <ProjectCard key={project.id} project={project} />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
