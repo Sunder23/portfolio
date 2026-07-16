@@ -37,7 +37,7 @@
 
 ### Phase 2 — Страница
 
-- [ ] 4. **Build Contact page** — `app/src/pages/Contact.tsx` (blocked by 2, 3)
+- [x] 4. **Build Contact page** — `app/src/pages/Contact.tsx` (blocked by 2, 3)
 
 ### Phase 3 — Wiring
 
