@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ProjectCard } from '@/components/ProjectCard'
 import { getProjects } from '@/lib/data'
+import { useDocumentMeta } from '@/lib/useDocumentMeta'
 import type { Project } from '@/types'
 
 export default function Projects() {
@@ -12,6 +13,8 @@ export default function Projects() {
     console.info('[pages/Projects] loading projects')
     getProjects().then(setProjects)
   }, [])
+
+  useDocumentMeta({ title: t('meta.projects.title'), description: t('meta.projects.description') })
 
   if (!projects) {
     return <p className="text-sm text-muted-foreground">{t('common.loading')}</p>

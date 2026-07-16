@@ -35,6 +35,28 @@
     "dark": "Dark",
     "toggleLabel": "Toggle theme"
   },
+  "meta": {
+    "home": {
+      "title": "Max Kravchuk — Fullstack developer",
+      "description": "Portfolio of Max Kravchuk, a fullstack developer building web applications with React and Node.js."
+    },
+    "projects": {
+      "title": "Projects — Max Kravchuk",
+      "description": "A selection of web development projects built with React and Node.js."
+    },
+    "projectDetail": {
+      "title": "Project — Max Kravchuk",
+      "description": "Details of a web development project by Max Kravchuk."
+    },
+    "about": {
+      "title": "About — Max Kravchuk",
+      "description": "About Max Kravchuk, a fullstack developer based in Odesa."
+    },
+    "contact": {
+      "title": "Contact — Max Kravchuk",
+      "description": "Get in touch with Max Kravchuk about your project."
+    }
+  },
   "contact": {
     "title": "Contact",
     "description": "Tell me briefly about your project — I'll reply by email.",

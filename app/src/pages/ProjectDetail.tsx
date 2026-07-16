@@ -7,8 +7,19 @@ import { MarkdownContent } from '@/components/MarkdownContent'
 import { getProjects } from '@/lib/data'
 import { useLocale } from '@/hooks/useLocale'
 import { useLocalized } from '@/hooks/useLocalized'
+import { useDocumentMeta } from '@/lib/useDocumentMeta'
 import { cn } from '@/lib/utils'
 import type { Project } from '@/types'
+
+// Strips common markdown syntax and trims to a reasonable meta-description length.
+function toPlainDescription(markdown: string): string {
+  const plain = markdown
+    .replace(/[#*_`>~-]/g, '')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/\s+/g, ' ')
+    .trim()
+  return plain.length > 160 ? `${plain.slice(0, 157)}…` : plain
+}
 
 export default function ProjectDetail() {
   const { t } = useTranslation()
@@ -25,6 +36,12 @@ export default function ProjectDetail() {
 
   const title = useLocalized(project?.title ?? { uk: '' })
   const description = useLocalized(project?.description ?? { uk: '' })
+
+  useDocumentMeta(
+    project
+      ? { title: `${title} — Max Kravchuk`, description: toPlainDescription(description) }
+      : { title: t('meta.projectDetail.title'), description: t('meta.projectDetail.description') },
+  )
 
   if (!projects) {
     return <p className="text-sm text-muted-foreground">{t('common.loading')}</p>

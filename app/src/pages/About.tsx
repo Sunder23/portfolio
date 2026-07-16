@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Badge } from '@/components/ui/badge'
 import { getProfile, getSkills } from '@/lib/data'
 import { useLocalized } from '@/hooks/useLocalized'
+import { useDocumentMeta } from '@/lib/useDocumentMeta'
 import type { Profile, SkillCategory } from '@/types'
 
 export default function About() {
@@ -17,6 +18,8 @@ export default function About() {
   }, [])
 
   const bio = useLocalized(profile?.bio ?? { uk: '' })
+
+  useDocumentMeta({ title: t('meta.about.title'), description: t('meta.about.description') })
 
   if (!profile || !skills) {
     return <p className="text-sm text-muted-foreground">{t('common.loading')}</p>

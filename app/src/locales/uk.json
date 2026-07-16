@@ -35,6 +35,28 @@
     "dark": "Темна",
     "toggleLabel": "Перемкнути тему"
   },
+  "meta": {
+    "home": {
+      "title": "Max Kravchuk — Fullstack розробник",
+      "description": "Портфоліо Max Kravchuk, fullstack-розробника вебзастосунків на React та Node.js."
+    },
+    "projects": {
+      "title": "Проєкти — Max Kravchuk",
+      "description": "Добірка проєктів веброзробки на React та Node.js."
+    },
+    "projectDetail": {
+      "title": "Проєкт — Max Kravchuk",
+      "description": "Деталі проєкту веброзробки Max Kravchuk."
+    },
+    "about": {
+      "title": "Про мене — Max Kravchuk",
+      "description": "Про Max Kravchuk, fullstack-розробника з Одеси."
+    },
+    "contact": {
+      "title": "Контакти — Max Kravchuk",
+      "description": "Зв'яжіться з Max Kravchuk щодо вашого проєкту."
+    }
+  },
   "contact": {
     "title": "Контакти",
     "description": "Розкажіть коротко про задачу — відповім на email.",

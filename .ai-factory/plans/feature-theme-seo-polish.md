@@ -34,10 +34,10 @@ Rationale: единственный незавершённый пункт роа
 <!-- Commit checkpoint: tasks 1-3 -->
 
 ### Phase 2: Локализованные мета-теги/OG
-- [ ] Task 4: Создать хук `app/src/lib/useDocumentMeta.ts` — upsert document.title + meta description/og:title/og:description/og:locale/og:url
-- [ ] Task 5: Добавить top-level ключ "meta" (title/description для home/projects/about/contact + фолбэк для projectDetail) в uk/ru/en.json
-- [ ] Task 6: Подключить useDocumentMeta во все публичные страницы (Home, Projects, About, Contact — из словаря; ProjectDetail — из данных проекта) (depends on 4, 5)
-- [ ] Task 7: Добавить статичные baseline OG-теги (og:type/og:site_name/og:image/twitter:card) и theme-color в `app/index.html` как фолбэк для non-JS краулеров (depends on 6)
+- [x] Task 4: Создать хук `app/src/lib/useDocumentMeta.ts` — upsert document.title + meta description/og:title/og:description/og:locale/og:url
+- [x] Task 5: Добавить top-level ключ "meta" (title/description для home/projects/about/contact + фолбэк для projectDetail) в uk/ru/en.json
+- [x] Task 6: Подключить useDocumentMeta во все публичные страницы (Home, Projects, About, Contact — из словаря; ProjectDetail — из данных проекта) (depends on 4, 5)
+- [x] Task 7: Добавить статичные baseline теги (meta name="description", og:type/og:site_name/og:image/twitter:card) и theme-color в `app/index.html` как фолбэк для non-JS краулеров (depends on 6)
 <!-- Commit checkpoint: tasks 4-7 -->
 
 ### Phase 3: Lighthouse ≥90 и финал

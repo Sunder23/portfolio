@@ -8,9 +8,12 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { useDocumentMeta } from '@/lib/useDocumentMeta'
 
 export default function Contact() {
   const { t } = useTranslation()
+
+  useDocumentMeta({ title: t('meta.contact.title'), description: t('meta.contact.description') })
 
   // Rebuilt on locale change so zod issue messages stay localized.
   const schema = useMemo(

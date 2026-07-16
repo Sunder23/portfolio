@@ -5,6 +5,7 @@ import { buttonVariants } from '@/components/ui/button'
 import { getProfile } from '@/lib/data'
 import { useLocale } from '@/hooks/useLocale'
 import { useLocalized } from '@/hooks/useLocalized'
+import { useDocumentMeta } from '@/lib/useDocumentMeta'
 import type { Profile } from '@/types'
 
 export default function Home() {
@@ -19,6 +20,8 @@ export default function Home() {
 
   const title = useLocalized(profile?.title ?? { uk: '' })
   const bio = useLocalized(profile?.bio ?? { uk: '' })
+
+  useDocumentMeta({ title: t('meta.home.title'), description: t('meta.home.description') })
 
   if (!profile) {
     return <p className="text-sm text-muted-foreground">{t('common.loading')}</p>
