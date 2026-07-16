@@ -45,10 +45,10 @@
 
 ### Phase 3 — Страницы
 
-- [ ] 8. **Реализовать `Home.tsx`** — `app/src/pages/Home.tsx` (blocked by 2, 4, 7)
-- [ ] 9. **Реализовать `Projects.tsx`** — `app/src/pages/Projects.tsx` (blocked by 6, 4, 7)
-- [ ] 10. **Реализовать `ProjectDetail.tsx`** — `app/src/pages/ProjectDetail.tsx` (blocked by 2, 4, 7)
-- [ ] 11. **Реализовать `About.tsx`** — `app/src/pages/About.tsx` (blocked by 2, 3, 4, 7)
+- [x] 8. **Реализовать `Home.tsx`** — `app/src/pages/Home.tsx` (blocked by 2, 4, 7)
+- [x] 9. **Реализовать `Projects.tsx`** — `app/src/pages/Projects.tsx` (blocked by 6, 4, 7)
+- [x] 10. **Реализовать `ProjectDetail.tsx`** — `app/src/pages/ProjectDetail.tsx` (blocked by 2, 4, 7)
+- [x] 11. **Реализовать `About.tsx`** — `app/src/pages/About.tsx` (blocked by 2, 3, 4, 7)
 
 **Commit checkpoint 3** — после задач 8–11: `feat: implement public pages with localized content`
 
