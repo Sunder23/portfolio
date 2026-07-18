@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
-import { MarkdownPreview } from '@/admin/MarkdownPreview'
+import { RichTextEditor } from '@/admin/RichTextEditor'
+import { useAdminLocale } from '@/admin/AdminLocaleContext'
 import type { Locale } from '@/lib/locale'
 import type { Localized } from '@/types'
 
@@ -18,11 +19,20 @@ interface LocalizedFieldProps {
   onChange: (next: Localized<string>) => void
   label: string
   multiline?: boolean
-  withPreview?: boolean
+  richText?: boolean
 }
 
-export function LocalizedField({ value, onChange, label, multiline, withPreview }: LocalizedFieldProps) {
-  const [active, setActive] = useState<Locale>('uk')
+export function LocalizedField({ value, onChange, label, multiline, richText }: LocalizedFieldProps) {
+  const { locale: adminLocale } = useAdminLocale()
+  const [active, setActive] = useState<Locale>(adminLocale)
+
+  // One-way sync: switching the admin-wide language in the top bar jumps every
+  // open LocalizedField to that tab, but clicking a tab locally does not push
+  // back into the global admin locale (same behavior as WordPress's admin
+  // language switcher).
+  useEffect(() => {
+    setActive(adminLocale)
+  }, [adminLocale])
 
   function handleFieldChange(locale: Locale, next: string) {
     const updated: Localized<string> = { ...value }
@@ -52,15 +62,10 @@ export function LocalizedField({ value, onChange, label, multiline, withPreview 
           const fieldValue = value[tab.locale] ?? ''
           return (
             <TabsContent key={tab.locale} value={tab.locale}>
-              {multiline ? (
-                <div className={withPreview ? 'grid grid-cols-2 gap-2' : undefined}>
-                  <Textarea
-                    rows={6}
-                    value={fieldValue}
-                    onChange={(e) => handleFieldChange(tab.locale, e.target.value)}
-                  />
-                  {withPreview && <MarkdownPreview markdown={fieldValue} />}
-                </div>
+              {richText ? (
+                <RichTextEditor value={fieldValue} onChange={(next) => handleFieldChange(tab.locale, next)} />
+              ) : multiline ? (
+                <Textarea rows={6} value={fieldValue} onChange={(e) => handleFieldChange(tab.locale, e.target.value)} />
               ) : (
                 <Input value={fieldValue} onChange={(e) => handleFieldChange(tab.locale, e.target.value)} />
               )}

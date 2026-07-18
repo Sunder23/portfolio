@@ -3,18 +3,21 @@ import { AdminAuthProvider } from '@/admin/AdminAuthContext'
 import { AdminLocaleProvider } from '@/admin/AdminLocaleContext'
 import AdminLayout from '@/admin/AdminLayout'
 import { editorRegistry } from '@/admin/registry'
+import { ProjectForm, ProjectsList } from '@/admin/editors/ProjectsEditor'
+import TaxonomyEditor from '@/admin/editors/TaxonomyEditor'
+import type { Taxonomies } from '@/types'
 
-function EditorRouter() {
-  const { entityId } = useParams<{ entityId: string }>()
-  const entry = editorRegistry.find((e) => e.id === entityId)
+const TAXONOMY_KEYS: (keyof Taxonomies)[] = ['stack', 'category', 'role']
 
-  if (!entry) {
-    console.info('[FIX:admin-locale-redirect] unknown entityId', entityId, '-> redirecting to', editorRegistry[0].id)
-    return <Navigate to={`/admin/${editorRegistry[0].id}`} replace />
+function TaxonomyRouter() {
+  const { key } = useParams<{ key: string }>()
+
+  if (!key || !TAXONOMY_KEYS.includes(key as keyof Taxonomies)) {
+    console.info('[admin/router] unknown taxonomy key', key, '-> redirecting to stack')
+    return <Navigate to="/admin/taxonomies/stack" replace />
   }
 
-  const Editor = entry.Editor
-  return <Editor />
+  return <TaxonomyEditor />
 }
 
 export default function Admin() {
@@ -23,8 +26,15 @@ export default function Admin() {
       <AdminLocaleProvider>
         <Routes>
           <Route element={<AdminLayout />}>
-            <Route index element={<Navigate to={editorRegistry[0].id} replace />} />
-            <Route path=":entityId" element={<EditorRouter />} />
+            <Route index element={<Navigate to="projects" replace />} />
+            <Route path="projects" element={<ProjectsList />} />
+            <Route path="projects/new" element={<ProjectForm />} />
+            <Route path="projects/:slug" element={<ProjectForm />} />
+            {editorRegistry.map((entry) => (
+              <Route key={entry.id} path={entry.id} element={<entry.Editor />} />
+            ))}
+            <Route path="taxonomies/:key" element={<TaxonomyRouter />} />
+            <Route path="*" element={<Navigate to="projects" replace />} />
           </Route>
         </Routes>
       </AdminLocaleProvider>

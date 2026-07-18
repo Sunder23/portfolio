@@ -47,7 +47,7 @@ export default function ProfileEditor() {
       </div>
 
       <LocalizedField label="title" value={profile.title} onChange={(v) => update('title', v)} />
-      <LocalizedField label="bio" value={profile.bio} onChange={(v) => update('bio', v)} multiline withPreview />
+      <LocalizedField label="bio" value={profile.bio} onChange={(v) => update('bio', v)} richText />
 
       <div className="grid grid-cols-2 gap-3">
         <div className="flex flex-col gap-1.5">

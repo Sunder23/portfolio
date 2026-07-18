@@ -79,21 +79,21 @@
 
 **Фаза 2 — языковой контекст и WP-оболочка**
 8. [x] `AdminLocaleContext` + `useAdminLocalized` + тесты
-9. shadcn: checkbox/select/collapsible/dropdown-menu/separator
-10. `admin/navConfig.ts`
-11. `AdminLayout.tsx` — top-bar + collapsible-сайдбар
-12. `Admin.tsx` — новое дерево роутов
+9. [x] shadcn: checkbox/select/collapsible/dropdown-menu/separator
+10. [x] `admin/navConfig.ts`
+11. [x] `AdminLayout.tsx` — top-bar + collapsible-сайдбар
+12. [x] `Admin.tsx` — новое дерево роутов
 
 **Фаза 3 — таксономии**
-13. `TaxonomyCheckboxes` + тесты
-14. `TaxonomyEditor.tsx` (обобщённый менеджер терминов)
+13. [x] `TaxonomyCheckboxes` + тесты
+14. [x] `TaxonomyEditor.tsx` (обобщённый менеджер терминов)
 
 **Фаза 4 — редактирование контента**
-15. `LocalizedField` — дефолтная вкладка из admin-locale + `richText`-вариант
-16. `RichTextEditor.tsx` (TipTap + `tiptap-markdown`), удаление `MarkdownPreview.tsx`
+15. [x] `LocalizedField` — дефолтная вкладка из admin-locale + `richText`-вариант
+16. [x] `RichTextEditor.tsx` (TipTap + `tiptap-markdown`), удаление `MarkdownPreview.tsx` (заодно `ProfileEditor.bio` переведён на `richText`)
 
 **Фаза 5 — Projects CRUD**
-17. Полный рерайт `ProjectsEditor.tsx` (list/new/:slug, авто-slug, чекбоксы таксономий, rich text, per-file CRUD)
+17. [x] Полный рерайт `ProjectsEditor.tsx` (list/new/:slug, авто-slug, чекбоксы таксономий, rich text, per-file CRUD; заодно `useAdminSave.ts` вынес общий `useAdminOperation` для переиспользования toast/error-логики)
 
 **Фаза 6 — проверка и документация**
 18. Ручная проверка в браузере (полный сценарий: логин → создание/переименование/удаление проекта → таксономии → смена языка)
