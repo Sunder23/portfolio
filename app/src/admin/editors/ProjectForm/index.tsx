@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
+import { Link, Navigate, useParams } from 'react-router-dom'
 import { Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -11,12 +11,12 @@ import { LocalizedField } from '@/admin/components/LocalizedField'
 import { ImageUploadField } from '@/admin/components/ImageUploadField'
 import { GalleryUploadField } from '@/admin/components/GalleryUploadField'
 import { TaxonomyCheckboxes } from '@/admin/components/TaxonomyCheckboxes'
-import { useAdminOperation } from '@/admin/hooks/useAdminSave'
 import { useAdminAuth } from '@/admin/components/AdminAuthContext'
+import { useAdminDraft } from '@/admin/components/AdminDraftContext'
 import { useAdminLocale, useAdminLocalized } from '@/admin/components/AdminLocaleContext'
-import { useDirtyState } from '@/admin/hooks/useDirtyState'
 import { useEditorData } from '@/admin/hooks/useEditorData'
-import { createFile, deleteFile, getFile, listDir, saveFile } from '@/admin/lib/github'
+import { createFile, deleteFile, getFile, listDir, saveFile, uploadPendingImage } from '@/admin/lib/github'
+import { resolvePendingImages, type PendingImage } from '@/admin/lib/resolvePendingImages'
 import { makeUniqueSlug, slugify } from '@/lib/slug'
 import { PROJECTS_DIR, TAXONOMIES_PATH, emptyProject } from '@/admin/editors/projectsData'
 import { SUPPORTED_LOCALES } from '@/lib/locale'
@@ -29,41 +29,59 @@ const YEAR_ITEMS = Array.from({ length: YEAR_MAX - YEAR_MIN + 1 }, (_, i) => Str
   value: year,
 }))
 
+const NEW_PROJECT_KEY = `${PROJECTS_DIR}/__new__`
+
+// The staged form shape: identical to Project, except cover/gallery can hold a locally
+// compressed-but-not-yet-uploaded image (see resolvePendingImages.ts) while editing.
+type ProjectDraft = Omit<Project, 'cover' | 'gallery'> & { cover: string | PendingImage; gallery: (string | PendingImage)[] }
+
+// `sha` is the on-disk sha of the loaded file (null for a not-yet-created project) — needed by
+// the rename branch below, kept alongside the form instead of separate component state so it
+// survives exactly as long as the staged draft itself does.
+type ProjectDraftEntry = { form: ProjectDraft; slug: string; sha: string | null }
+
 export function ProjectForm() {
   const { slug: slugParam } = useParams<{ slug: string }>()
   const isNew = !slugParam
-  const navigate = useNavigate()
   const { token } = useAdminAuth()
-  const { run, saving } = useAdminOperation()
+  const draft = useAdminDraft()
   const { locale, setLocale } = useAdminLocale()
   const [taxonomies] = useEditorData<Taxonomies>(TAXONOMIES_PATH)
-  const { capture, isDirty } = useDirtyState<{ form: Project; slug: string }>()
 
-  const [loading, setLoading] = useState(!isNew)
+  // Existing projects keep the same draft key for their whole lifetime (the GitHub path they
+  // were loaded from); a new project gets one synthetic key for the session — only one
+  // "new project" draft can be in flight at a time, which is fine for a single-user admin.
+  const draftKey = isNew ? NEW_PROJECT_KEY : `${PROJECTS_DIR}/${slugParam}.json`
+
+  const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
-  const [original, setOriginal] = useState<{ path: string; sha: string } | null>(null)
-  const [existingSlugs, setExistingSlugs] = useState<string[]>([])
-  const [form, setForm] = useState<Project>(emptyProject())
-  const [slug, setSlug] = useState('')
   const [slugLocked, setSlugLocked] = useState(!isNew)
+
+  const current = draft.getEntry<ProjectDraftEntry>(draftKey)
+  const form = current?.form ?? emptyProject()
+  const slug = current?.slug ?? ''
 
   const autoSlugSource = useAdminLocalized(form.title)
 
   useEffect(() => {
-    if (!slugLocked) {
+    if (!slugLocked && current) {
       setSlug(slugify(autoSlugSource))
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoSlugSource, slugLocked])
 
   useEffect(() => {
     if (!token) return
+    setLoading(true)
+    setNotFound(false)
 
     listDir(PROJECTS_DIR, token).then(async (files) => {
-      setExistingSlugs(files.map((file) => file.name.replace(/\.json$/, '')))
+      const slugs = files.map((file) => file.name.replace(/\.json$/, ''))
 
       if (isNew) {
-        capture({ form: emptyProject(), slug: '' })
-        console.info('[admin/ProjectForm] baseline captured for new project')
+        draft.captureBaseline(draftKey, { form: emptyProject(), slug: '', sha: null })
+        console.info(`[admin/ProjectForm] draft loaded for ${draftKey}`)
+        registerProjectFlush(draftKey, slugs)
         setLoading(false)
         return
       }
@@ -76,16 +94,54 @@ export function ProjectForm() {
         return
       }
 
-      console.info(`[admin/ProjectForm] loading ${match.path}`)
       const { data, sha } = await getFile<Project>(match.path, token)
-      setForm(data)
-      setSlug(data.slug)
-      setOriginal({ path: match.path, sha })
-      capture({ form: data, slug: data.slug })
-      console.info(`[admin/ProjectForm] baseline captured for ${match.path}`)
+      draft.captureBaseline(draftKey, { form: data, slug: data.slug, sha })
+      console.info(`[admin/ProjectForm] draft loaded for ${draftKey}`)
+      registerProjectFlush(draftKey, slugs)
       setLoading(false)
     })
-  }, [token, isNew, slugParam, capture])
+
+    function registerProjectFlush(key: string, slugs: string[]) {
+      draft.registerFlush(key, async (entryData, saveToken) => {
+        const entry = entryData as ProjectDraftEntry
+        const ownSlug = key === NEW_PROJECT_KEY ? undefined : key.split('/').pop()?.replace(/\.json$/, '')
+        const otherSlugs = slugs.filter((s) => s !== ownSlug)
+        const finalSlug = makeUniqueSlug(entry.slug || 'untitled', otherSlugs)
+        const newPath = `${PROJECTS_DIR}/${finalSlug}.json`
+
+        try {
+          const resolvedForm = await resolvePendingImages(entry.form, (blob) => uploadPendingImage(blob, saveToken))
+          // resolvePendingImages replaces every PendingImage with its uploaded path at runtime,
+          // but its generic signature can't narrow cover/gallery back from `string | PendingImage`
+          // to plain `string` at the type level — safe to assert here since resolution is complete.
+          const nextProject: Project = {
+            ...resolvedForm,
+            cover: resolvedForm.cover as string,
+            gallery: resolvedForm.gallery as string[],
+            slug: finalSlug,
+          }
+
+          if (entry.sha === null) {
+            console.info(`[admin/ProjectForm] flush start ${key}, mode=create`)
+            await createFile(newPath, nextProject, `admin: update projects.json (add "${finalSlug}")`, saveToken)
+          } else if (key === newPath) {
+            console.info(`[admin/ProjectForm] flush start ${key}, mode=update`)
+            await saveFile(newPath, nextProject, `admin: update projects.json (edit "${finalSlug}")`, saveToken)
+          } else {
+            console.info(`[admin/ProjectForm] flush start ${key}, mode=rename`)
+            const message = `admin: rename project "${ownSlug}" -> "${finalSlug}"`
+            await createFile(newPath, nextProject, message, saveToken)
+            await deleteFile(key, entry.sha, message, saveToken)
+          }
+          console.info(`[admin/ProjectForm] flush success ${key}`)
+        } catch (err) {
+          console.error(`[admin/ProjectForm] flush failed ${key}`, err)
+          throw err
+        }
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token, isNew, slugParam, draftKey])
 
   const roleItems = useMemo(() => (taxonomies?.role ?? []).map((role) => ({ label: role, value: role })), [taxonomies])
 
@@ -93,40 +149,18 @@ export function ProjectForm() {
     return <Navigate to="/admin/projects" replace />
   }
 
-  if (loading || !taxonomies) {
+  if (loading || !taxonomies || !current) {
     return <p className="text-sm text-muted-foreground">Загрузка…</p>
   }
 
-  function update<K extends keyof Project>(key: K, value: Project[K]) {
-    setForm((prev) => ({ ...prev, [key]: value }))
+  function update<K extends keyof ProjectDraft>(key: K, value: ProjectDraft[K]) {
+    if (!current) return
+    draft.setEntry(draftKey, { ...current, form: { ...current.form, [key]: value } })
   }
 
-  async function handleSave() {
-    if (!token) return
-
-    const otherSlugs = existingSlugs.filter((s) => s !== original?.path.split('/').pop()?.replace(/\.json$/, ''))
-    const finalSlug = makeUniqueSlug(slug || 'untitled', otherSlugs)
-    const nextProject: Project = { ...form, slug: finalSlug }
-    const newPath = `${PROJECTS_DIR}/${finalSlug}.json`
-
-    const ok = await run(async () => {
-      if (!original) {
-        console.info(`[admin/ProjectForm] creating ${newPath}`)
-        await createFile(newPath, nextProject, `admin: update projects.json (add "${finalSlug}")`, token)
-      } else if (original.path === newPath) {
-        console.info(`[admin/ProjectForm] updating ${newPath}`)
-        await saveFile(newPath, nextProject, `admin: update projects.json (edit "${finalSlug}")`, token)
-      } else {
-        console.info(`[admin/ProjectForm] renaming ${original.path} -> ${newPath}`)
-        const message = `admin: rename project "${original.path.split('/').pop()?.replace(/\.json$/, '')}" -> "${finalSlug}"`
-        await createFile(newPath, nextProject, message, token)
-        await deleteFile(original.path, original.sha, message, token)
-      }
-    })
-
-    if (ok) {
-      navigate('/admin/projects')
-    }
+  function setSlug(next: string) {
+    if (!current) return
+    draft.setEntry(draftKey, { ...current, slug: next })
   }
 
   return (
@@ -172,7 +206,7 @@ export function ProjectForm() {
 
           <div className="flex flex-col gap-1.5">
             <Label>gallery</Label>
-            <GalleryUploadField value={form.gallery} onChange={(paths) => update('gallery', paths)} />
+            <GalleryUploadField value={form.gallery} onChange={(next) => update('gallery', next)} />
           </div>
         </div>
 
@@ -198,16 +232,7 @@ export function ProjectForm() {
               </div>
 
               <div className="flex flex-col gap-2 pt-2">
-                <Button className="w-full" disabled={saving || !isDirty({ form, slug })} onClick={handleSave}>
-                  {saving ? 'Сохранение…' : 'Сохранить'}
-                </Button>
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  disabled={saving}
-                  nativeButton={false}
-                  render={<Link to="/admin/projects" />}
-                >
+                <Button variant="outline" className="w-full" nativeButton={false} render={<Link to="/admin/projects" />}>
                   Отмена
                 </Button>
               </div>
@@ -289,7 +314,7 @@ export function ProjectForm() {
               <CardTitle>Обложка</CardTitle>
             </CardHeader>
             <CardContent>
-              <ImageUploadField value={form.cover} onChange={(path) => update('cover', path)} />
+              <ImageUploadField value={form.cover} onChange={(next) => update('cover', next)} />
             </CardContent>
           </Card>
         </aside>

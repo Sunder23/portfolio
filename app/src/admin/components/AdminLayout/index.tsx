@@ -14,6 +14,7 @@ import { useAdminLocale } from '@/admin/components/AdminLocaleContext'
 import { useSessionCheck } from '@/admin/hooks/useSessionCheck'
 import TokenGate from '@/admin/components/TokenGate'
 import { AdminSidebar } from '@/admin/components/AdminSidebar'
+import { SaveAllButton } from '@/admin/components/SaveAllButton'
 import { SUPPORTED_LOCALES, getStoredLocale, DEFAULT_LOCALE } from '@/lib/locale'
 
 export default function AdminLayout() {
@@ -42,10 +43,9 @@ export default function AdminLayout() {
 
   return (
     // Wraps the whole authenticated shell (not just <Outlet/>) so both the routed editors
-    // and the floating "Save all" button (a sibling of <main>, added in a later task) share
-    // the same staging store. AdminLayout itself never remounts on route changes, so the
-    // draft survives navigating between editors either way — this is about sibling access,
-    // not persistence.
+    // and the floating <SaveAllButton/> (a sibling of <main>) share the same staging store.
+    // AdminLayout itself never remounts on route changes, so the draft survives navigating
+    // between editors either way — this is about sibling access, not persistence.
     <AdminDraftProvider>
       <div className="flex min-h-svh flex-col">
         <header className="flex h-12 shrink-0 items-center justify-between border-b bg-neutral-900 px-3 text-neutral-100">
@@ -90,6 +90,7 @@ export default function AdminLayout() {
             </div>
           </main>
         </div>
+        <SaveAllButton />
         <Toaster />
       </div>
     </AdminDraftProvider>

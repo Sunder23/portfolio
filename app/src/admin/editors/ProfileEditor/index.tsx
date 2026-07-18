@@ -4,18 +4,23 @@ import { Label } from '@/components/ui/label'
 import { LocalizedField } from '@/admin/components/LocalizedField'
 import { ImageUploadField } from '@/admin/components/ImageUploadField'
 import { useEditorData } from '@/admin/hooks/useEditorData'
+import type { PendingImage } from '@/admin/lib/resolvePendingImages'
 import type { Profile, SocialLink } from '@/types'
 
 const PROFILE_PATH = 'app/data/profile.json'
 
+// avatar can hold a locally compressed-but-not-yet-uploaded image while editing —
+// resolved back to a plain path by resolvePendingImages() at Save-all time.
+type ProfileDraft = Omit<Profile, 'avatar'> & { avatar: string | PendingImage }
+
 export default function ProfileEditor() {
-  const [profile, setProfile] = useEditorData<Profile>(PROFILE_PATH)
+  const [profile, setProfile] = useEditorData<ProfileDraft>(PROFILE_PATH)
 
   if (!profile) {
     return <p className="text-sm text-muted-foreground">Загрузка…</p>
   }
 
-  function update<K extends keyof Profile>(key: K, value: Profile[K]) {
+  function update<K extends keyof ProfileDraft>(key: K, value: ProfileDraft[K]) {
     setProfile((prev) => (prev ? { ...prev, [key]: value } : prev))
   }
 

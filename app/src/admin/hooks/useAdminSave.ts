@@ -3,7 +3,7 @@ import { toast } from 'sonner'
 import { GithubAuthError, GithubConflictError, saveFile } from '@/admin/lib/github'
 import { useAdminAuth } from '@/admin/components/AdminAuthContext'
 
-const ACTIONS_URL = 'https://github.com/Sunder23/portfolio/actions'
+export const ACTIONS_URL = 'https://github.com/Sunder23/portfolio/actions'
 const DEFAULT_SUCCESS_MESSAGE = 'Сохранено. Деплой займёт ~1–2 минуты'
 
 // Shared error/toast handling for any admin write operation (single-file save,
