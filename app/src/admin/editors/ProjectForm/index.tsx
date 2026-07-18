@@ -2,22 +2,10 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle, CardAction } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
-import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
 import { LocalizedField } from '@/admin/LocalizedField'
 import { ImageUploadField } from '@/admin/ImageUploadField'
 import { GalleryUploadField } from '@/admin/GalleryUploadField'
@@ -27,153 +15,8 @@ import { useAdminAuth } from '@/admin/AdminAuthContext'
 import { useAdminLocalized } from '@/admin/AdminLocaleContext'
 import { createFile, deleteFile, getFile, listDir, saveFile } from '@/admin/github'
 import { makeUniqueSlug, slugify } from '@/lib/slug'
+import { PROJECTS_DIR, TAXONOMIES_PATH, emptyProject } from '@/admin/editors/projectsData'
 import type { Project, Taxonomies } from '@/types'
-
-const PROJECTS_DIR = 'app/data/projects'
-const TAXONOMIES_PATH = 'app/data/taxonomies.json'
-
-interface ProjectEntry {
-  project: Project
-  path: string
-  sha: string
-}
-
-async function loadProjectEntries(token: string): Promise<ProjectEntry[]> {
-  const files = await listDir(PROJECTS_DIR, token)
-  return Promise.all(
-    files.map(async (file) => {
-      const { data, sha } = await getFile<Project>(file.path, token)
-      return { project: data, path: file.path, sha }
-    }),
-  )
-}
-
-function emptyProject(): Project {
-  return {
-    title: { uk: '' },
-    slug: '',
-    shortDescription: { uk: '' },
-    description: { uk: '' },
-    stack: [],
-    category: [],
-    role: '',
-    year: new Date().getFullYear(),
-    url: '',
-    cover: '',
-    gallery: [],
-    featured: false,
-    order: 0,
-    published: false,
-  }
-}
-
-function ProjectRow({ entry, onDelete }: { entry: ProjectEntry; onDelete: (entry: ProjectEntry) => void }) {
-  const title = useAdminLocalized(entry.project.title)
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{title || entry.project.slug}</CardTitle>
-        <CardAction className="flex gap-2">
-          <Badge variant={entry.project.published ? 'default' : 'outline'}>
-            {entry.project.published ? 'published' : 'draft'}
-          </Badge>
-        </CardAction>
-      </CardHeader>
-      <CardContent className="flex items-center justify-between gap-2">
-        <span className="text-sm text-muted-foreground">
-          {entry.project.slug} · order {entry.project.order}
-        </span>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            nativeButton={false}
-            render={<Link to={`/admin/projects/${entry.project.slug}`} />}
-          >
-            Редактировать
-          </Button>
-          <Button variant="destructive" size="sm" onClick={() => onDelete(entry)}>
-            Удалить
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
-
-export function ProjectsList() {
-  const { token } = useAdminAuth()
-  const { run, saving: deleting } = useAdminOperation()
-
-  const [entries, setEntries] = useState<ProjectEntry[] | null>(null)
-  const [deleteTarget, setDeleteTarget] = useState<ProjectEntry | null>(null)
-
-  useEffect(() => {
-    if (!token) return
-    console.info('[admin/ProjectsList] loading project list')
-    loadProjectEntries(token).then(setEntries)
-  }, [token])
-
-  if (!entries) {
-    return <p className="text-sm text-muted-foreground">Загрузка…</p>
-  }
-
-  const sorted = [...entries].sort((a, b) => a.project.order - b.project.order)
-
-  return (
-    <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-medium">Проекты</h2>
-        <Button nativeButton={false} render={<Link to="/admin/projects/new" />}>
-          Добавить
-        </Button>
-      </div>
-
-      {sorted.map((entry) => (
-        <ProjectRow key={entry.path} entry={entry} onDelete={setDeleteTarget} />
-      ))}
-
-      <AlertDialog open={deleteTarget !== null} onOpenChange={(open) => !open && setDeleteTarget(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Удалить проект?</AlertDialogTitle>
-            <AlertDialogDescription>
-              «{deleteTarget?.project.title.uk}» будет удалён из app/data/projects/. Действие необратимо.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Отмена</AlertDialogCancel>
-            <AlertDialogAction
-              variant="destructive"
-              disabled={deleting}
-              onClick={async () => {
-                if (!deleteTarget || !token) return
-                console.info(`[admin/ProjectsList] delete requested: ${deleteTarget.project.slug}`)
-                const ok = await run(
-                  () =>
-                    deleteFile(
-                      deleteTarget.path,
-                      deleteTarget.sha,
-                      `admin: update projects.json (delete "${deleteTarget.project.slug}")`,
-                      token,
-                    ),
-                  'Проект удалён. Деплой займёт ~1–2 минуты',
-                )
-                if (ok) {
-                  setEntries((prev) => prev?.filter((e) => e.path !== deleteTarget.path) ?? null)
-                  setDeleteTarget(null)
-                }
-              }}
-            >
-              Удалить
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
-  )
-}
 
 export function ProjectForm() {
   const { slug: slugParam } = useParams<{ slug: string }>()

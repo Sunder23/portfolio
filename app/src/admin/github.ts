@@ -24,6 +24,47 @@ function authHeaders(token: string): HeadersInit {
   }
 }
 
+// Shared status handling for every Contents API call — 401/409/generic-error
+// branches used to be repeated in each function; centralized here instead.
+async function assertOkResponse(
+  response: Response,
+  path: string,
+  action: string,
+  opts: { conflict?: boolean } = {},
+): Promise<void> {
+  if (response.status === 401) {
+    throw new GithubAuthError()
+  }
+  if (opts.conflict && response.status === 409) {
+    throw new GithubConflictError()
+  }
+  if (!response.ok) {
+    console.error(`[admin/github] ${action} failed ${path}: ${response.status}`)
+    throw new Error(`GitHub API error ${action} ${path}: ${response.status}`)
+  }
+}
+
+// Shared retry-once-on-409 wrapper used by saveFile and uploadImage — re-runs
+// `action` (which itself re-fetches a fresh sha where needed) exactly once
+// after a conflict, then gives up.
+async function withConflictRetry<T>(action: () => Promise<T>, path: string, label: string): Promise<T> {
+  try {
+    const result = await action()
+    console.info(`[admin/github] ${label} success ${path}`)
+    return result
+  } catch (err) {
+    if (!(err instanceof GithubConflictError)) {
+      console.error(`[admin/github] ${label} failed ${path}`, err)
+      throw err
+    }
+
+    console.warn(`[admin/github] ${label} conflict on ${path}, retrying once`)
+    const result = await action()
+    console.info(`[admin/github] ${label} success after retry ${path}`)
+    return result
+  }
+}
+
 // btoa/atob only handle Latin1 — content is Ukrainian/Russian, so we go through
 // raw UTF-8 bytes instead of encoding the JS string directly.
 function utf8ToBase64(str: string): string {
@@ -60,13 +101,7 @@ async function fetchContents(path: string, token: string): Promise<{ sha: string
   const response = await fetch(`${API_BASE}/repos/${OWNER}/${REPO}/contents/${path}`, {
     headers: authHeaders(token),
   })
-
-  if (response.status === 401) {
-    throw new GithubAuthError()
-  }
-  if (!response.ok) {
-    throw new Error(`GitHub API error reading ${path}: ${response.status}`)
-  }
+  await assertOkResponse(response, path, 'reading')
 
   const json = await response.json()
   return { sha: json.sha, content: json.content }
@@ -105,16 +140,7 @@ export async function putFile(
       sha,
     }),
   })
-
-  if (response.status === 401) {
-    throw new GithubAuthError()
-  }
-  if (response.status === 409) {
-    throw new GithubConflictError()
-  }
-  if (!response.ok) {
-    throw new Error(`GitHub API error writing ${path}: ${response.status}`)
-  }
+  await assertOkResponse(response, path, 'writing', { conflict: true })
 
   const json = await response.json()
   return { sha: json.content.sha }
@@ -122,22 +148,14 @@ export async function putFile(
 
 export async function saveFile<T>(path: string, content: T, message: string, token: string): Promise<void> {
   console.info(`[admin/github] save start ${path}`)
-
-  try {
-    const { sha } = await fetchContents(path, token)
-    await putFile(path, content, message, token, sha)
-    console.info(`[admin/github] save success ${path}`)
-  } catch (err) {
-    if (!(err instanceof GithubConflictError)) {
-      console.error(`[admin/github] save failed ${path}`, err)
-      throw err
-    }
-
-    console.warn(`[admin/github] sha conflict on ${path}, retrying once`)
-    const { sha } = await fetchContents(path, token)
-    await putFile(path, content, message, token, sha)
-    console.info(`[admin/github] save success after retry ${path}`)
-  }
+  await withConflictRetry(
+    async () => {
+      const { sha } = await fetchContents(path, token)
+      await putFile(path, content, message, token, sha)
+    },
+    path,
+    'save',
+  )
 }
 
 export async function listDir(path: string, token: string): Promise<{ name: string; path: string; sha: string }[]> {
@@ -153,9 +171,7 @@ export async function listDir(path: string, token: string): Promise<{ name: stri
     console.info(`[admin/github] LIST ${path} -> not found, treating as empty`)
     return []
   }
-  if (!response.ok) {
-    throw new Error(`GitHub API error listing ${path}: ${response.status}`)
-  }
+  await assertOkResponse(response, path, 'listing')
 
   const json = (await response.json()) as { name: string; path: string; sha: string }[]
   return json.filter((entry) => entry.name.endsWith('.json'))
@@ -171,14 +187,7 @@ export async function createFile(path: string, content: unknown, message: string
       content: utf8ToBase64(JSON.stringify(content, null, 2)),
     }),
   })
-
-  if (response.status === 401) {
-    throw new GithubAuthError()
-  }
-  if (!response.ok) {
-    console.error(`[admin/github] create failed ${path}: ${response.status}`)
-    throw new Error(`GitHub API error creating ${path}: ${response.status}`)
-  }
+  await assertOkResponse(response, path, 'creating')
 
   const json = await response.json()
   console.info(`[admin/github] create success ${path}`)
@@ -192,17 +201,7 @@ export async function deleteFile(path: string, sha: string, message: string, tok
     headers: { ...authHeaders(token), 'Content-Type': 'application/json' },
     body: JSON.stringify({ message, sha }),
   })
-
-  if (response.status === 401) {
-    throw new GithubAuthError()
-  }
-  if (response.status === 409) {
-    throw new GithubConflictError()
-  }
-  if (!response.ok) {
-    console.error(`[admin/github] delete failed ${path}: ${response.status}`)
-    throw new Error(`GitHub API error deleting ${path}: ${response.status}`)
-  }
+  await assertOkResponse(response, path, 'deleting', { conflict: true })
   console.info(`[admin/github] delete success ${path}`)
 }
 
@@ -212,16 +211,7 @@ async function putBinary(path: string, base64Content: string, message: string, t
     headers: { ...authHeaders(token), 'Content-Type': 'application/json' },
     body: JSON.stringify({ message, content: base64Content }),
   })
-
-  if (response.status === 401) {
-    throw new GithubAuthError()
-  }
-  if (response.status === 409) {
-    throw new GithubConflictError()
-  }
-  if (!response.ok) {
-    throw new Error(`GitHub API error uploading ${path}: ${response.status}`)
-  }
+  await assertOkResponse(response, path, 'uploading', { conflict: true })
 
   const json = await response.json()
   return { sha: json.content.sha }
@@ -232,20 +222,5 @@ async function putBinary(path: string, base64Content: string, message: string, t
 export async function uploadImage(path: string, blob: Blob, message: string, token: string): Promise<{ sha: string }> {
   console.info(`[admin/github] upload start ${path} (${blob.size} bytes)`)
   const base64Content = await blobToBase64(blob)
-
-  try {
-    const result = await putBinary(path, base64Content, message, token)
-    console.info(`[admin/github] upload success ${path}`)
-    return result
-  } catch (err) {
-    if (!(err instanceof GithubConflictError)) {
-      console.error(`[admin/github] upload failed ${path}`, err)
-      throw err
-    }
-
-    console.warn(`[admin/github] upload conflict on ${path}, retrying once`)
-    const result = await putBinary(path, base64Content, message, token)
-    console.info(`[admin/github] upload success after retry ${path}`)
-    return result
-  }
+  return withConflictRetry(() => putBinary(path, base64Content, message, token), path, 'upload')
 }
