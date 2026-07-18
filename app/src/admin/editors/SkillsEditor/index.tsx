@@ -2,15 +2,13 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
-import { useAdminSave } from '@/admin/hooks/useAdminSave'
 import { useEditorData } from '@/admin/hooks/useEditorData'
 import type { SkillCategory } from '@/types'
 
 const SKILLS_PATH = 'app/data/skills.json'
 
 export default function SkillsEditor() {
-  const { save, saving } = useAdminSave<SkillCategory[]>(SKILLS_PATH)
-  const [categories, setCategories, isDirty] = useEditorData<SkillCategory[]>(SKILLS_PATH)
+  const [categories, setCategories] = useEditorData<SkillCategory[]>(SKILLS_PATH)
 
   if (!categories) {
     return <p className="text-sm text-muted-foreground">Загрузка…</p>
@@ -76,15 +74,6 @@ export default function SkillsEditor() {
         onClick={() => setCategories([...categories, { category: '', items: [] }])}
       >
         Добавить категорию
-      </Button>
-
-      <Button
-        disabled={saving || !isDirty}
-        onClick={async () => {
-          await save(categories, 'admin: update skills.json')
-        }}
-      >
-        {saving ? 'Сохранение…' : 'Сохранить'}
       </Button>
     </div>
   )

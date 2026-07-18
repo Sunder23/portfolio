@@ -3,15 +3,13 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { LocalizedField } from '@/admin/components/LocalizedField'
 import { ImageUploadField } from '@/admin/components/ImageUploadField'
-import { useAdminSave } from '@/admin/hooks/useAdminSave'
 import { useEditorData } from '@/admin/hooks/useEditorData'
 import type { Profile, SocialLink } from '@/types'
 
 const PROFILE_PATH = 'app/data/profile.json'
 
 export default function ProfileEditor() {
-  const { save, saving } = useAdminSave<Profile>(PROFILE_PATH)
-  const [profile, setProfile, isDirty] = useEditorData<Profile>(PROFILE_PATH)
+  const [profile, setProfile] = useEditorData<Profile>(PROFILE_PATH)
 
   if (!profile) {
     return <p className="text-sm text-muted-foreground">Загрузка…</p>
@@ -83,15 +81,6 @@ export default function ProfileEditor() {
           Добавить соцсеть
         </Button>
       </div>
-
-      <Button
-        disabled={saving || !isDirty}
-        onClick={async () => {
-          await save(profile, 'admin: update profile.json')
-        }}
-      >
-        {saving ? 'Сохранение…' : 'Сохранить'}
-      </Button>
     </div>
   )
 }
