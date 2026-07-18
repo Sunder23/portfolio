@@ -33,7 +33,12 @@ export default function TaxonomyEditor() {
   const taxonomyKey = (key && key in TAXONOMY_LABELS ? key : 'stack') as keyof Taxonomies
   const { token } = useAdminAuth()
   const { save, saving } = useAdminSave<Taxonomies>(TAXONOMIES_PATH)
-  const [taxonomies, setTaxonomies] = useEditorData<Taxonomies>(TAXONOMIES_PATH)
+  // TaxonomyEditor commits immediately on every add/rename/delete via `save` above (see
+  // ARCHITECTURE.md — deliberately out of scope for the global draft/batch-save flow), so
+  // it uses `markClean` (not the raw setter) to sync local state after a successful write —
+  // this re-baselines the shared draft entry instead of leaving it falsely "dirty" for the
+  // floating Save All button, since the write already happened.
+  const [taxonomies, , , markClean] = useEditorData<Taxonomies>(TAXONOMIES_PATH)
 
   const [newTerm, setNewTerm] = useState('')
   const [renaming, setRenaming] = useState<{ index: number; value: string } | null>(null)
@@ -49,7 +54,7 @@ export default function TaxonomyEditor() {
     if (!taxonomies) return
     const updated = { ...taxonomies, [taxonomyKey]: next }
     const ok = await save(updated, message)
-    if (ok) setTaxonomies(updated)
+    if (ok) markClean(updated)
   }
 
   async function handleAdd() {

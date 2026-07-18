@@ -218,9 +218,23 @@ async function putBinary(path: string, base64Content: string, message: string, t
 }
 
 // New-file create for binary assets (images) — unlike putFile/saveFile, no sha is fetched or
-// sent since uploads always target a fresh, uniquely-named path (see useImageUpload).
+// sent since uploads always target a fresh, uniquely-named path (see uploadPendingImage).
 export async function uploadImage(path: string, blob: Blob, message: string, token: string): Promise<{ sha: string }> {
   console.info(`[admin/github] upload start ${path} (${blob.size} bytes)`)
   const base64Content = await blobToBase64(blob)
   return withConflictRetry(() => putBinary(path, base64Content, message, token), path, 'upload')
+}
+
+// Uploads a locally-staged image blob (see admin/lib/resolvePendingImages.ts) to a fresh
+// uniquely-named path and returns the public runtime URL to store in JSON content fields
+// (cover/gallery/avatar) — BASE_URL differs between dev ('/') and the built site ('/portfolio/'),
+// see vite.config.ts, so ProjectCard/ProjectDetail/ProfileEditor can render <img src={value}>
+// unchanged in both environments.
+export async function uploadPendingImage(blob: Blob, token: string): Promise<string> {
+  const filename = `${crypto.randomUUID()}.webp`
+  const path = `app/public/uploads/${filename}`
+  await uploadImage(path, blob, `chore(uploads): add ${filename}`, token)
+  const publicPath = `${import.meta.env.BASE_URL}uploads/${filename}`
+  console.info(`[admin/github] uploaded pending image ${filename} -> ${publicPath}`)
+  return publicPath
 }

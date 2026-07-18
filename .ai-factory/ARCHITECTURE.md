@@ -35,26 +35,28 @@ app/src/
 ├── admin/                     # Admin-модуль — самодостаточный, не импортируется публичной частью.
 │   │                            Сгруппирован по типу, зеркалируя верхний уровень src/
 │   ├── components/              # Все компоненты админки (JSX)
-│   │   ├── AdminLayout/           # WP-подобная оболочка: top-bar + <AdminSidebar/> + <Outlet/>
+│   │   ├── AdminLayout/           # WP-подобная оболочка: top-bar + <AdminSidebar/> + <AdminDraftProvider><Outlet/></AdminDraftProvider> + <SaveAllButton/>
 │   │   ├── AdminSidebar/          # рендер дерева сайдбара из lib/navConfig.ts
+│   │   ├── AdminDraftContext/     # глобальный staging-стор (черновики правок за сессию, keyed by путь к файлу)
+│   │   ├── SaveAllButton/         # плавающая кнопка "Сохранить всё" — единственная точка сохранения, флашит все dirty-черновики по очереди
 │   │   ├── AdminLocaleContext/    # глобальный языковой контекст админки (переключатель в top-bar)
 │   │   ├── TokenGate/             # авторизация (fine-grained PAT)
 │   │   ├── RichTextEditor/        # WYSIWYG (TipTap), data-driven toolbar, сериализация в markdown-строку
 │   │   ├── TaxonomyCheckboxes/    # чекбоксы для полей-таксономий (stack/category) в формах
 │   │   ├── LocalizedField/        # обёртка uk/ru/en-табов для локализуемых полей форм
-│   │   ├── ImageUploadField/, GalleryUploadField/  # загрузка одиночного/множественных изображений
+│   │   ├── ImageUploadField/, GalleryUploadField/  # локальная компрессия + отложенная загрузка (PendingImage) одиночного/множественных изображений
 │   ├── hooks/                   # Все хуки админки
 │   │   ├── useSessionCheck.ts     # хук проверки валидности PAT-сессии
-│   │   ├── useEditorData.ts       # общий "load one JSON once token ready" хук для редакторов-одиночек
-│   │   ├── useAdminSave.ts        # общая логика сохранения (useAdminOperation) с обработкой ошибок
-│   │   └── useImageUpload.ts      # сжатие + загрузка изображения через lib/github.ts
+│   │   ├── useEditorData.ts       # общий "load one JSON, stage in AdminDraftContext, auto-register default flush" хук для редакторов-одиночек
+│   │   └── useAdminSave.ts        # общая логика сохранения (useAdminOperation) с обработкой ошибок — используется точечными операциями (create/delete/rename в ProjectsList/ProjectForm, мгновенные записи в TaxonomyEditor), не батч-сохранением
 │   ├── lib/                      # Чистые модули без JSX
 │   │   ├── github.ts              # единственный клиент записи в репозиторий (Contents API),
-│   │   │                           включая per-file операции (listDir/createFile/deleteFile)
+│   │   │                           включая per-file операции (listDir/createFile/deleteFile) и uploadPendingImage()
+│   │   ├── resolvePendingImages.ts # generic-резолвер PendingImage {blob, previewUrl} -> загруженный путь, не завязан на схему сущности
 │   │   ├── navConfig.ts           # дерево сайдбара админки — точка расширения на новые разделы меню
 │   │   ├── registry.ts            # реестр редакторов-одиночек (Profile, Skills) — точка расширения
 │   │   ├── pat.ts                 # чтение/запись PAT в localStorage
-│   │   └── imageCompress.ts       # сжатие изображения в webp (canvas)
+│   │   └── imageCompress.ts       # сжатие изображения в webp (canvas), выполняется локально при выборе файла (без сети)
 │   └── editors/
 │       ├── ProfileEditor/, SkillsEditor/, TaxonomyEditor/  # редакторы-одиночки
 │       ├── ProjectsList/, ProjectForm/                      # Projects: список и форма — раздельные компоненты

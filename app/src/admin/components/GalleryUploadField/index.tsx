@@ -1,16 +1,17 @@
 import { Button } from '@/components/ui/button'
 import { ImageUploadField } from '@/admin/components/ImageUploadField'
+import type { PendingImage } from '@/admin/lib/resolvePendingImages'
 
 export function GalleryUploadField({
   value,
   onChange,
 }: {
-  value: string[]
-  onChange: (paths: string[]) => void
+  value: (string | PendingImage)[]
+  onChange: (next: (string | PendingImage)[]) => void
 }) {
-  function updateItem(index: number, path: string) {
+  function updateItem(index: number, item: string | PendingImage) {
     const next = [...value]
-    next[index] = path
+    next[index] = item
     onChange(next)
   }
 
