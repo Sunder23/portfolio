@@ -6,18 +6,27 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { LocalizedField } from '@/admin/components/LocalizedField'
 import { ImageUploadField } from '@/admin/components/ImageUploadField'
 import { GalleryUploadField } from '@/admin/components/GalleryUploadField'
 import { TaxonomyCheckboxes } from '@/admin/components/TaxonomyCheckboxes'
 import { useAdminOperation } from '@/admin/hooks/useAdminSave'
 import { useAdminAuth } from '@/admin/components/AdminAuthContext'
-import { useAdminLocalized } from '@/admin/components/AdminLocaleContext'
+import { useAdminLocale, useAdminLocalized } from '@/admin/components/AdminLocaleContext'
 import { useEditorData } from '@/admin/hooks/useEditorData'
 import { createFile, deleteFile, getFile, listDir, saveFile } from '@/admin/lib/github'
 import { makeUniqueSlug, slugify } from '@/lib/slug'
 import { PROJECTS_DIR, TAXONOMIES_PATH, emptyProject } from '@/admin/editors/projectsData'
+import { SUPPORTED_LOCALES } from '@/lib/locale'
 import type { Project, Taxonomies } from '@/types'
+
+const YEAR_MIN = 2015
+const YEAR_MAX = 2030
+const YEAR_ITEMS = Array.from({ length: YEAR_MAX - YEAR_MIN + 1 }, (_, i) => String(YEAR_MAX - i)).map((year) => ({
+  label: year,
+  value: year,
+}))
 
 export function ProjectForm() {
   const { slug: slugParam } = useParams<{ slug: string }>()
@@ -25,6 +34,7 @@ export function ProjectForm() {
   const navigate = useNavigate()
   const { token } = useAdminAuth()
   const { run, saving } = useAdminOperation()
+  const { locale, setLocale } = useAdminLocale()
   const [taxonomies] = useEditorData<Taxonomies>(TAXONOMIES_PATH)
 
   const [loading, setLoading] = useState(!isNew)
@@ -117,103 +127,166 @@ export function ProjectForm() {
     <div className="flex flex-col gap-3">
       <h2 className="text-lg font-medium">{isNew ? 'Новый проект' : 'Редактировать проект'}</h2>
 
-      <LocalizedField label="title" value={form.title} onChange={(v) => update('title', v)} />
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
+        <div className="flex min-w-0 flex-1 flex-col gap-3">
+          <LocalizedField label="title" value={form.title} onChange={(v) => update('title', v)} />
 
-      <div className="flex flex-col gap-1.5">
-        <Label>slug</Label>
-        {slugLocked ? (
-          <Input value={slug} onChange={(e) => setSlug(e.target.value)} />
-        ) : (
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">{slug || 'untitled'}</span>
-            <Button type="button" variant="ghost" size="sm" onClick={() => setSlugLocked(true)}>
-              <Pencil data-icon="inline-start" />
-              Изменить
-            </Button>
+          <div className="flex flex-col gap-1.5">
+            <Label>slug</Label>
+            {slugLocked ? (
+              <Input value={slug} onChange={(e) => setSlug(e.target.value)} />
+            ) : (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">{slug || 'untitled'}</span>
+                <Button type="button" variant="ghost" size="sm" onClick={() => setSlugLocked(true)}>
+                  <Pencil data-icon="inline-start" />
+                  Изменить
+                </Button>
+              </div>
+            )}
           </div>
-        )}
-      </div>
 
-      <LocalizedField
-        label="shortDescription"
-        value={form.shortDescription}
-        onChange={(v) => update('shortDescription', v)}
-        multiline
-      />
-      <LocalizedField
-        label="description"
-        value={form.description}
-        onChange={(v) => update('description', v)}
-        richText
-      />
+          <LocalizedField
+            label="description"
+            value={form.description}
+            onChange={(v) => update('description', v)}
+            richText
+          />
+          <LocalizedField
+            label="shortDescription"
+            value={form.shortDescription}
+            onChange={(v) => update('shortDescription', v)}
+            multiline
+          />
 
-      <TaxonomyCheckboxes label="stack" terms={taxonomies.stack} selected={form.stack} onChange={(v) => update('stack', v)} />
-      <TaxonomyCheckboxes
-        label="category"
-        terms={taxonomies.category}
-        selected={form.category}
-        onChange={(v) => update('category', v)}
-      />
+          <div className="flex flex-col gap-1.5">
+            <Label>url</Label>
+            <Input value={form.url} onChange={(e) => update('url', e.target.value)} />
+          </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <div className="flex flex-col gap-1.5">
-          <Label>role</Label>
-          <Select items={roleItems} value={form.role} onValueChange={(v) => update('role', v as string)}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {roleItems.map((item) => (
-                  <SelectItem key={item.value} value={item.value}>
-                    {item.label}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          <div className="flex flex-col gap-1.5">
+            <Label>gallery</Label>
+            <GalleryUploadField value={form.gallery} onChange={(paths) => update('gallery', paths)} />
+          </div>
         </div>
-        <div className="flex flex-col gap-1.5">
-          <Label>year</Label>
-          <Input type="number" value={form.year} onChange={(e) => update('year', Number(e.target.value))} />
-        </div>
-      </div>
 
-      <div className="flex flex-col gap-1.5">
-        <Label>url</Label>
-        <Input value={form.url} onChange={(e) => update('url', e.target.value)} />
-      </div>
+        <aside className="flex w-full flex-col gap-4 lg:w-72 lg:shrink-0">
+          <Card>
+            <CardHeader>
+              <CardTitle>Публикация</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3">
+              <div className="flex items-center gap-2">
+                <Switch checked={form.published} onCheckedChange={(v) => update('published', v)} />
+                <Label>published</Label>
+              </div>
 
-      <ImageUploadField label="cover" value={form.cover} onChange={(path) => update('cover', path)} />
+              <div className="flex flex-col gap-1.5">
+                <Label>order</Label>
+                <Input type="number" value={form.order} onChange={(e) => update('order', Number(e.target.value))} />
+              </div>
 
-      <div className="flex flex-col gap-1.5">
-        <Label>gallery</Label>
-        <GalleryUploadField value={form.gallery} onChange={(paths) => update('gallery', paths)} />
-      </div>
+              <div className="flex items-center gap-2">
+                <Switch checked={form.featured} onCheckedChange={(v) => update('featured', v)} />
+                <Label>featured</Label>
+              </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <div className="flex flex-col gap-1.5">
-          <Label>order</Label>
-          <Input type="number" value={form.order} onChange={(e) => update('order', Number(e.target.value))} />
-        </div>
-        <div className="flex items-center gap-2 pt-6">
-          <Switch checked={form.featured} onCheckedChange={(v) => update('featured', v)} />
-          <Label>featured</Label>
-        </div>
-      </div>
+              <div className="flex flex-col gap-2 pt-2">
+                <Button className="w-full" disabled={saving} onClick={handleSave}>
+                  {saving ? 'Сохранение…' : 'Сохранить'}
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  disabled={saving}
+                  nativeButton={false}
+                  render={<Link to="/admin/projects" />}
+                >
+                  Отмена
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
 
-      <div className="flex items-center gap-2">
-        <Switch checked={form.published} onCheckedChange={(v) => update('published', v)} />
-        <Label>published</Label>
-      </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Языки</CardTitle>
+            </CardHeader>
+            <CardContent className="flex gap-2">
+              {SUPPORTED_LOCALES.map((item) => (
+                <Button
+                  key={item}
+                  type="button"
+                  size="sm"
+                  variant={locale === item ? 'secondary' : 'ghost'}
+                  onClick={() => setLocale(item)}
+                >
+                  {item.toUpperCase()}
+                </Button>
+              ))}
+            </CardContent>
+          </Card>
 
-      <div className="flex gap-2">
-        <Button disabled={saving} onClick={handleSave}>
-          {saving ? 'Сохранение…' : 'Сохранить'}
-        </Button>
-        <Button variant="outline" disabled={saving} nativeButton={false} render={<Link to="/admin/projects" />}>
-          Отмена
-        </Button>
+          <Card>
+            <CardHeader>
+              <CardTitle>Классификация</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3">
+              <TaxonomyCheckboxes label="stack" terms={taxonomies.stack} selected={form.stack} onChange={(v) => update('stack', v)} />
+              <TaxonomyCheckboxes
+                label="category"
+                terms={taxonomies.category}
+                selected={form.category}
+                onChange={(v) => update('category', v)}
+              />
+
+              <div className="flex flex-col gap-1.5">
+                <Label>role</Label>
+                <Select items={roleItems} value={form.role} onValueChange={(v) => update('role', v as string)}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {roleItems.map((item) => (
+                        <SelectItem key={item.value} value={item.value}>
+                          {item.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <Label>year</Label>
+                <Select items={YEAR_ITEMS} value={String(form.year)} onValueChange={(v) => update('year', Number(v))}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {YEAR_ITEMS.map((item) => (
+                        <SelectItem key={item.value} value={item.value}>
+                          {item.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Обложка</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ImageUploadField value={form.cover} onChange={(path) => update('cover', path)} />
+            </CardContent>
+          </Card>
+        </aside>
       </div>
     </div>
   )

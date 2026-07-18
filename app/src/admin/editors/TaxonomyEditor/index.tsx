@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -96,56 +96,65 @@ export default function TaxonomyEditor() {
     <div className="flex flex-col gap-3">
       <h2 className="text-lg font-medium">{TAXONOMY_LABELS[taxonomyKey]}</h2>
 
-      <div className="flex flex-col gap-2">
-        {terms.map((term, index) => (
-          <Card key={term}>
-            <CardContent className="flex items-center justify-between gap-2">
-              {renaming?.index === index ? (
-                <Input
-                  autoFocus
-                  value={renaming.value}
-                  onChange={(e) => setRenaming({ index, value: e.target.value })}
-                  onKeyDown={(e) => e.key === 'Enter' && handleRenameConfirm()}
-                />
-              ) : (
-                <span className="text-sm">{term}</span>
-              )}
-              <div className="flex gap-2">
-                {renaming?.index === index ? (
-                  <>
-                    <Button size="sm" disabled={saving} onClick={handleRenameConfirm}>
-                      Сохранить
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={() => setRenaming(null)}>
-                      Отмена
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Button variant="outline" size="sm" onClick={() => setRenaming({ index, value: term })}>
-                      Переименовать
-                    </Button>
-                    <Button variant="destructive" size="sm" onClick={() => handleDeleteRequest(term)}>
-                      Удалить
-                    </Button>
-                  </>
-                )}
-              </div>
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
+        <div className="w-full lg:w-72 lg:shrink-0">
+          <Card>
+            <CardHeader>
+              <CardTitle>Добавить термин</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-2">
+              <Input
+                placeholder="Новый термин"
+                value={newTerm}
+                onChange={(e) => setNewTerm(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
+              />
+              <Button disabled={saving} onClick={handleAdd}>
+                Добавить
+              </Button>
             </CardContent>
           </Card>
-        ))}
-      </div>
+        </div>
 
-      <div className="flex gap-2">
-        <Input
-          placeholder="Новый термин"
-          value={newTerm}
-          onChange={(e) => setNewTerm(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
-        />
-        <Button disabled={saving} onClick={handleAdd}>
-          Добавить
-        </Button>
+        <div className="flex min-w-0 flex-1 flex-col gap-2">
+          {terms.map((term, index) => (
+            <Card key={term}>
+              <CardContent className="flex items-center justify-between gap-2">
+                {renaming?.index === index ? (
+                  <Input
+                    autoFocus
+                    value={renaming.value}
+                    onChange={(e) => setRenaming({ index, value: e.target.value })}
+                    onKeyDown={(e) => e.key === 'Enter' && handleRenameConfirm()}
+                  />
+                ) : (
+                  <span className="text-sm">{term}</span>
+                )}
+                <div className="flex gap-2">
+                  {renaming?.index === index ? (
+                    <>
+                      <Button size="sm" disabled={saving} onClick={handleRenameConfirm}>
+                        Сохранить
+                      </Button>
+                      <Button variant="outline" size="sm" onClick={() => setRenaming(null)}>
+                        Отмена
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button variant="outline" size="sm" onClick={() => setRenaming({ index, value: term })}>
+                        Переименовать
+                      </Button>
+                      <Button variant="destructive" size="sm" onClick={() => handleDeleteRequest(term)}>
+                        Удалить
+                      </Button>
+                    </>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
 
       <AlertDialog open={deleteTarget !== null} onOpenChange={(open) => !open && setDeleteTarget(null)}>
