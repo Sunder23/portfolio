@@ -7,7 +7,7 @@ import { getProjects } from '@/lib/data'
 import { useLocale } from '@/hooks/useLocale'
 import { useLocalized } from '@/hooks/useLocalized'
 import { useAsyncData } from '@/hooks/useAsyncData'
-import { useDocumentMeta } from '@/lib/useDocumentMeta'
+import { useDocumentMeta } from '@/hooks/useDocumentMeta'
 import { cn } from '@/lib/utils'
 
 // Strips common markdown syntax and trims to a reasonable meta-description length.

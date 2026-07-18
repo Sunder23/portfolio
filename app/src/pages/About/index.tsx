@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge'
 import { getProfile, getSkills } from '@/lib/data'
 import { useLocalized } from '@/hooks/useLocalized'
 import { useAsyncData } from '@/hooks/useAsyncData'
-import { useDocumentMeta } from '@/lib/useDocumentMeta'
+import { useDocumentMeta } from '@/hooks/useDocumentMeta'
 
 export default function About() {
   const { t } = useTranslation()

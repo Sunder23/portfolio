@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { ProjectCard } from '@/components/ProjectCard'
 import { getProjects } from '@/lib/data'
 import { useAsyncData } from '@/hooks/useAsyncData'
-import { useDocumentMeta } from '@/lib/useDocumentMeta'
+import { useDocumentMeta } from '@/hooks/useDocumentMeta'
 
 export default function Projects() {
   const { t } = useTranslation()

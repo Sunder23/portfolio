@@ -5,7 +5,7 @@ import { getProfile } from '@/lib/data'
 import { useLocale } from '@/hooks/useLocale'
 import { useLocalized } from '@/hooks/useLocalized'
 import { useAsyncData } from '@/hooks/useAsyncData'
-import { useDocumentMeta } from '@/lib/useDocumentMeta'
+import { useDocumentMeta } from '@/hooks/useDocumentMeta'
 
 export default function Home() {
   const { t } = useTranslation()
