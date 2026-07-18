@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, type ReactNode } from 'react'
-import { clearPat, getStoredPat, storePat } from '@/admin/pat'
+import { clearPat, getStoredPat, storePat } from '@/admin/lib/pat'
 
 interface AdminAuthValue {
   token: string | null

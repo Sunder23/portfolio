@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
 import { ChevronDown } from 'lucide-react'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
-import { navConfig } from '@/admin/navConfig'
+import { navConfig } from '@/admin/lib/navConfig'
 import { cn } from '@/lib/utils'
 
 function isActivePath(pathname: string, target: string): boolean {

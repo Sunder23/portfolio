@@ -1,4 +1,4 @@
-import { getFile, listDir } from '@/admin/github'
+import { getFile, listDir } from '@/admin/lib/github'
 import type { Project } from '@/types'
 
 export const PROJECTS_DIR = 'app/data/projects'

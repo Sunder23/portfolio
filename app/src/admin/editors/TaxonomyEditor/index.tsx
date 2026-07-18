@@ -13,10 +13,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { useAdminSave } from '@/admin/useAdminSave'
-import { useAdminAuth } from '@/admin/AdminAuthContext'
-import { useEditorData } from '@/admin/useEditorData'
-import { getFile, listDir } from '@/admin/github'
+import { useAdminSave } from '@/admin/hooks/useAdminSave'
+import { useAdminAuth } from '@/admin/components/AdminAuthContext'
+import { useEditorData } from '@/admin/hooks/useEditorData'
+import { getFile, listDir } from '@/admin/lib/github'
 import type { Project, Taxonomies } from '@/types'
 
 const TAXONOMIES_PATH = 'app/data/taxonomies.json'

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { GithubAuthError, createFile, deleteFile, listDir } from '@/admin/github'
+import { GithubAuthError, createFile, deleteFile, listDir } from '@/admin/lib/github'
 
 function jsonResponse(status: number, body: unknown): Response {
   return new Response(JSON.stringify(body), { status })

@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { compressImage } from '@/admin/imageCompress'
-import { GithubAuthError, GithubConflictError, uploadImage as uploadImageToGithub } from '@/admin/github'
-import { useAdminAuth } from '@/admin/AdminAuthContext'
+import { compressImage } from '@/admin/lib/imageCompress'
+import { GithubAuthError, GithubConflictError, uploadImage as uploadImageToGithub } from '@/admin/lib/github'
+import { useAdminAuth } from '@/admin/components/AdminAuthContext'
 
 export function useImageUpload() {
   const { token, logout } = useAdminAuth()

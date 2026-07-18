@@ -8,11 +8,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useAdminAuth } from '@/admin/AdminAuthContext'
-import { useAdminLocale } from '@/admin/AdminLocaleContext'
-import { useSessionCheck } from '@/admin/useSessionCheck'
-import TokenGate from '@/admin/TokenGate'
-import { AdminSidebar } from '@/admin/AdminSidebar'
+import { useAdminAuth } from '@/admin/components/AdminAuthContext'
+import { useAdminLocale } from '@/admin/components/AdminLocaleContext'
+import { useSessionCheck } from '@/admin/hooks/useSessionCheck'
+import TokenGate from '@/admin/components/TokenGate'
+import { AdminSidebar } from '@/admin/components/AdminSidebar'
 import { SUPPORTED_LOCALES, getStoredLocale, DEFAULT_LOCALE } from '@/lib/locale'
 
 export default function AdminLayout() {

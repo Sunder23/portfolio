@@ -2,8 +2,8 @@ import { useState, type FormEvent } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useAdminAuth } from '@/admin/AdminAuthContext'
-import { validateToken } from '@/admin/github'
+import { useAdminAuth } from '@/admin/components/AdminAuthContext'
+import { validateToken } from '@/admin/lib/github'
 
 export default function TokenGate() {
   const { setToken } = useAdminAuth()

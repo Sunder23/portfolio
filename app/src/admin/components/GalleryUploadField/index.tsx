@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { ImageUploadField } from '@/admin/ImageUploadField'
+import { ImageUploadField } from '@/admin/components/ImageUploadField'
 
 export function GalleryUploadField({
   value,

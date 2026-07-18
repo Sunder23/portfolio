@@ -1,6 +1,6 @@
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react'
-import { useAdminAuth } from '@/admin/AdminAuthContext'
-import { getFile } from '@/admin/github'
+import { useAdminAuth } from '@/admin/components/AdminAuthContext'
+import { getFile } from '@/admin/lib/github'
 
 // Shared "load one JSON file once the token is available" pattern used by every
 // singleton editor (Profile/Skills/Taxonomies) and by ProjectForm's taxonomies load.

@@ -13,10 +13,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { useAdminOperation } from '@/admin/useAdminSave'
-import { useAdminAuth } from '@/admin/AdminAuthContext'
-import { useAdminLocalized } from '@/admin/AdminLocaleContext'
-import { deleteFile } from '@/admin/github'
+import { useAdminOperation } from '@/admin/hooks/useAdminSave'
+import { useAdminAuth } from '@/admin/components/AdminAuthContext'
+import { useAdminLocalized } from '@/admin/components/AdminLocaleContext'
+import { deleteFile } from '@/admin/lib/github'
 import { loadProjectEntries, type ProjectEntry } from '@/admin/editors/projectsData'
 
 function ProjectRow({ entry, onDelete }: { entry: ProjectEntry; onDelete: (entry: ProjectEntry) => void }) {

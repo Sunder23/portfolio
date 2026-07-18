@@ -2,7 +2,7 @@ import { useRef, type ChangeEvent } from 'react'
 import { Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
-import { useImageUpload } from '@/admin/useImageUpload'
+import { useImageUpload } from '@/admin/hooks/useImageUpload'
 
 export function ImageUploadField({
   value,

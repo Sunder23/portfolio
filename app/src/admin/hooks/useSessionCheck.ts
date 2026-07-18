@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { validateToken } from '@/admin/github'
+import { validateToken } from '@/admin/lib/github'
 
 export function useSessionCheck(token: string | null, logout: () => void): { checking: boolean; valid: boolean } {
   const [checking, setChecking] = useState(true)
