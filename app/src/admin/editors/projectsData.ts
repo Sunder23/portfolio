@@ -28,7 +28,7 @@ export function emptyProject(): Project {
     description: { uk: '' },
     stack: [],
     category: [],
-    role: '',
+    role: 'WordPress developer',
     year: new Date().getFullYear(),
     url: '',
     cover: '',
