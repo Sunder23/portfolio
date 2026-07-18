@@ -11,19 +11,16 @@
     "WPML",
     "Polylang",
     "WP-CLI",
-    "MySQL",
-    "Test"
+    "MySQL"
   ],
   "category": [
     "Web",
     "CMS",
     "E-commerce",
-    "Portfolio",
-    "Categories Test"
+    "Portfolio"
   ],
   "role": [
     "Fullstack developer",
-    "WordPress developer",
-    "Super Puper Developer"
+    "WordPress developer"
   ]
 }
