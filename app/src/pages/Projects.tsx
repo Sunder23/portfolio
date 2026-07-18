@@ -30,7 +30,7 @@ export default function Projects() {
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {published.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+            <ProjectCard key={project.slug} project={project} />
           ))}
         </div>
       )}

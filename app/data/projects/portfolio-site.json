@@ -1,0 +1,31 @@
+{
+  "title": {
+    "uk": "Портфоліо-сайт",
+    "ru": "Сайт-портфолио",
+    "en": "Portfolio site"
+  },
+  "slug": "portfolio-site",
+  "shortDescription": {
+    "uk": "Статичний сайт-портфоліо з власною адмінкою без бекенду і бази даних.",
+    "ru": "Статичный сайт-портфолио с собственной админкой без бэкенда и базы данных.",
+    "en": "A static portfolio site with a built-in admin panel, no backend or database."
+  },
+  "description": {
+    "uk": "## Про проєкт\n\nСайт-портфоліо на React + Vite + TypeScript, який редагується прямо в браузері через власну адмінку. Контент зберігається як JSON у репозиторії, збереження з адмінки — коміт через GitHub Contents API.\n\n- Хостинг: GitHub Pages\n- Без сервера і без бази даних\n- Мультимовність: uk/ru/en",
+    "ru": "## О проекте\n\nСайт-портфолио на React + Vite + TypeScript, который редактируется прямо в браузере через собственную админку. Контент хранится как JSON в репозитории, сохранение из админки — коммит через GitHub Contents API.\n\n- Хостинг: GitHub Pages\n- Без сервера и без базы данных\n- Мультиязычность: uk/ru/en",
+    "en": "## About the project\n\nA portfolio site built with React + Vite + TypeScript, editable right in the browser through a built-in admin panel. Content is stored as JSON in the repository; saving from the admin panel commits through the GitHub Contents API.\n\n- Hosting: GitHub Pages\n- No server, no database\n- Multilingual: uk/ru/en"
+  },
+  "stack": ["React", "TypeScript", "Vite", "Tailwind CSS"],
+  "category": [],
+  "role": "Fullstack developer",
+  "year": 2026,
+  "url": "https://github.com",
+  "cover": "https://placehold.co/800x600?text=Portfolio",
+  "gallery": [
+    "https://placehold.co/1200x800?text=Home",
+    "https://placehold.co/1200x800?text=Admin"
+  ],
+  "featured": true,
+  "order": 2,
+  "published": true
+}

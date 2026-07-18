@@ -1,12 +1,18 @@
+import type { Locale } from '@/lib/locale'
+
 export type Localized<T = string> = { uk: T; ru?: T; en?: T }
 
+export function resolveLocalized<T>(field: Localized<T>, locale: Locale): T {
+  return field[locale] ?? field.uk
+}
+
 export interface Project {
-  id: string
   title: Localized
   slug: string
   shortDescription: Localized
   description: Localized
   stack: string[]
+  category: string[]
   role: string
   year: number
   url: string
@@ -15,6 +21,12 @@ export interface Project {
   featured: boolean
   order: number
   published: boolean
+}
+
+export interface Taxonomies {
+  stack: string[]
+  category: string[]
+  role: string[]
 }
 
 export interface SocialLink {

@@ -1,0 +1,28 @@
+{
+  "title": {
+    "uk": "WordPress-портал нерухомості",
+    "ru": "WordPress-портал недвижимости",
+    "en": "Real estate WordPress portal"
+  },
+  "slug": "realestate-wp-portal",
+  "shortDescription": {
+    "uk": "Портал нерухомості на ~6 000 оголошень трьома мовами на WordPress.",
+    "ru": "Портал недвижимости на ~6 000 объявлений на трёх языках на WordPress.",
+    "en": "A real estate portal with ~6,000 listings in three languages, built on WordPress."
+  },
+  "description": {
+    "uk": "## Про проєкт\n\nПідтримка та розвиток порталу нерухомості на WordPress з ~6 000 оголошень трьома мовами (WPML/Polylang).\n\n- Усунув критичні проблеми продуктивності адмінки\n- Імпортував ~20 000 зображень через WP-CLI\n- Провів security-розслідування: виявив і видалив два бекдори, посилив захист сайту\n- Мігрував сайт з Joomla на WordPress через власний Python-скрапер\n- Розробив кастомний sitemap-плагін з hreflang для Polylang",
+    "ru": "## О проекте\n\nПоддержка и развитие портала недвижимости на WordPress с ~6 000 объявлений на трёх языках (WPML/Polylang).\n\n- Устранил критические проблемы производительности админки\n- Импортировал ~20 000 изображений через WP-CLI\n- Провёл security-расследование: обнаружил и удалил два бэкдора, усилил защиту сайта\n- Мигрировал сайт с Joomla на WordPress через собственный Python-скрапер\n- Разработал кастомный sitemap-плагин с hreflang для Polylang",
+    "en": "## About the project\n\nMaintenance and development of a WordPress real estate portal with ~6,000 listings in three languages (WPML/Polylang).\n\n- Fixed critical admin panel performance issues\n- Imported ~20,000 images via WP-CLI\n- Conducted a security investigation: found and removed two backdoors, hardened site security\n- Migrated the site from Joomla to WordPress using a custom Python scraper\n- Built a custom sitemap plugin with hreflang support for Polylang"
+  },
+  "stack": ["PHP", "WordPress", "ACF/SCF", "WooCommerce", "WPML", "Polylang", "WP-CLI", "MySQL", "Docker", "GitHub Actions"],
+  "category": [],
+  "role": "WordPress developer",
+  "year": 2021,
+  "url": "",
+  "cover": "https://placehold.co/800x600?text=Real+Estate+Portal",
+  "gallery": ["https://placehold.co/1200x800?text=Real+Estate+Portal"],
+  "featured": true,
+  "order": 1,
+  "published": true
+}

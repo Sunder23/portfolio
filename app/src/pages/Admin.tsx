@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes, useParams } from 'react-router-dom'
 import { AdminAuthProvider } from '@/admin/AdminAuthContext'
+import { AdminLocaleProvider } from '@/admin/AdminLocaleContext'
 import AdminLayout from '@/admin/AdminLayout'
 import { editorRegistry } from '@/admin/registry'
 
@@ -19,12 +20,14 @@ function EditorRouter() {
 export default function Admin() {
   return (
     <AdminAuthProvider>
-      <Routes>
-        <Route element={<AdminLayout />}>
-          <Route index element={<Navigate to={editorRegistry[0].id} replace />} />
-          <Route path=":entityId" element={<EditorRouter />} />
-        </Route>
-      </Routes>
+      <AdminLocaleProvider>
+        <Routes>
+          <Route element={<AdminLayout />}>
+            <Route index element={<Navigate to={editorRegistry[0].id} replace />} />
+            <Route path=":entityId" element={<EditorRouter />} />
+          </Route>
+        </Routes>
+      </AdminLocaleProvider>
     </AdminAuthProvider>
   )
 }

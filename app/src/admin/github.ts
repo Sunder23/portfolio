@@ -140,6 +140,72 @@ export async function saveFile<T>(path: string, content: T, message: string, tok
   }
 }
 
+export async function listDir(path: string, token: string): Promise<{ name: string; path: string; sha: string }[]> {
+  console.info(`[admin/github] LIST ${path}`)
+  const response = await fetch(`${API_BASE}/repos/${OWNER}/${REPO}/contents/${path}`, {
+    headers: authHeaders(token),
+  })
+
+  if (response.status === 401) {
+    throw new GithubAuthError()
+  }
+  if (response.status === 404) {
+    console.info(`[admin/github] LIST ${path} -> not found, treating as empty`)
+    return []
+  }
+  if (!response.ok) {
+    throw new Error(`GitHub API error listing ${path}: ${response.status}`)
+  }
+
+  const json = (await response.json()) as { name: string; path: string; sha: string }[]
+  return json.filter((entry) => entry.name.endsWith('.json'))
+}
+
+export async function createFile(path: string, content: unknown, message: string, token: string): Promise<{ sha: string }> {
+  console.info(`[admin/github] create start ${path}`)
+  const response = await fetch(`${API_BASE}/repos/${OWNER}/${REPO}/contents/${path}`, {
+    method: 'PUT',
+    headers: { ...authHeaders(token), 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      message,
+      content: utf8ToBase64(JSON.stringify(content, null, 2)),
+    }),
+  })
+
+  if (response.status === 401) {
+    throw new GithubAuthError()
+  }
+  if (!response.ok) {
+    console.error(`[admin/github] create failed ${path}: ${response.status}`)
+    throw new Error(`GitHub API error creating ${path}: ${response.status}`)
+  }
+
+  const json = await response.json()
+  console.info(`[admin/github] create success ${path}`)
+  return { sha: json.content.sha }
+}
+
+export async function deleteFile(path: string, sha: string, message: string, token: string): Promise<void> {
+  console.info(`[admin/github] delete start ${path}`)
+  const response = await fetch(`${API_BASE}/repos/${OWNER}/${REPO}/contents/${path}`, {
+    method: 'DELETE',
+    headers: { ...authHeaders(token), 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message, sha }),
+  })
+
+  if (response.status === 401) {
+    throw new GithubAuthError()
+  }
+  if (response.status === 409) {
+    throw new GithubConflictError()
+  }
+  if (!response.ok) {
+    console.error(`[admin/github] delete failed ${path}: ${response.status}`)
+    throw new Error(`GitHub API error deleting ${path}: ${response.status}`)
+  }
+  console.info(`[admin/github] delete success ${path}`)
+}
+
 async function putBinary(path: string, base64Content: string, message: string, token: string): Promise<{ sha: string }> {
   const response = await fetch(`${API_BASE}/repos/${OWNER}/${REPO}/contents/${path}`, {
     method: 'PUT',

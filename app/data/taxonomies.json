@@ -1,0 +1,28 @@
+{
+  "stack": [
+    "React",
+    "TypeScript",
+    "Vite",
+    "Tailwind CSS",
+    "PHP",
+    "WordPress",
+    "ACF/SCF",
+    "WooCommerce",
+    "WPML",
+    "Polylang",
+    "WP-CLI",
+    "MySQL",
+    "Docker",
+    "GitHub Actions"
+  ],
+  "category": [
+    "Web",
+    "CMS",
+    "E-commerce",
+    "Portfolio"
+  ],
+  "role": [
+    "Fullstack developer",
+    "WordPress developer"
+  ]
+}
