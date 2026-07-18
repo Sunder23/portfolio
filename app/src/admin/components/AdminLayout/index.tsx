@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useAdminAuth } from '@/admin/components/AdminAuthContext'
+import { AdminDraftProvider } from '@/admin/components/AdminDraftContext'
 import { useAdminLocale } from '@/admin/components/AdminLocaleContext'
 import { useSessionCheck } from '@/admin/hooks/useSessionCheck'
 import TokenGate from '@/admin/components/TokenGate'
@@ -40,50 +41,57 @@ export default function AdminLayout() {
   const siteHref = `/#/${getStoredLocale() ?? DEFAULT_LOCALE}`
 
   return (
-    <div className="flex min-h-svh flex-col">
-      <header className="flex h-12 shrink-0 items-center justify-between border-b bg-neutral-900 px-3 text-neutral-100">
-        <a href={siteHref} className="text-sm font-medium hover:underline">
-          ← На сайт
-        </a>
-        <div className="flex items-center gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              render={
-                <Button variant="ghost" size="sm" className="text-neutral-100 hover:bg-neutral-800 hover:text-neutral-100" />
-              }
+    // Wraps the whole authenticated shell (not just <Outlet/>) so both the routed editors
+    // and the floating "Save all" button (a sibling of <main>, added in a later task) share
+    // the same staging store. AdminLayout itself never remounts on route changes, so the
+    // draft survives navigating between editors either way — this is about sibling access,
+    // not persistence.
+    <AdminDraftProvider>
+      <div className="flex min-h-svh flex-col">
+        <header className="flex h-12 shrink-0 items-center justify-between border-b bg-neutral-900 px-3 text-neutral-100">
+          <a href={siteHref} className="text-sm font-medium hover:underline">
+            ← На сайт
+          </a>
+          <div className="flex items-center gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={
+                  <Button variant="ghost" size="sm" className="text-neutral-100 hover:bg-neutral-800 hover:text-neutral-100" />
+                }
+              >
+                {locale.toUpperCase()}
+                <ChevronDown data-icon="inline-end" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {SUPPORTED_LOCALES.map((item) => (
+                  <DropdownMenuItem key={item} onClick={() => setLocale(item)}>
+                    {item.toUpperCase()}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-neutral-100 hover:bg-neutral-800 hover:text-neutral-100"
+              onClick={logout}
             >
-              {locale.toUpperCase()}
-              <ChevronDown data-icon="inline-end" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {SUPPORTED_LOCALES.map((item) => (
-                <DropdownMenuItem key={item} onClick={() => setLocale(item)}>
-                  {item.toUpperCase()}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-neutral-100 hover:bg-neutral-800 hover:text-neutral-100"
-            onClick={logout}
-          >
-            <LogOut data-icon="inline-start" />
-            Выйти
-          </Button>
-        </div>
-      </header>
-
-      <div className="flex flex-1">
-        <AdminSidebar />
-        <main className="flex-1 overflow-y-auto p-6">
-          <div className="mx-auto w-full max-w-5xl">
-            <Outlet />
+              <LogOut data-icon="inline-start" />
+              Выйти
+            </Button>
           </div>
-        </main>
+        </header>
+
+        <div className="flex flex-1">
+          <AdminSidebar />
+          <main className="flex-1 overflow-y-auto p-6">
+            <div className="mx-auto w-full max-w-5xl">
+              <Outlet />
+            </div>
+          </main>
+        </div>
+        <Toaster />
       </div>
-      <Toaster />
-    </div>
+    </AdminDraftProvider>
   )
 }
