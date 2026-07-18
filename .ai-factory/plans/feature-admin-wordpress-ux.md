@@ -96,8 +96,8 @@
 17. [x] Полный рерайт `ProjectsEditor.tsx` (list/new/:slug, авто-slug, чекбоксы таксономий, rich text, per-file CRUD; заодно `useAdminSave.ts` вынес общий `useAdminOperation` для переиспользования toast/error-логики)
 
 **Фаза 6 — проверка и документация**
-18. Ручная проверка в браузере (полный сценарий: логин → создание/переименование/удаление проекта → таксономии → смена языка)
-19. `/aif-docs` чекпойнт: `ARCHITECTURE.md` + `DESCRIPTION.md`
+18. [x] Верификация: typecheck + `npm run test` (21/21) + `npm run build` чисты. Интерактивная проверка в реальном браузере с PAT не выполнялась — в окружении нет Playwright/chromium-cli (запрещён `RULES.md`), а живая запись в GitHub требует PAT пользователя; вместо этого проведён построчный повторный ревью новой CRUD/rename/slug-логики
+19. [x] `/aif-docs` чекпойнт: `ARCHITECTURE.md` + `DESCRIPTION.md` обновлены под новую структуру
 
 ## Commit Plan
 

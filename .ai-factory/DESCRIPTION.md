@@ -26,7 +26,8 @@
 - **UI:** Tailwind + shadcn/ui (компоненты копируются в `src/components/ui/`, используются и в публичной части, и в админке)
 - **i18n:** react-i18next
 - **Формы:** react-hook-form + zod (клиентская валидация, `pages/Contact.tsx`)
-- **Markdown:** `marked` — рендер превью markdown-полей (`description`, `bio`) в админке; на публичной части ещё не используется (страницы пока заглушки, Этап 1)
+- **Тесты:** Vitest + React Testing Library (`npm run test`), для ключевой логики (slug, GitHub Contents API хелперы, языковой контекст админки, чекбоксы таксономий)
+- **Markdown:** `marked` + `DOMPurify` — рендер markdown-полей (`description`, `bio`) на публичной части (`components/MarkdownContent.tsx`, используется в `ProjectDetail.tsx`); в админке те же поля редактируются визуально через TipTap (`admin/RichTextEditor.tsx` + `tiptap-markdown`), с сериализацией обратно в markdown-строку — формат хранения общий для обеих частей
 - **State management:** отсутствует — React Context + fetch/import JSON
 - **База данных:** отсутствует — JSON-файлы в `/data/` как единственный источник данных
 - **Хранилище файлов:** `/public/uploads/` в репозитории, запись через GitHub Contents API
@@ -40,21 +41,27 @@
 ├── app/                     # приложение целиком: код + build-конфиг (package.json, vite.config.ts, tsconfig*)
 │   ├── data/
 │   │   ├── profile.json        # имя, титул, био, контакты, соцсети
-│   │   ├── projects.json       # массив проектов
+│   │   ├── projects/           # по одному JSON-файлу на проект: {slug}.json
+│   │   ├── taxonomies.json     # управляемые словари: stack, category, role
 │   │   └── skills.json         # стек, категории
 │   ├── public/
 │   │   └── uploads/             # картинки проектов (webp)
 │   └── src/
 │       ├── pages/               # Home, Projects, ProjectDetail, About, Admin
 │       ├── components/
-│       ├── admin/                # всё, что относится к админке
-│       │   ├── AdminLayout.tsx
+│       ├── admin/                # всё, что относится к админке (WP-подобная структура)
+│       │   ├── AdminLayout.tsx     # top-bar + collapsible-сайдбар
+│       │   ├── navConfig.ts        # дерево сайдбара — точка расширения на новые разделы
+│       │   ├── AdminLocaleContext.tsx  # глобальный языковой контекст админки
 │       │   ├── TokenGate.tsx     # ввод/проверка PAT
-│       │   ├── editors/          # формы редактирования каждой сущности
-│       │   ├── registry.ts       # реестр редакторов (для масштабирования)
-│       │   └── github.ts         # клиент Contents API
+│       │   ├── RichTextEditor.tsx  # WYSIWYG (TipTap) для markdown-полей
+│       │   ├── TaxonomyCheckboxes.tsx
+│       │   ├── editors/          # формы редактирования каждой сущности (+ TaxonomyEditor)
+│       │   ├── registry.ts       # реестр редакторов-одиночек (Profile, Skills)
+│       │   └── github.ts         # клиент Contents API (включая per-file CRUD для projects/)
 │       ├── lib/
-│       │   └── data.ts           # загрузка и типизация JSON
+│       │   ├── data.ts           # загрузка и типизация JSON (projects/ — через import.meta.glob)
+│       │   └── slug.ts           # авто-slug из заголовка (кириллица → латиница)
 │       ├── locales/               # словари react-i18next (uk, ru, en)
 │       └── types.ts
 └── .github/workflows/deploy.yml   # working-directory: app, path: app/dist
@@ -64,9 +71,12 @@
 
 ## Архитектурные заметки
 
-- Каждая сущность контента = тройка «JSON-файл в `/data/` + тип в `types.ts` + редактор в `admin/editors/`». Добавление новой сущности (блог, отзывы, сертификаты) не требует изменения общего кода: `github.ts` и `lib/data.ts` работают с любым файлом по пути через дженерик-хелперы, а список редакторов в админке собирается из `admin/registry.ts`.
-- Локализуемые поля контента — объекты вида `{ "uk": "…", "ru": "…", "en": "…" }`, тип-хелпер `Localized<T>` и хук `useLocalized()` с фолбэком на `uk`.
-- Запись файла через Contents API: `GET` за текущим `sha` → `PUT` с `{ message, content, sha }` → при 409 повторить `GET`+`PUT` один раз, иначе показать ошибку. PAT никогда не попадает в код/коммиты, хранится только в `localStorage`.
+- Каждая сущность контента = тройка «JSON-файл (или папка per-item файлов) в `/data/` + тип в `types.ts` + редактор в `admin/editors/`». Добавление новой сущности (блог, отзывы, сертификаты) не требует изменения общего кода: `github.ts` и `lib/data.ts` работают с любым файлом/папкой по пути через дженерик-хелперы, а список разделов в сайдбаре собирается из `admin/navConfig.ts` (редакторы-одиночки — из `admin/registry.ts`).
+- Проекты — не единый массив, а по одному файлу на проект: `data/projects/{slug}.json`. `slug` — единственный идентификатор проекта (отдельного поля `id` нет), генерируется автоматически из заголовка (см. `lib/slug.ts`) с ручной перезаписью и дедупликацией при коллизии. Смена slug у существующего проекта = создание нового файла + удаление старого (в этом порядке, чтобы сбой между двумя запросами не терял данные).
+- Таксономии (`data/taxonomies.json`): управляемые словари `stack`/`category`/`role` — в формах проекта выбираются чекбоксами/select вместо ручного ввода текста.
+- Локализуемые поля контента — объекты вида `{ "uk": "…", "ru": "…", "en": "…" }`, тип-хелпер `Localized<T>` и общая функция фолбэка `resolveLocalized()`, используемая и публичным `useLocalized()`, и админским `useAdminLocalized()` (читает свой собственный языковой контекст — `admin/AdminLocaleContext.tsx`, независимый от локали публичной части).
+- Markdown-поля (`description`, `bio`) редактируются визуально через TipTap (`admin/RichTextEditor.tsx`), но хранятся как обычная markdown-строка — формат данных не меняется, меняется только UX редактирования.
+- Запись файла через Contents API: `GET` за текущим `sha` → `PUT` с `{ message, content, sha }` → при 409 повторить `GET`+`PUT` один раз, иначе показать ошибку. Создание нового файла (`createFile`) не отправляет `sha`; удаление (`deleteFile`) требует его. PAT никогда не попадает в код/коммиты, хранится только в `localStorage`.
 - Прямые запросы к Telegram Bot API из браузера запрещены (токен бота не должен светиться в клиентском коде) — обязателен relay на Google Apps Script.
 
 ## Нефункциональные требования
