@@ -1,14 +1,14 @@
 {
   "name": "Max Kravchuk",
   "title": {
-    "uk": "Fullstack розробник",
-    "ru": "Fullstack разработчик",
-    "en": "Fullstack developer"
+    "uk": "WordPress розробник",
+    "ru": "WordPress разработчик",
+    "en": "WordPress developer"
   },
   "bio": {
-    "uk": "Розробляю веб-застосунки на React та Node.js. Люблю прості рішення без зайвих залежностей.",
-    "ru": "Разрабатываю веб-приложения на React и Node.js. Люблю простые решения без лишних зависимостей.",
-    "en": "I build web applications with React and Node.js. I like simple solutions without unnecessary dependencies."
+    "uk": "Розробляю кастомні WordPress-теми та плагіни на PHP: ACF/SCF, Gutenberg-блоки, WooCommerce, мультимовні сайти на WPML/Polylang. Масові операції з даними через WP-CLI, CI/CD на GitHub Actions, Docker-оточення для розробки.",
+    "ru": "Разрабатываю кастомные WordPress-темы и плагины на PHP: ACF/SCF, Gutenberg-блоки, WooCommerce, мультиязычные сайты на WPML/Polylang. Массовые операции с данными через WP-CLI, CI/CD на GitHub Actions, Docker-окружения для разработки.",
+    "en": "I build custom WordPress themes and plugins in PHP: ACF/SCF, Gutenberg blocks, WooCommerce, multilingual sites with WPML/Polylang. Bulk data operations via WP-CLI, CI/CD with GitHub Actions, Docker environments for development."
   },
   "location": "Odesa",
   "email": "sunder123@gmail.com",

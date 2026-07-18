@@ -1,14 +1,18 @@
 [
   {
-    "category": "Frontend",
-    "items": ["React", "TypeScript", "Vite", "Tailwind CSS", "React Router"]
+    "category": "CMS & WordPress",
+    "items": ["WordPress", "WooCommerce", "ACF", "Gutenberg", "WPML", "Polylang", "WP-CLI", "Elementor"]
   },
   {
-    "category": "Backend",
-    "items": ["Node.js", "Express", "REST API"]
+    "category": "Languages & Frontend",
+    "items": ["PHP", "JavaScript", "HTML/CSS", "SASS", "GSAP", "REST API", "MySQL"]
   },
   {
-    "category": "Tools",
-    "items": ["Git", "GitHub Actions", "Figma"]
+    "category": "Tools & DevOps",
+    "items": ["Vite", "Docker", "Git", "GitHub Actions", "Figma", "SEO"]
+  },
+  {
+    "category": "AI Tools",
+    "items": ["Claude Code", "Codex", "Gemini", "Antigravity"]
   }
 ]
