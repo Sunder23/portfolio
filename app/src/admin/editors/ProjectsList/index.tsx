@@ -13,8 +13,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { useAdminOperation } from '@/admin/hooks/useAdminSave'
 import { useAdminAuth } from '@/admin/components/AdminAuthContext'
+import { useAdminDraft } from '@/admin/components/AdminDraftContext'
 import { useAdminLocalized } from '@/admin/components/AdminLocaleContext'
 import { deleteFile } from '@/admin/lib/github'
 import { loadProjectEntries, type ProjectEntry } from '@/admin/editors/projectsData'
@@ -56,7 +56,7 @@ function ProjectRow({ entry, onDelete }: { entry: ProjectEntry; onDelete: (entry
 
 export function ProjectsList() {
   const { token } = useAdminAuth()
-  const { run, saving: deleting } = useAdminOperation()
+  const draft = useAdminDraft()
 
   const [entries, setEntries] = useState<ProjectEntry[] | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<ProjectEntry | null>(null)
@@ -98,24 +98,23 @@ export function ProjectsList() {
             <AlertDialogCancel>Отмена</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
-              disabled={deleting}
-              onClick={async () => {
-                if (!deleteTarget || !token) return
-                console.info(`[admin/ProjectsList] delete requested: ${deleteTarget.project.slug}`)
-                const ok = await run(
-                  () =>
-                    deleteFile(
-                      deleteTarget.path,
-                      deleteTarget.sha,
-                      `admin: update projects.json (delete "${deleteTarget.project.slug}")`,
-                      token,
-                    ),
-                  'Проект удалён. Деплой займёт ~1–2 минуты',
-                )
-                if (ok) {
-                  setEntries((prev) => prev?.filter((e) => e.path !== deleteTarget.path) ?? null)
-                  setDeleteTarget(null)
-                }
+              onClick={() => {
+                if (!deleteTarget) return
+                const { path, sha, project } = deleteTarget
+                // [FIX] Used to call deleteFile() straight away via useAdminOperation, bypassing
+                // AdminDraftContext entirely — every delete pushed a commit immediately and the
+                // floating "Save all" counter never reflected it (and could go stale if the same
+                // project had unrelated pending edits). Now it stages like every other editor:
+                // marked dirty here, actually deleted from GitHub only when the registered flush
+                // runs off the "Save all" click.
+                console.info(`[admin/ProjectsList] staged delete: ${project.slug}`)
+                draft.captureBaseline(path, { deleted: false })
+                draft.setEntry(path, { deleted: true })
+                draft.registerFlush(path, async (_data, saveToken) => {
+                  await deleteFile(path, sha, `admin: update projects.json (delete "${project.slug}")`, saveToken)
+                })
+                setEntries((prev) => prev?.filter((e) => e.path !== path) ?? null)
+                setDeleteTarget(null)
               }}
             >
               Удалить

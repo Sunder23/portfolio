@@ -30,7 +30,11 @@ export function SaveAllButton() {
       for (const path of paths) {
         const flush = draft.getFlush(path)
         if (!flush) {
+          // Can happen after a page reload restores a draft from localStorage before its
+          // owning editor has mounted (registerFlush only runs on mount) — open that section
+          // once to re-register the flush, then Save All again.
           console.error(`[admin/SaveAllButton] no flush registered for ${path}, skipping`)
+          toast.error(`${path}: откройте этот раздел ещё раз перед сохранением`)
           continue
         }
 

@@ -30,7 +30,7 @@ export function useSessionCheck(token: string | null, logout: () => void): { che
         // all — it says nothing about whether the stored token is actually valid. Treating it
         // the same as a definitive 401 forces a working session back to TokenGate on every
         // transient network hiccup. Only a real 401 (handled in .then above and in
-        // useAdminSave.ts) should log the user out.
+        // SaveAllButton's flush loop) should log the user out.
         console.error('[FIX:admin-session-network-error] could not verify stored token (network error), keeping existing session', err)
         setValid(true)
       })

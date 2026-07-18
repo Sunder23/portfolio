@@ -19,6 +19,11 @@ vi.mock('@/admin/lib/github', async (importOriginal) => {
 
 import { getFile, listDir, saveFile } from '@/admin/lib/github'
 
+// AdminDraftProvider now mirrors its state to localStorage (see AdminDraftContext), so a
+// staged-but-unsaved change from one test would otherwise leak into the next test's fresh
+// provider instance — clear it alongside the PAT in every describe block below.
+const DRAFT_STORAGE_KEY = 'admin-draft-v1'
+
 function renderEditor() {
   return render(
     <AdminAuthProvider>
@@ -46,6 +51,7 @@ describe('TaxonomyEditor rename no-op guard', () => {
 
   afterEach(() => {
     clearPat()
+    localStorage.removeItem(DRAFT_STORAGE_KEY)
     vi.mocked(getFile).mockReset()
     vi.mocked(listDir).mockReset()
     vi.mocked(saveFile).mockReset()
@@ -103,6 +109,7 @@ describe('TaxonomyEditor add term staging', () => {
 
   afterEach(() => {
     clearPat()
+    localStorage.removeItem(DRAFT_STORAGE_KEY)
     vi.mocked(getFile).mockReset()
     vi.mocked(listDir).mockReset()
     vi.mocked(saveFile).mockReset()

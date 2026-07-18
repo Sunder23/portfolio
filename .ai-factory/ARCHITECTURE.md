@@ -48,7 +48,7 @@ app/src/
 │   ├── hooks/                   # Все хуки админки
 │   │   ├── useSessionCheck.ts     # хук проверки валидности PAT-сессии
 │   │   ├── useEditorData.ts       # общий "load one JSON, stage in AdminDraftContext, auto-register default flush" хук для редакторов-одиночек
-│   │   └── useAdminSave.ts        # общая логика сохранения (useAdminOperation) с обработкой ошибок — используется точечными операциями (create/delete/rename в ProjectsList/ProjectForm, мгновенные записи в TaxonomyEditor), не батч-сохранением
+│   │   └── useAdminSave.ts        # ACTIONS_URL (ссылка на GitHub Actions в тосте "Сохранено") + useAdminOperation/useAdminSave — общая логика мгновенного сохранения с обработкой ошибок; ни один редактор сейчас её не вызывает (create/delete/rename проектов и правки Taxonomies идут батчем через AdminDraftContext), кандидат на удаление, если не появится сценарий, которому батчинг не подходит
 │   ├── lib/                      # Чистые модули без JSX
 │   │   ├── github.ts              # единственный клиент записи в репозиторий (Contents API),
 │   │   │                           включая per-file операции (listDir/createFile/deleteFile) и uploadPendingImage()
