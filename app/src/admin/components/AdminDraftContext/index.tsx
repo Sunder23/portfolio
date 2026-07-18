@@ -93,15 +93,26 @@ function loadInitialEntries(): Record<string, DraftEntry> {
   }
 }
 
-async function persistEntries(entries: Record<string, DraftEntry>): Promise<void> {
+// [FIX] Serializing entries is async (base64-encoding any staged images via FileReader), so
+// two rapid entries changes (e.g. typing in a title, or a clearEntry mid Save-All) can have
+// their persistEntries calls resolve out of order — a slower earlier call finishing after a
+// faster later one would overwrite localStorage with stale, already-superseded data, even
+// though in-memory `entries` is already correct. `isStale` lets the caller discard a write
+// that a newer entries change has since made obsolete.
+async function persistEntries(entries: Record<string, DraftEntry>, isStale: () => boolean): Promise<void> {
   try {
     if (Object.keys(entries).length === 0) {
+      if (isStale()) return
       localStorage.removeItem(STORAGE_KEY)
       return
     }
     const serializable: Record<string, DraftEntry> = {}
     for (const [path, entry] of Object.entries(entries)) {
       serializable[path] = { data: await serializeForStorage(entry.data), baseline: entry.baseline }
+    }
+    if (isStale()) {
+      console.info('[admin/draft] discarding stale localStorage write (superseded by a newer change)')
+      return
     }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(serializable))
     console.info(`[admin/draft] persisted ${Object.keys(serializable).length} entries to localStorage`)
@@ -118,9 +129,11 @@ async function persistEntries(entries: Record<string, DraftEntry>): Promise<void
 export function AdminDraftProvider({ children }: { children: ReactNode }) {
   const [entries, setEntries] = useState<Record<string, DraftEntry>>(loadInitialEntries)
   const flushers = useRef<Record<string, FlushFn>>({})
+  const persistSeqRef = useRef(0)
 
   useEffect(() => {
-    void persistEntries(entries)
+    const seq = ++persistSeqRef.current
+    void persistEntries(entries, () => persistSeqRef.current !== seq)
   }, [entries])
 
   const getEntry = useCallback(

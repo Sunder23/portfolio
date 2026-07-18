@@ -1,6 +1,6 @@
 import { render, renderHook, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { AdminDraftProvider, useAdminDraft } from '@/admin/components/AdminDraftContext'
 
 const STORAGE_KEY = 'admin-draft-v1'
@@ -97,5 +97,81 @@ describe('AdminDraftContext', () => {
 
     await user.click(screen.getByText('clear'))
     expect(screen.getByTestId('dirty-count')).toHaveTextContent('0')
+  })
+})
+
+function RaceProbe() {
+  const draft = useAdminDraft()
+  return (
+    <div>
+      <button
+        onClick={() => {
+          draft.captureBaseline('race-path', { img: null })
+          draft.setEntry('race-path', { img: { blob: new Blob(['x']), previewUrl: 'blob:x' } })
+        }}
+      >
+        stage-image
+      </button>
+      <button onClick={() => draft.clearEntry('race-path')}>clear</button>
+    </div>
+  )
+}
+
+describe('AdminDraftContext localStorage persist race', () => {
+  let deferredLoads: (() => void)[]
+
+  beforeEach(() => {
+    safeClearDraftStorage()
+    deferredLoads = []
+    // Serializing a staged image goes through FileReader (see blobToDataUrl in
+    // AdminDraftContext) — stubbing it out lets the test control exactly when that slow
+    // path resolves, instead of hoping real jsdom I/O happens to finish in a particular order.
+    class DeferredFileReader {
+      result: string | null = null
+      onload: (() => void) | null = null
+      onerror: (() => void) | null = null
+      readAsDataURL() {
+        deferredLoads.push(() => {
+          this.result = 'data:application/octet-stream;base64,eA=='
+          this.onload?.()
+        })
+      }
+    }
+    vi.stubGlobal('FileReader', DeferredFileReader)
+  })
+
+  afterEach(() => {
+    safeClearDraftStorage()
+    vi.unstubAllGlobals()
+  })
+
+  // [FIX] persistEntries used to have no defense against out-of-order async completion: two
+  // rapid entries changes each scheduled their own fire-and-forget persist call, and a slower
+  // earlier one (e.g. base64-encoding a staged image) finishing after a faster later one (e.g.
+  // clearEntry after a save) would overwrite localStorage with stale, already-superseded data —
+  // even though in-memory state was already correct. This was the likely cause behind "Save
+  // all" reappearing with a stale dirty count after the post-save reload rehydrated that stale
+  // localStorage snapshot.
+  it('does not let a slow, superseded persist overwrite a newer, faster clear', async () => {
+    render(
+      <AdminDraftProvider>
+        <RaceProbe />
+      </AdminDraftProvider>,
+    )
+
+    const user = userEvent.setup()
+    await user.click(screen.getByText('stage-image'))
+    // The image-serializing persist for 'race-path' is now in flight, blocked on our stub.
+    await user.click(screen.getByText('clear'))
+    // clearEntry's persist has no images (fast, synchronous removeItem branch) and should have
+    // already completed and won the race by the time we get here.
+    expect(localStorage.getItem(STORAGE_KEY)).toBeNull()
+
+    // Now let the earlier, now-stale image persist finish and attempt its write.
+    expect(deferredLoads).toHaveLength(1)
+    deferredLoads[0]()
+    await new Promise((resolve) => setTimeout(resolve, 0))
+
+    expect(localStorage.getItem(STORAGE_KEY)).toBeNull()
   })
 })

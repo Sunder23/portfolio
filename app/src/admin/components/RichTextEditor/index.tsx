@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useEditor, EditorContent, type Editor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
@@ -75,6 +76,20 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
       },
     },
   })
+
+  // [FIX] TipTap's `content` option only seeds the editor once, at creation — it doesn't react
+  // to `value` changing afterwards. LocalizedField swaps `value` when the admin switches the
+  // uk/ru/en tab, but without this the editor kept showing whatever locale it mounted with.
+  // Comparing against the editor's own current markdown (not just tracking the previous prop)
+  // is what avoids fighting the user's typing: onUpdate -> onChange -> this effect re-runs with
+  // a `value` that already matches the editor's content, so setContent is skipped and the
+  // cursor/selection isn't reset on every keystroke.
+  useEffect(() => {
+    if (!editor) return
+    if (editor.storage.markdown.getMarkdown() !== value) {
+      editor.commands.setContent(value)
+    }
+  }, [editor, value])
 
   if (!editor) {
     return null

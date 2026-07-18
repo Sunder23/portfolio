@@ -64,7 +64,12 @@ export function ProjectForm() {
   const autoSlugSource = useAdminLocalized(form.title)
 
   useEffect(() => {
-    if (!slugLocked && current) {
+    // [FIX] slugify('') falls back to 'untitled' (so a save with no title still gets a usable
+    // slug) — but running that through setSlug() here on every mount, before the user typed
+    // anything, wrote 'untitled' into the draft immediately and made a freshly opened "Add
+    // project" page dirty on its own. The slug *display* already falls back to "untitled" via
+    // `{slug || 'untitled'}` below, so there's nothing to auto-fill until there's a real title.
+    if (!slugLocked && current && autoSlugSource.trim()) {
       setSlug(slugify(autoSlugSource))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
