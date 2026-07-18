@@ -66,11 +66,11 @@ Rationale: Пропущено по решению пользователя — �
 
 ### Phase 3: Admin — общий хук загрузки данных редактора
 
-- [ ] Task 5: Вынести `useEditorData` хук, применить в `ProfileEditor`, `SkillsEditor`, `TaxonomyEditor`, `ProjectForm`; поправить хранение массива в `SkillsEditor`; перенести `ProfileEditor`, `SkillsEditor`, `TaxonomyEditor` в форму `Name/index.tsx`
+- [x] Task 5: Вынести `useEditorData` хук, применить в `ProfileEditor`, `SkillsEditor`, `TaxonomyEditor`, `ProjectForm`; поправить хранение массива в `SkillsEditor`; перенести `ProfileEditor`, `SkillsEditor`, `TaxonomyEditor` в форму `Name/index.tsx`
 
 ### Phase 4: Публичная часть — общий хук загрузки данных
 
-- [ ] Task 6: Вынести `useAsyncData` хук, применить в `Home`, `About`, `Projects`, `ProjectDetail`; перенести эти 4 страницы в форму `Name/index.tsx`
+- [x] Task 6: Вынести `useAsyncData` хук, применить в `Home`, `About`, `Projects`, `ProjectDetail`; перенести эти 4 страницы в форму `Name/index.tsx`
 <!-- Commit checkpoint: tasks 5-6 -->
 
 ### Phase 5: Сквозная уборка и завершение миграции на папки

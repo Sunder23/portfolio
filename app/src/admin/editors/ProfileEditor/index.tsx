@@ -1,27 +1,17 @@
-import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { LocalizedField } from '@/admin/LocalizedField'
 import { ImageUploadField } from '@/admin/ImageUploadField'
 import { useAdminSave } from '@/admin/useAdminSave'
-import { useAdminAuth } from '@/admin/AdminAuthContext'
-import { getFile } from '@/admin/github'
+import { useEditorData } from '@/admin/useEditorData'
 import type { Profile, SocialLink } from '@/types'
 
 const PROFILE_PATH = 'app/data/profile.json'
 
 export default function ProfileEditor() {
-  const { token } = useAdminAuth()
   const { save, saving } = useAdminSave<Profile>(PROFILE_PATH)
-
-  const [profile, setProfile] = useState<Profile | null>(null)
-
-  useEffect(() => {
-    if (!token) return
-    console.info(`[admin/ProfileEditor] loading ${PROFILE_PATH}`)
-    getFile<Profile>(PROFILE_PATH, token).then(({ data }) => setProfile(data))
-  }, [token])
+  const [profile, setProfile] = useEditorData<Profile>(PROFILE_PATH, 'ProfileEditor')
 
   if (!profile) {
     return <p className="text-sm text-muted-foreground">Загрузка…</p>

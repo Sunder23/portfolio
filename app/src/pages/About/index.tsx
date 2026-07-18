@@ -1,21 +1,14 @@
-import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Badge } from '@/components/ui/badge'
 import { getProfile, getSkills } from '@/lib/data'
 import { useLocalized } from '@/hooks/useLocalized'
+import { useAsyncData } from '@/hooks/useAsyncData'
 import { useDocumentMeta } from '@/lib/useDocumentMeta'
-import type { Profile, SkillCategory } from '@/types'
 
 export default function About() {
   const { t } = useTranslation()
-  const [profile, setProfile] = useState<Profile | null>(null)
-  const [skills, setSkills] = useState<SkillCategory[] | null>(null)
-
-  useEffect(() => {
-    console.info('[pages/About] loading profile and skills')
-    getProfile().then(setProfile)
-    getSkills().then(setSkills)
-  }, [])
+  const profile = useAsyncData(getProfile, 'About')
+  const skills = useAsyncData(getSkills, 'About')
 
   const bio = useLocalized(profile?.bio ?? { uk: '' })
 

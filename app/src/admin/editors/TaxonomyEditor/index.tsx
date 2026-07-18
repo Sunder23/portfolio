@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { useAdminSave } from '@/admin/useAdminSave'
 import { useAdminAuth } from '@/admin/AdminAuthContext'
+import { useEditorData } from '@/admin/useEditorData'
 import { getFile, listDir } from '@/admin/github'
 import type { Project, Taxonomies } from '@/types'
 
@@ -32,17 +33,11 @@ export default function TaxonomyEditor() {
   const taxonomyKey = (key && key in TAXONOMY_LABELS ? key : 'stack') as keyof Taxonomies
   const { token } = useAdminAuth()
   const { save, saving } = useAdminSave<Taxonomies>(TAXONOMIES_PATH)
+  const [taxonomies, setTaxonomies] = useEditorData<Taxonomies>(TAXONOMIES_PATH, 'TaxonomyEditor')
 
-  const [taxonomies, setTaxonomies] = useState<Taxonomies | null>(null)
   const [newTerm, setNewTerm] = useState('')
   const [renaming, setRenaming] = useState<{ index: number; value: string } | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<{ term: string; usageCount: number } | null>(null)
-
-  useEffect(() => {
-    if (!token) return
-    console.info(`[admin/TaxonomyEditor] loading ${TAXONOMIES_PATH}`)
-    getFile<Taxonomies>(TAXONOMIES_PATH, token).then(({ data }) => setTaxonomies(data))
-  }, [token])
 
   if (!taxonomies) {
     return <p className="text-sm text-muted-foreground">Загрузка…</p>

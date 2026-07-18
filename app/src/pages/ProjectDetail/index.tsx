@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { buttonVariants } from '@/components/ui/button'
@@ -7,9 +6,9 @@ import { MarkdownContent } from '@/components/MarkdownContent'
 import { getProjects } from '@/lib/data'
 import { useLocale } from '@/hooks/useLocale'
 import { useLocalized } from '@/hooks/useLocalized'
+import { useAsyncData } from '@/hooks/useAsyncData'
 import { useDocumentMeta } from '@/lib/useDocumentMeta'
 import { cn } from '@/lib/utils'
-import type { Project } from '@/types'
 
 // Strips common markdown syntax and trims to a reasonable meta-description length.
 function toPlainDescription(markdown: string): string {
@@ -25,12 +24,7 @@ export default function ProjectDetail() {
   const { t } = useTranslation()
   const locale = useLocale()
   const { slug } = useParams<{ slug: string }>()
-  const [projects, setProjects] = useState<Project[] | null>(null)
-
-  useEffect(() => {
-    console.info('[pages/ProjectDetail] loading projects')
-    getProjects().then(setProjects)
-  }, [])
+  const projects = useAsyncData(getProjects, 'ProjectDetail')
 
   const project = projects?.find((p) => p.slug === slug && p.published) ?? null
 

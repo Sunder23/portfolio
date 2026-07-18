@@ -13,6 +13,7 @@ import { TaxonomyCheckboxes } from '@/admin/TaxonomyCheckboxes'
 import { useAdminOperation } from '@/admin/useAdminSave'
 import { useAdminAuth } from '@/admin/AdminAuthContext'
 import { useAdminLocalized } from '@/admin/AdminLocaleContext'
+import { useEditorData } from '@/admin/useEditorData'
 import { createFile, deleteFile, getFile, listDir, saveFile } from '@/admin/github'
 import { makeUniqueSlug, slugify } from '@/lib/slug'
 import { PROJECTS_DIR, TAXONOMIES_PATH, emptyProject } from '@/admin/editors/projectsData'
@@ -24,12 +25,12 @@ export function ProjectForm() {
   const navigate = useNavigate()
   const { token } = useAdminAuth()
   const { run, saving } = useAdminOperation()
+  const [taxonomies] = useEditorData<Taxonomies>(TAXONOMIES_PATH, 'ProjectForm')
 
   const [loading, setLoading] = useState(!isNew)
   const [notFound, setNotFound] = useState(false)
   const [original, setOriginal] = useState<{ path: string; sha: string } | null>(null)
   const [existingSlugs, setExistingSlugs] = useState<string[]>([])
-  const [taxonomies, setTaxonomies] = useState<Taxonomies | null>(null)
   const [form, setForm] = useState<Project>(emptyProject())
   const [slug, setSlug] = useState('')
   const [slugLocked, setSlugLocked] = useState(!isNew)
@@ -44,8 +45,6 @@ export function ProjectForm() {
 
   useEffect(() => {
     if (!token) return
-
-    getFile<Taxonomies>(TAXONOMIES_PATH, token).then(({ data }) => setTaxonomies(data))
 
     listDir(PROJECTS_DIR, token).then(async (files) => {
       setExistingSlugs(files.map((file) => file.name.replace(/\.json$/, '')))

@@ -1,18 +1,12 @@
-import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ProjectCard } from '@/components/ProjectCard'
 import { getProjects } from '@/lib/data'
+import { useAsyncData } from '@/hooks/useAsyncData'
 import { useDocumentMeta } from '@/lib/useDocumentMeta'
-import type { Project } from '@/types'
 
 export default function Projects() {
   const { t } = useTranslation()
-  const [projects, setProjects] = useState<Project[] | null>(null)
-
-  useEffect(() => {
-    console.info('[pages/Projects] loading projects')
-    getProjects().then(setProjects)
-  }, [])
+  const projects = useAsyncData(getProjects, 'Projects')
 
   useDocumentMeta({ title: t('meta.projects.title'), description: t('meta.projects.description') })
 

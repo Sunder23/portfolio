@@ -1,26 +1,16 @@
-import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
 import { useAdminSave } from '@/admin/useAdminSave'
-import { useAdminAuth } from '@/admin/AdminAuthContext'
-import { getFile } from '@/admin/github'
+import { useEditorData } from '@/admin/useEditorData'
 import type { SkillCategory } from '@/types'
 
 const SKILLS_PATH = 'app/data/skills.json'
 
 export default function SkillsEditor() {
-  const { token } = useAdminAuth()
   const { save, saving } = useAdminSave<SkillCategory[]>(SKILLS_PATH)
-
-  const [categories, setCategories] = useState<SkillCategory[] | null>(null)
-
-  useEffect(() => {
-    if (!token) return
-    console.info(`[admin/SkillsEditor] loading ${SKILLS_PATH}`)
-    getFile<SkillCategory[]>(SKILLS_PATH, token).then(({ data }) => setCategories(data))
-  }, [token])
+  const [categories, setCategories] = useEditorData<SkillCategory[]>(SKILLS_PATH, 'SkillsEditor')
 
   if (!categories) {
     return <p className="text-sm text-muted-foreground">Загрузка…</p>
@@ -29,6 +19,16 @@ export default function SkillsEditor() {
   function updateCategory(index: number, patch: Partial<SkillCategory>) {
     if (!categories) return
     setCategories(categories.map((c, i) => (i === index ? { ...c, ...patch } : c)))
+  }
+
+  function updateItem(categoryIndex: number, itemIndex: number, value: string) {
+    const cat = categories![categoryIndex]
+    updateCategory(categoryIndex, { items: cat.items.map((v, i) => (i === itemIndex ? value : v)) })
+  }
+
+  function removeItem(categoryIndex: number, itemIndex: number) {
+    const cat = categories![categoryIndex]
+    updateCategory(categoryIndex, { items: cat.items.filter((_, i) => i !== itemIndex) })
   }
 
   return (
@@ -43,18 +43,22 @@ export default function SkillsEditor() {
               <Input value={cat.category} onChange={(e) => updateCategory(index, { category: e.target.value })} />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label>items (через запятую)</Label>
-              <Input
-                value={cat.items.join(', ')}
-                onChange={(e) =>
-                  updateCategory(index, {
-                    items: e.target.value
-                      .split(',')
-                      .map((s) => s.trim())
-                      .filter(Boolean),
-                  })
-                }
-              />
+              <Label>items</Label>
+              {cat.items.map((item, itemIndex) => (
+                <div key={itemIndex} className="flex gap-2">
+                  <Input value={item} onChange={(e) => updateItem(index, itemIndex, e.target.value)} />
+                  <Button variant="outline" size="sm" onClick={() => removeItem(index, itemIndex)}>
+                    Убрать
+                  </Button>
+                </div>
+              ))}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => updateCategory(index, { items: [...cat.items, ''] })}
+              >
+                Добавить элемент
+              </Button>
             </div>
             <Button
               variant="outline"
