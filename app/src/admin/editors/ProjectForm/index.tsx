@@ -14,6 +14,7 @@ import { TaxonomyCheckboxes } from '@/admin/components/TaxonomyCheckboxes'
 import { useAdminOperation } from '@/admin/hooks/useAdminSave'
 import { useAdminAuth } from '@/admin/components/AdminAuthContext'
 import { useAdminLocale, useAdminLocalized } from '@/admin/components/AdminLocaleContext'
+import { useDirtyState } from '@/admin/hooks/useDirtyState'
 import { useEditorData } from '@/admin/hooks/useEditorData'
 import { createFile, deleteFile, getFile, listDir, saveFile } from '@/admin/lib/github'
 import { makeUniqueSlug, slugify } from '@/lib/slug'
@@ -36,6 +37,7 @@ export function ProjectForm() {
   const { run, saving } = useAdminOperation()
   const { locale, setLocale } = useAdminLocale()
   const [taxonomies] = useEditorData<Taxonomies>(TAXONOMIES_PATH)
+  const { capture, isDirty } = useDirtyState<{ form: Project; slug: string }>()
 
   const [loading, setLoading] = useState(!isNew)
   const [notFound, setNotFound] = useState(false)
@@ -60,6 +62,8 @@ export function ProjectForm() {
       setExistingSlugs(files.map((file) => file.name.replace(/\.json$/, '')))
 
       if (isNew) {
+        capture({ form: emptyProject(), slug: '' })
+        console.info('[admin/ProjectForm] baseline captured for new project')
         setLoading(false)
         return
       }
@@ -77,9 +81,11 @@ export function ProjectForm() {
       setForm(data)
       setSlug(data.slug)
       setOriginal({ path: match.path, sha })
+      capture({ form: data, slug: data.slug })
+      console.info(`[admin/ProjectForm] baseline captured for ${match.path}`)
       setLoading(false)
     })
-  }, [token, isNew, slugParam])
+  }, [token, isNew, slugParam, capture])
 
   const roleItems = useMemo(() => (taxonomies?.role ?? []).map((role) => ({ label: role, value: role })), [taxonomies])
 
@@ -192,7 +198,7 @@ export function ProjectForm() {
               </div>
 
               <div className="flex flex-col gap-2 pt-2">
-                <Button className="w-full" disabled={saving} onClick={handleSave}>
+                <Button className="w-full" disabled={saving || !isDirty({ form, slug })} onClick={handleSave}>
                   {saving ? 'Сохранение…' : 'Сохранить'}
                 </Button>
                 <Button

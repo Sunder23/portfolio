@@ -11,7 +11,7 @@ const PROFILE_PATH = 'app/data/profile.json'
 
 export default function ProfileEditor() {
   const { save, saving } = useAdminSave<Profile>(PROFILE_PATH)
-  const [profile, setProfile] = useEditorData<Profile>(PROFILE_PATH)
+  const [profile, setProfile, isDirty] = useEditorData<Profile>(PROFILE_PATH)
 
   if (!profile) {
     return <p className="text-sm text-muted-foreground">Загрузка…</p>
@@ -85,7 +85,7 @@ export default function ProfileEditor() {
       </div>
 
       <Button
-        disabled={saving}
+        disabled={saving || !isDirty}
         onClick={async () => {
           await save(profile, 'admin: update profile.json')
         }}

@@ -62,8 +62,12 @@ export default function TaxonomyEditor() {
   async function handleRenameConfirm() {
     if (!renaming) return
     const value = renaming.value.trim()
-    if (!value) return
     const oldValue = terms[renaming.index]
+    if (!value || value === oldValue) {
+      console.info('[admin/TaxonomyEditor] rename skipped: value unchanged')
+      setRenaming(null)
+      return
+    }
     const next = terms.map((t, i) => (i === renaming.index ? value : t))
     await persist(next, `admin: update taxonomies.json (rename "${oldValue}" -> "${value}" in ${taxonomyKey})`)
     setRenaming(null)
@@ -133,7 +137,11 @@ export default function TaxonomyEditor() {
                 <div className="flex gap-2">
                   {renaming?.index === index ? (
                     <>
-                      <Button size="sm" disabled={saving} onClick={handleRenameConfirm}>
+                      <Button
+                        size="sm"
+                        disabled={saving || !renaming.value.trim() || renaming.value.trim() === terms[renaming.index]}
+                        onClick={handleRenameConfirm}
+                      >
                         Сохранить
                       </Button>
                       <Button variant="outline" size="sm" onClick={() => setRenaming(null)}>
