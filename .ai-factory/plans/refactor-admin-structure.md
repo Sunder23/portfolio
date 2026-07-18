@@ -77,7 +77,7 @@ Rationale: Пропущено по решению пользователя — �
 
 - [x] Task 7: Перенести `app/src/lib/useDocumentMeta.ts` → `app/src/hooks/useDocumentMeta.ts`
 <!-- Commit checkpoint: task 7 -->
-- [ ] Task 8: Перенести оставшиеся компоненты в форму `Name/index.tsx` (depends on 1-7): `admin/TokenGate`, `admin/GalleryUploadField`, `admin/ImageUploadField`, `admin/AdminAuthContext`, `admin/AdminLocaleContext` (+ колокейтед тест), `admin/LocalizedField`, `admin/TaxonomyCheckboxes` (+ колокейтед тест), `pages/Admin`, `pages/Contact`, `components/Nav`, `components/ProjectCard`, `components/PublicLayout`, `components/LocaleSwitcher`, `components/ThemeToggle`, `components/MarkdownContent`, корневой `App` → `src/App/index.tsx`. НЕ трогать `components/ui/*` (см. раздел про конвенцию выше)
+- [x] Task 8: Перенести оставшиеся компоненты в форму `Name/index.tsx` (depends on 1-7): `admin/TokenGate`, `admin/GalleryUploadField`, `admin/ImageUploadField`, `admin/AdminAuthContext`, `admin/AdminLocaleContext` (+ колокейтед тест), `admin/LocalizedField`, `admin/TaxonomyCheckboxes` (+ колокейтед тест), `pages/Admin`, `pages/Contact`, `components/Nav`, `components/ProjectCard`, `components/PublicLayout`, `components/LocaleSwitcher`, `components/ThemeToggle`, `components/MarkdownContent`, корневой `App` → `src/App/index.tsx`. НЕ трогать `components/ui/*` (см. раздел про конвенцию выше)
 <!-- Commit checkpoint: task 8 -->
 
 - [ ] Task 9: Убрать/зачистить debug-логи (`console.info`/`console.warn`) по `pages/*`, `lib/data.ts`, `App/index.tsx` (включая `[FIX:admin-locale-redirect]` в `RootRedirect`), появившиеся в ходе задач 1-8 в `admin/*` (depends on 8)
