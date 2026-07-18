@@ -13,7 +13,8 @@
     "WP-CLI",
     "MySQL",
     "Docker",
-    "GitHub Actions"
+    "GitHub Actions",
+    "Test"
   ],
   "category": [
     "Web",
