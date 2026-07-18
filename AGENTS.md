@@ -25,11 +25,12 @@
 │   ├── data/                     # profile.json, projects/{slug}.json, taxonomies.json, skills.json
 │   ├── public/uploads/            # изображения проектов (webp), пишутся из админки
 │   ├── src/
-│   │   ├── App/                    # корневой компонент (App/index.tsx)
+│   │   ├── App.tsx                 # корневой компонент — плоский файл (единственное исключение
+│   │   │                             из конвенции "компонент = папка", см. .ai-factory/ARCHITECTURE.md)
 │   │   ├── pages/                  # Home/, Projects/, ProjectDetail/, About/, Contact/, Admin/
 │   │   ├── components/              # переиспользуемые UI-компоненты (+ components/ui — плоские shadcn-примитивы)
 │   │   ├── hooks/                   # useLocale, useLocalized, useAsyncData, useDocumentMeta
-│   │   ├── admin/                   # весь код админки: AdminLayout/, TokenGate/, github.ts, editors/, registry.ts
+│   │   ├── admin/                   # весь код админки, сгруппирован по типу: components/, hooks/, lib/ (github.ts, registry.ts, navConfig.ts), editors/
 │   │   ├── lib/                     # data.ts — загрузка и типизация JSON, slug.ts
 │   │   └── locales/                  # словари react-i18next (uk, ru, en)
 │   ├── index.html

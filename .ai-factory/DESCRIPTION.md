@@ -27,7 +27,7 @@
 - **i18n:** react-i18next
 - **Формы:** react-hook-form + zod (клиентская валидация, `pages/Contact.tsx`)
 - **Тесты:** Vitest + React Testing Library (`npm run test`), для ключевой логики (slug, GitHub Contents API хелперы, языковой контекст админки, чекбоксы таксономий)
-- **Markdown:** `marked` + `DOMPurify` — рендер markdown-полей (`description`, `bio`) на публичной части (`components/MarkdownContent.tsx`, используется в `ProjectDetail.tsx`); в админке те же поля редактируются визуально через TipTap (`admin/RichTextEditor.tsx` + `tiptap-markdown`), с сериализацией обратно в markdown-строку — формат хранения общий для обеих частей
+- **Markdown:** `marked` + `DOMPurify` — рендер markdown-полей (`description`, `bio`) на публичной части (`components/MarkdownContent.tsx`, используется в `ProjectDetail.tsx`); в админке те же поля редактируются визуально через TipTap (`admin/components/RichTextEditor/index.tsx` + `tiptap-markdown`), с сериализацией обратно в markdown-строку — формат хранения общий для обеих частей
 - **State management:** отсутствует — React Context + fetch/import JSON
 - **База данных:** отсутствует — JSON-файлы в `/data/` как единственный источник данных
 - **Хранилище файлов:** `/public/uploads/` в репозитории, запись через GitHub Contents API
@@ -47,23 +47,18 @@
 │   ├── public/
 │   │   └── uploads/             # картинки проектов (webp)
 │   └── src/
-│       ├── App/                  # корневой компонент (App/index.tsx)
+│       ├── App.tsx               # корневой компонент — плоский файл (единственное исключение
+│       │                           из конвенции "компонент = папка", см. ARCHITECTURE.md)
 │       ├── pages/                # Home/, Projects/, ProjectDetail/, About/, Contact/, Admin/
 │       ├── components/           # Nav/, ProjectCard/, PublicLayout/, ... (+ components/ui/ — плоские shadcn-примитивы)
 │       ├── hooks/                # useLocale, useLocalized, useAsyncData, useDocumentMeta
-│       ├── admin/                # всё, что относится к админке (WP-подобная структура)
-│       │   ├── AdminLayout/        # top-bar + <AdminSidebar/> + <Outlet/>
-│       │   ├── AdminSidebar/       # дерево сайдбара из navConfig.ts
-│       │   ├── useSessionCheck.ts  # проверка валидности PAT-сессии
-│       │   ├── navConfig.ts        # дерево сайдбара — точка расширения на новые разделы
-│       │   ├── AdminLocaleContext/ # глобальный языковой контекст админки
-│       │   ├── TokenGate/        # ввод/проверка PAT
-│       │   ├── RichTextEditor/   # WYSIWYG (TipTap), data-driven toolbar
-│       │   ├── TaxonomyCheckboxes/
-│       │   ├── useEditorData.ts  # общий хук загрузки JSON для редакторов-одиночек
-│       │   ├── editors/          # ProfileEditor/, SkillsEditor/, TaxonomyEditor/, ProjectsList/, ProjectForm/, projectsData.ts
-│       │   ├── registry.ts       # реестр редакторов-одиночек (Profile, Skills)
-│       │   └── github.ts         # клиент Contents API (включая per-file CRUD для projects/)
+│       ├── admin/                # всё, что относится к админке — сгруппировано по типу
+│       │   ├── components/         # AdminLayout/, AdminSidebar/, AdminLocaleContext/, TokenGate/,
+│       │   │                         RichTextEditor/, TaxonomyCheckboxes/, LocalizedField/,
+│       │   │                         ImageUploadField/, GalleryUploadField/
+│       │   ├── hooks/              # useSessionCheck.ts, useEditorData.ts, useAdminSave.ts, useImageUpload.ts
+│       │   ├── lib/                # github.ts (Contents API), navConfig.ts, registry.ts, pat.ts, imageCompress.ts
+│       │   └── editors/            # ProfileEditor/, SkillsEditor/, TaxonomyEditor/, ProjectsList/, ProjectForm/, projectsData.ts
 │       ├── lib/
 │       │   ├── data.ts           # загрузка и типизация JSON (projects/ — через import.meta.glob)
 │       │   └── slug.ts           # авто-slug из заголовка (кириллица → латиница)
@@ -72,17 +67,17 @@
 └── .github/workflows/deploy.yml   # working-directory: app, path: app/dist
 ```
 
-Конвенция: каждый React-компонент (`.tsx` с JSX) живёт в собственной папке `Name/index.tsx` — подробности и исключение для `components/ui/*` см. в `.ai-factory/ARCHITECTURE.md`.
+Конвенция: каждый React-компонент (`.tsx` с JSX) живёт в собственной папке `Name/index.tsx` — подробности и исключения (`components/ui/*`, корневой `App.tsx`) см. в `.ai-factory/ARCHITECTURE.md`.
 
 `.ai-factory/`, `.claude/`, `.github/`, `.mcp.json`, `AGENTS.md`, `PLAN.md`, `skills-lock.json` остаются в истинном корне репозитория (dev/AI-tooling — сами инструменты ищут их только там), `app/` — единственная папка продукта.
 
 ## Архитектурные заметки
 
-- Каждая сущность контента = тройка «JSON-файл (или папка per-item файлов) в `/data/` + тип в `types.ts` + редактор в `admin/editors/`». Добавление новой сущности (блог, отзывы, сертификаты) не требует изменения общего кода: `github.ts` и `lib/data.ts` работают с любым файлом/папкой по пути через дженерик-хелперы, а список разделов в сайдбаре собирается из `admin/navConfig.ts` (редакторы-одиночки — из `admin/registry.ts`).
+- Каждая сущность контента = тройка «JSON-файл (или папка per-item файлов) в `/data/` + тип в `types.ts` + редактор в `admin/editors/`». Добавление новой сущности (блог, отзывы, сертификаты) не требует изменения общего кода: `admin/lib/github.ts` и `lib/data.ts` работают с любым файлом/папкой по пути через дженерик-хелперы, а список разделов в сайдбаре собирается из `admin/lib/navConfig.ts` (редакторы-одиночки — из `admin/lib/registry.ts`).
 - Проекты — не единый массив, а по одному файлу на проект: `data/projects/{slug}.json`. `slug` — единственный идентификатор проекта (отдельного поля `id` нет), генерируется автоматически из заголовка (см. `lib/slug.ts`) с ручной перезаписью и дедупликацией при коллизии. Смена slug у существующего проекта = создание нового файла + удаление старого (в этом порядке, чтобы сбой между двумя запросами не терял данные).
 - Таксономии (`data/taxonomies.json`): управляемые словари `stack`/`category`/`role` — в формах проекта выбираются чекбоксами/select вместо ручного ввода текста.
-- Локализуемые поля контента — объекты вида `{ "uk": "…", "ru": "…", "en": "…" }`, тип-хелпер `Localized<T>` и общая функция фолбэка `resolveLocalized()`, используемая и публичным `useLocalized()`, и админским `useAdminLocalized()` (читает свой собственный языковой контекст — `admin/AdminLocaleContext.tsx`, независимый от локали публичной части).
-- Markdown-поля (`description`, `bio`) редактируются визуально через TipTap (`admin/RichTextEditor.tsx`), но хранятся как обычная markdown-строка — формат данных не меняется, меняется только UX редактирования.
+- Локализуемые поля контента — объекты вида `{ "uk": "…", "ru": "…", "en": "…" }`, тип-хелпер `Localized<T>` и общая функция фолбэка `resolveLocalized()`, используемая и публичным `useLocalized()`, и админским `useAdminLocalized()` (читает свой собственный языковой контекст — `admin/components/AdminLocaleContext/index.tsx`, независимый от локали публичной части).
+- Markdown-поля (`description`, `bio`) редактируются визуально через TipTap (`admin/components/RichTextEditor/index.tsx`), но хранятся как обычная markdown-строка — формат данных не меняется, меняется только UX редактирования.
 - Запись файла через Contents API: `GET` за текущим `sha` → `PUT` с `{ message, content, sha }` → при 409 повторить `GET`+`PUT` один раз, иначе показать ошибку. Создание нового файла (`createFile`) не отправляет `sha`; удаление (`deleteFile`) требует его. PAT никогда не попадает в код/коммиты, хранится только в `localStorage`.
 - Прямые запросы к Telegram Bot API из браузера запрещены (токен бота не должен светиться в клиентском коде) — обязателен relay на Google Apps Script.
 
@@ -97,7 +92,7 @@
 ## Архитектура
 
 Подробные архитектурные правила — в `.ai-factory/ARCHITECTURE.md`.
-Паттерн: Modular Monolith (frontend-адаптация) — публичная часть и админка как два строго разделённых модуля с единой точкой чтения (`lib/data.ts`) и единой точкой записи (`admin/github.ts`) данных.
+Паттерн: Modular Monolith (frontend-адаптация) — публичная часть и админка как два строго разделённых модуля с единой точкой чтения (`lib/data.ts`) и единой точкой записи (`admin/lib/github.ts`) данных.
 
 ## Осознанно вне скоупа v1
 
@@ -111,7 +106,7 @@
 
 0. Каркас: Vite + React + TS, роутер, workflow деплоя, валидные пустые JSON.
 1. Публичная часть + i18n с первого дня.
-2. Админка: данные (TokenGate, github.ts, CRUD).
+2. Админка: данные (TokenGate, admin/lib/github.ts, CRUD).
 3. Админка: загрузка и сжатие картинок.
 4. Лиды: форма → Apps Script relay → Telegram.
 5. Полировка: темы, мета-теги, lighthouse, favicon, README.

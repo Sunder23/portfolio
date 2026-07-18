@@ -112,14 +112,14 @@ Rationale: Пропущено по решению пользователя — �
 - [x] Task 12: Вернуть `app/src/App/index.tsx` → `app/src/App.tsx` (плоский файл, без папки). Удалить папку `App/`. Проверить, что `app/src/main.tsx` (`import App from './App'`) по-прежнему резолвится корректно — правка импорта не требуется, но нужно явно собрать проект и убедиться, что резолвится именно новый `App.tsx`, а не осталась пустая папка.
 <!-- Commit checkpoint: task 12 -->
 
-- [ ] Task 13: Создать `app/src/admin/lib/` и перенести туда `github.ts`, `github.test.ts`, `imageCompress.ts`, `navConfig.ts`, `pat.ts`, `registry.ts`. Обновить импорты `@/admin/<module>` → `@/admin/lib/<module>` во всех потребителях:
+- [x] Task 13: Создать `app/src/admin/lib/` и перенести туда `github.ts`, `github.test.ts`, `imageCompress.ts`, `navConfig.ts`, `pat.ts`, `registry.ts`. Обновить импорты `@/admin/<module>` → `@/admin/lib/<module>` во всех потребителях:
   - `github.ts` → `admin/editors/ProjectForm/index.tsx`, `admin/editors/projectsData.ts`, `admin/editors/ProjectsList/index.tsx`, `admin/editors/TaxonomyEditor/index.tsx`, `admin/lib/github.test.ts` (сам тест), `admin/TokenGate/index.tsx`, `admin/useAdminSave.ts`, `admin/useEditorData.ts`, `admin/useImageUpload.ts`, `admin/useSessionCheck.ts`
   - `imageCompress.ts` → `admin/useImageUpload.ts`
   - `navConfig.ts` → `admin/AdminSidebar/index.tsx`
   - `pat.ts` → `admin/AdminAuthContext/index.tsx`
   - `registry.ts` → `pages/Admin/index.tsx`
 
-- [ ] Task 14: Создать `app/src/admin/components/` и перенести туда `AdminLayout/`, `AdminSidebar/`, `AdminAuthContext/`, `AdminLocaleContext/` (вместе с `AdminLocaleContext.test.tsx`), `TokenGate/`, `LocalizedField/`, `TaxonomyCheckboxes/` (вместе с `TaxonomyCheckboxes.test.tsx`), `ImageUploadField/`, `GalleryUploadField/`, `RichTextEditor/`. Обновить импорты `@/admin/<Component>` → `@/admin/components/<Component>` во всех потребителях:
+- [x] Task 14: Создать `app/src/admin/components/` и перенести туда `AdminLayout/`, `AdminSidebar/`, `AdminAuthContext/`, `AdminLocaleContext/` (вместе с `AdminLocaleContext.test.tsx`), `TokenGate/`, `LocalizedField/`, `TaxonomyCheckboxes/` (вместе с `TaxonomyCheckboxes.test.tsx`), `ImageUploadField/`, `GalleryUploadField/`, `RichTextEditor/`. Обновить импорты `@/admin/<Component>` → `@/admin/components/<Component>` во всех потребителях:
   - `AdminLayout` → `pages/Admin/index.tsx`
   - `AdminSidebar` → `admin/components/AdminLayout/index.tsx` (после переноса)
   - `AdminAuthContext` → `admin/components/AdminLayout/index.tsx`, `admin/editors/ProjectForm/index.tsx`, `admin/editors/ProjectsList/index.tsx`, `admin/editors/TaxonomyEditor/index.tsx`, `admin/components/TokenGate/index.tsx`, `admin/hooks/useAdminSave.ts`, `admin/hooks/useEditorData.ts`, `admin/hooks/useImageUpload.ts` (три последних — плейсхолдер путь, файлы физически ещё в `admin/` до Task 15, но алиас-путь к `AdminAuthContext` в них обновляется уже здесь), `pages/Admin/index.tsx`
@@ -133,7 +133,7 @@ Rationale: Пропущено по решению пользователя — �
   (depends on 13)
 <!-- Commit checkpoint: tasks 13-14 -->
 
-- [ ] Task 15: Создать `app/src/admin/hooks/` и перенести туда `useAdminSave.ts`, `useEditorData.ts`, `useImageUpload.ts`, `useSessionCheck.ts`. Обновить импорты `@/admin/<hook>` → `@/admin/hooks/<hook>` во всех потребителях:
+- [x] Task 15: Создать `app/src/admin/hooks/` и перенести туда `useAdminSave.ts`, `useEditorData.ts`, `useImageUpload.ts`, `useSessionCheck.ts`. Обновить импорты `@/admin/<hook>` → `@/admin/hooks/<hook>` во всех потребителях:
   - `useAdminSave` (включая `useAdminOperation`) → `admin/editors/ProfileEditor/index.tsx`, `admin/editors/ProjectForm/index.tsx`, `admin/editors/ProjectsList/index.tsx`, `admin/editors/SkillsEditor/index.tsx`, `admin/editors/TaxonomyEditor/index.tsx`
   - `useEditorData` → `admin/editors/ProfileEditor/index.tsx`, `admin/editors/ProjectForm/index.tsx`, `admin/editors/SkillsEditor/index.tsx`, `admin/editors/TaxonomyEditor/index.tsx`
   - `useImageUpload` → `admin/components/ImageUploadField/index.tsx`
@@ -143,6 +143,6 @@ Rationale: Пропущено по решению пользователя — �
 
 ### Phase 8: Верификация и документация (амендмент)
 
-- [ ] Task 16: Прогнать `npm run build` и `npm run test` в `app/`, убедиться что все алиасные импорты на `admin/lib/*`, `admin/components/*`, `admin/hooks/*` и плоский `App.tsx` резолвятся корректно, ничего не сломано (depends on 15)
-- [ ] Task 17: Обновить `.ai-factory/ARCHITECTURE.md`, `.ai-factory/DESCRIPTION.md` и `AGENTS.md` под новую структуру `admin/` (`components/`/`hooks/`/`lib/`, зеркалирующую верхний уровень `src/`) и исключение плоского `App.tsx` из конвенции «компонент = папка» (depends on 16)
+- [x] Task 16: Прогнать `npm run build` и `npm run test` в `app/`, убедиться что все алиасные импорты на `admin/lib/*`, `admin/components/*`, `admin/hooks/*` и плоский `App.tsx` резолвятся корректно, ничего не сломано (depends on 15)
+- [x] Task 17: Обновить `.ai-factory/ARCHITECTURE.md`, `.ai-factory/DESCRIPTION.md` и `AGENTS.md` под новую структуру `admin/` (`components/`/`hooks/`/`lib/`, зеркалирующую верхний уровень `src/`) и исключение плоского `App.tsx` из конвенции «компонент = папка» (depends on 16)
 <!-- Commit checkpoint: tasks 16-17 -->
