@@ -36,8 +36,7 @@ export default function Contact() {
     defaultValues: { name: '', email: '', message: '', company: '' },
   })
 
-  function onSubmit(data: ContactFormValues) {
-    console.info('[pages/Contact] submit (stub, no backend yet)', data)
+  function onSubmit(_data: ContactFormValues) {
     toast.success(t('contact.successTitle'), {
       description: t('contact.successDescription'),
     })

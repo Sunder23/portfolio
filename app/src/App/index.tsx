@@ -16,7 +16,6 @@ const Admin = lazy(() => import('@/pages/Admin'))
 
 function RootRedirect() {
   const target = `/${getStoredLocale() ?? DEFAULT_LOCALE}`
-  console.info('[FIX:admin-locale-redirect] RootRedirect ->', target, 'from', window.location.hash)
   return <Navigate to={target} replace />
 }
 

@@ -24,7 +24,7 @@ export default function ProjectDetail() {
   const { t } = useTranslation()
   const locale = useLocale()
   const { slug } = useParams<{ slug: string }>()
-  const projects = useAsyncData(getProjects, 'ProjectDetail')
+  const projects = useAsyncData(getProjects)
 
   const project = projects?.find((p) => p.slug === slug && p.published) ?? null
 
@@ -42,7 +42,6 @@ export default function ProjectDetail() {
   }
 
   if (!project) {
-    console.warn(`[pages/ProjectDetail] project not found for slug "${slug}"`)
     return (
       <div className="flex flex-col gap-4">
         <p className="text-sm text-muted-foreground">{t('projectDetail.notFound')}</p>

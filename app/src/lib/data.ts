@@ -3,9 +3,7 @@ import type { Profile, Project, SkillCategory } from '@/types'
 const projectModules = import.meta.glob<{ default: Project }>('../../data/projects/*.json', { eager: true })
 
 export async function getProjects(): Promise<Project[]> {
-  const projects = Object.values(projectModules).map((module) => module.default)
-  console.info(`[lib/data] loaded ${projects.length} projects from data/projects/`)
-  return projects
+  return Object.values(projectModules).map((module) => module.default)
 }
 
 export async function getProfile(): Promise<Profile> {

@@ -25,7 +25,7 @@ export function ProjectForm() {
   const navigate = useNavigate()
   const { token } = useAdminAuth()
   const { run, saving } = useAdminOperation()
-  const [taxonomies] = useEditorData<Taxonomies>(TAXONOMIES_PATH, 'ProjectForm')
+  const [taxonomies] = useEditorData<Taxonomies>(TAXONOMIES_PATH)
 
   const [loading, setLoading] = useState(!isNew)
   const [notFound, setNotFound] = useState(false)

@@ -14,7 +14,6 @@ function TaxonomyRouter() {
   const { key } = useParams<{ key: string }>()
 
   if (!key || !TAXONOMY_KEYS.includes(key as keyof Taxonomies)) {
-    console.info('[admin/router] unknown taxonomy key', key, '-> redirecting to stack')
     return <Navigate to="/admin/taxonomies/stack" replace />
   }
 

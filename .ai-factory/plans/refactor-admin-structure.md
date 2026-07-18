@@ -80,10 +80,10 @@ Rationale: Пропущено по решению пользователя — �
 - [x] Task 8: Перенести оставшиеся компоненты в форму `Name/index.tsx` (depends on 1-7): `admin/TokenGate`, `admin/GalleryUploadField`, `admin/ImageUploadField`, `admin/AdminAuthContext`, `admin/AdminLocaleContext` (+ колокейтед тест), `admin/LocalizedField`, `admin/TaxonomyCheckboxes` (+ колокейтед тест), `pages/Admin`, `pages/Contact`, `components/Nav`, `components/ProjectCard`, `components/PublicLayout`, `components/LocaleSwitcher`, `components/ThemeToggle`, `components/MarkdownContent`, корневой `App` → `src/App/index.tsx`. НЕ трогать `components/ui/*` (см. раздел про конвенцию выше)
 <!-- Commit checkpoint: task 8 -->
 
-- [ ] Task 9: Убрать/зачистить debug-логи (`console.info`/`console.warn`) по `pages/*`, `lib/data.ts`, `App/index.tsx` (включая `[FIX:admin-locale-redirect]` в `RootRedirect`), появившиеся в ходе задач 1-8 в `admin/*` (depends on 8)
+- [x] Task 9: Убрать/зачистить debug-логи (`console.info`/`console.warn`) по `pages/*`, `lib/data.ts`, `App/index.tsx` (включая `[FIX:admin-locale-redirect]` в `RootRedirect`), появившиеся в ходе задач 1-8 в `admin/*` (depends on 8)
 
 ### Phase 6: Верификация и документация
 
-- [ ] Task 10: Прогнать `npm run build` и `npm run test` в `app/`, убедиться что ничего не сломано, включая разрешение алиасных импортов на новые папки (depends on 9)
-- [ ] Task 11: Обновить `.ai-factory/ARCHITECTURE.md` и `.ai-factory/DESCRIPTION.md` под новую структуру (папка-на-компонент, разбиение `ProjectsEditor`/`AdminLayout`, `useEditorData`/`useAsyncData`, `registry.ts` покрывает только singleton-редакторы, исключение `components/ui/*` из конвенции папок) (depends on 10)
+- [x] Task 10: Прогнать `npm run build` и `npm run test` в `app/`, убедиться что ничего не сломано, включая разрешение алиасных импортов на новые папки (depends on 9)
+- [x] Task 11: Обновить `.ai-factory/ARCHITECTURE.md` и `.ai-factory/DESCRIPTION.md` под новую структуру (папка-на-компонент, разбиение `ProjectsEditor`/`AdminLayout`, `useEditorData`/`useAsyncData`, `registry.ts` покрывает только singleton-редакторы, исключение `components/ui/*` из конвенции папок) (depends on 10)
 <!-- Commit checkpoint: tasks 9-11 -->

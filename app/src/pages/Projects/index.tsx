@@ -6,7 +6,7 @@ import { useDocumentMeta } from '@/hooks/useDocumentMeta'
 
 export default function Projects() {
   const { t } = useTranslation()
-  const projects = useAsyncData(getProjects, 'Projects')
+  const projects = useAsyncData(getProjects)
 
   useDocumentMeta({ title: t('meta.projects.title'), description: t('meta.projects.description') })
 

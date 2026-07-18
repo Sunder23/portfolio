@@ -47,16 +47,21 @@
 │   ├── public/
 │   │   └── uploads/             # картинки проектов (webp)
 │   └── src/
-│       ├── pages/               # Home, Projects, ProjectDetail, About, Admin
-│       ├── components/
+│       ├── App/                  # корневой компонент (App/index.tsx)
+│       ├── pages/                # Home/, Projects/, ProjectDetail/, About/, Contact/, Admin/
+│       ├── components/           # Nav/, ProjectCard/, PublicLayout/, ... (+ components/ui/ — плоские shadcn-примитивы)
+│       ├── hooks/                # useLocale, useLocalized, useAsyncData, useDocumentMeta
 │       ├── admin/                # всё, что относится к админке (WP-подобная структура)
-│       │   ├── AdminLayout.tsx     # top-bar + collapsible-сайдбар
+│       │   ├── AdminLayout/        # top-bar + <AdminSidebar/> + <Outlet/>
+│       │   ├── AdminSidebar/       # дерево сайдбара из navConfig.ts
+│       │   ├── useSessionCheck.ts  # проверка валидности PAT-сессии
 │       │   ├── navConfig.ts        # дерево сайдбара — точка расширения на новые разделы
-│       │   ├── AdminLocaleContext.tsx  # глобальный языковой контекст админки
-│       │   ├── TokenGate.tsx     # ввод/проверка PAT
-│       │   ├── RichTextEditor.tsx  # WYSIWYG (TipTap) для markdown-полей
-│       │   ├── TaxonomyCheckboxes.tsx
-│       │   ├── editors/          # формы редактирования каждой сущности (+ TaxonomyEditor)
+│       │   ├── AdminLocaleContext/ # глобальный языковой контекст админки
+│       │   ├── TokenGate/        # ввод/проверка PAT
+│       │   ├── RichTextEditor/   # WYSIWYG (TipTap), data-driven toolbar
+│       │   ├── TaxonomyCheckboxes/
+│       │   ├── useEditorData.ts  # общий хук загрузки JSON для редакторов-одиночек
+│       │   ├── editors/          # ProfileEditor/, SkillsEditor/, TaxonomyEditor/, ProjectsList/, ProjectForm/, projectsData.ts
 │       │   ├── registry.ts       # реестр редакторов-одиночек (Profile, Skills)
 │       │   └── github.ts         # клиент Contents API (включая per-file CRUD для projects/)
 │       ├── lib/
@@ -66,6 +71,8 @@
 │       └── types.ts
 └── .github/workflows/deploy.yml   # working-directory: app, path: app/dist
 ```
+
+Конвенция: каждый React-компонент (`.tsx` с JSX) живёт в собственной папке `Name/index.tsx` — подробности и исключение для `components/ui/*` см. в `.ai-factory/ARCHITECTURE.md`.
 
 `.ai-factory/`, `.claude/`, `.github/`, `.mcp.json`, `AGENTS.md`, `PLAN.md`, `skills-lock.json` остаются в истинном корне репозитория (dev/AI-tooling — сами инструменты ищут их только там), `app/` — единственная папка продукта.
 

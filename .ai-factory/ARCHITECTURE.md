@@ -20,27 +20,52 @@
 
 ```
 app/src/
-├── pages/                  # Публичный модуль: Home, Projects, ProjectDetail, About
-│   └── admin/                # (роут /#/admin) — отдельная точка входа, см. admin/
-├── components/              # Переиспользуемые UI-компоненты публичной части
-│   └── ui/                   # shadcn/ui — общие для публичной части и админки
-├── admin/                   # Admin-модуль — самодостаточный, не импортируется публичной частью
-│   ├── AdminLayout.tsx        # WP-подобная оболочка: top-bar + collapsible-сайдбар из navConfig.ts
-│   ├── navConfig.ts           # дерево сайдбара админки — точка расширения на новые разделы меню
-│   ├── AdminLocaleContext.tsx # глобальный языковой контекст админки (переключатель в top-bar)
-│   ├── TokenGate.tsx         # авторизация (fine-grained PAT)
-│   ├── RichTextEditor.tsx     # WYSIWYG (TipTap) для markdown-полей, сериализация в markdown-строку
-│   ├── TaxonomyCheckboxes.tsx # чекбоксы для полей-таксономий (stack/category) в формах
-│   ├── editors/               # формы редактирования по сущностям (включая TaxonomyEditor.tsx)
-│   ├── registry.ts            # реестр редакторов-одиночек (Profile, Skills) — точка расширения
-│   └── github.ts              # единственный клиент записи в репозиторий (Contents API),
-│                               # включая per-file операции (listDir/createFile/deleteFile)
+├── App/                      # корневой компонент (App/index.tsx), рендерится из main.tsx
+├── pages/                    # Публичный модуль: Home/, Projects/, ProjectDetail/, About/, Contact/
+│   └── Admin/                  # (роут /#/admin) — отдельная точка входа, см. admin/
+├── components/                # Переиспользуемые UI-компоненты публичной части (Name/index.tsx)
+│   └── ui/                     # shadcn/ui — плоские файлы, исключены из конвенции папка-на-компонент
+├── hooks/
+│   ├── useAsyncData.ts         # общий "fetch once on mount" хук для публичных страниц
+│   ├── useDocumentMeta.ts      # управление <title>/meta/OG-тегами
+│   ├── useLocale.ts
+│   └── useLocalized.ts
+├── admin/                     # Admin-модуль — самодостаточный, не импортируется публичной частью
+│   ├── AdminLayout/             # WP-подобная оболочка: top-bar + <AdminSidebar/> + <Outlet/>
+│   ├── AdminSidebar/            # рендер дерева сайдбара из navConfig.ts
+│   ├── useSessionCheck.ts       # хук проверки валидности PAT-сессии
+│   ├── navConfig.ts             # дерево сайдбара админки — точка расширения на новые разделы меню
+│   ├── AdminLocaleContext/      # глобальный языковой контекст админки (переключатель в top-bar)
+│   ├── TokenGate/               # авторизация (fine-grained PAT)
+│   ├── RichTextEditor/          # WYSIWYG (TipTap), data-driven toolbar, сериализация в markdown-строку
+│   ├── TaxonomyCheckboxes/      # чекбоксы для полей-таксономий (stack/category) в формах
+│   ├── useEditorData.ts         # общий "load one JSON once token ready" хук для редакторов-одиночек
+│   ├── editors/
+│   │   ├── ProfileEditor/, SkillsEditor/, TaxonomyEditor/  # редакторы-одиночки
+│   │   ├── ProjectsList/, ProjectForm/                      # Projects: список и форма — раздельные компоненты
+│   │   └── projectsData.ts                                  # data-хелперы Projects (не компонент, плоский файл)
+│   ├── registry.ts              # реестр редакторов-одиночек (Profile, Skills) — точка расширения
+│   └── github.ts                # единственный клиент записи в репозиторий (Contents API),
+│                                 # включая per-file операции (listDir/createFile/deleteFile)
 ├── lib/
-│   ├── data.ts                # единственная точка чтения data/*.json и data/projects/*.json
-│   └── slug.ts                # авто-генерация slug из заголовка (кириллица → латиница)
-├── locales/                  # словари react-i18next (uk, ru, en)
-└── types.ts                  # общие типы, включая Localized<T> и Taxonomies
+│   ├── data.ts                  # единственная точка чтения data/*.json и data/projects/*.json
+│   └── slug.ts                  # авто-генерация slug из заголовка (кириллица → латиница)
+├── locales/                   # словари react-i18next (uk, ru, en)
+└── types.ts                   # общие типы, включая Localized<T> и Taxonomies
 ```
+
+### Конвенция: компонент = папка
+
+Каждый `.tsx`-файл, экспортирующий React-компонент с JSX (включая context-провайдеры),
+живёт в собственной папке `ComponentName/index.tsx`. Благодаря алиасу `@/*` → `./src`
+импорт вида `@/admin/TokenGate` разрешается в `TokenGate/index.tsx` автоматически —
+переезд файла в папку не требует правки импортов у потребителей. Колокейтед тест —
+`ComponentName/ComponentName.test.tsx` (не `index.test.tsx`, чтобы имя было видно во
+вкладках редактора и в выводе test-раннера). Хуки (`useX.ts`) и чистые модули без JSX
+(`github.ts`, `slug.ts`, `navConfig.ts`, `registry.ts`, `projectsData.ts`) остаются
+плоскими файлами — это не компоненты. **Исключение:** `components/ui/*` — это shadcn/ui
+примитивы, `components.json` (`aliases.ui: "@/components/ui"`) ожидает их плоскими, так
+работает `npx shadcn add`/`diff`; перенос в папки сломал бы штатное обновление через CLI.
 
 `app/data/*.json`, `app/data/projects/*.json` и `app/public/uploads/`
 физически лежат вне `app/src/` (но внутри `app/`, не в истинном корне репо —

@@ -7,8 +7,8 @@ import { useDocumentMeta } from '@/hooks/useDocumentMeta'
 
 export default function About() {
   const { t } = useTranslation()
-  const profile = useAsyncData(getProfile, 'About')
-  const skills = useAsyncData(getSkills, 'About')
+  const profile = useAsyncData(getProfile)
+  const skills = useAsyncData(getSkills)
 
   const bio = useLocalized(profile?.bio ?? { uk: '' })
 

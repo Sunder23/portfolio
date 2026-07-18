@@ -10,7 +10,7 @@ const SKILLS_PATH = 'app/data/skills.json'
 
 export default function SkillsEditor() {
   const { save, saving } = useAdminSave<SkillCategory[]>(SKILLS_PATH)
-  const [categories, setCategories] = useEditorData<SkillCategory[]>(SKILLS_PATH, 'SkillsEditor')
+  const [categories, setCategories] = useEditorData<SkillCategory[]>(SKILLS_PATH)
 
   if (!categories) {
     return <p className="text-sm text-muted-foreground">Загрузка…</p>

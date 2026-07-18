@@ -17,19 +17,21 @@
 
 ## Структура проекта
 
-> Структура ниже соответствует физическому состоянию репозитория. `admin/` (TokenGate, github.ts, editors/, registry.ts) реализован полностью (Этап 2 roadmap). Публичные страницы (`pages/Home`, `Projects`, `ProjectDetail`, `About`) пока частично заглушки — читают данные не везде (Этап 1 не завершён), это отдельная область работы.
+> Структура ниже соответствует физическому состоянию репозитория. Проект реализован полностью (публичная часть + i18n, админка с данными/картинками/CRUD, лиды, полировка). Конвенция: каждый React-компонент живёт в собственной папке `Name/index.tsx` — подробности в `.ai-factory/ARCHITECTURE.md`.
 
 ```
 /
 ├── app/                        # всё приложение: код + build-конфиг (npm run * запускается отсюда)
-│   ├── data/                     # profile.json, projects.json, skills.json — источник контента
+│   ├── data/                     # profile.json, projects/{slug}.json, taxonomies.json, skills.json
 │   ├── public/uploads/            # изображения проектов (webp), пишутся из админки
 │   ├── src/
-│   │   ├── pages/                 # Home, Projects, ProjectDetail, About, Admin
-│   │   ├── components/             # переиспользуемые UI-компоненты (+ components/ui из shadcn)
-│   │   ├── admin/                  # весь код админки: TokenGate, github.ts, editors/, registry.ts
-│   │   ├── lib/                    # data.ts — загрузка и типизация JSON
-│   │   └── locales/                 # словари react-i18next (uk, ru, en)
+│   │   ├── App/                    # корневой компонент (App/index.tsx)
+│   │   ├── pages/                  # Home/, Projects/, ProjectDetail/, About/, Contact/, Admin/
+│   │   ├── components/              # переиспользуемые UI-компоненты (+ components/ui — плоские shadcn-примитивы)
+│   │   ├── hooks/                   # useLocale, useLocalized, useAsyncData, useDocumentMeta
+│   │   ├── admin/                   # весь код админки: AdminLayout/, TokenGate/, github.ts, editors/, registry.ts
+│   │   ├── lib/                     # data.ts — загрузка и типизация JSON, slug.ts
+│   │   └── locales/                  # словари react-i18next (uk, ru, en)
 │   ├── index.html
 │   ├── package.json
 │   ├── vite.config.ts

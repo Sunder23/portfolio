@@ -33,7 +33,7 @@ export default function TaxonomyEditor() {
   const taxonomyKey = (key && key in TAXONOMY_LABELS ? key : 'stack') as keyof Taxonomies
   const { token } = useAdminAuth()
   const { save, saving } = useAdminSave<Taxonomies>(TAXONOMIES_PATH)
-  const [taxonomies, setTaxonomies] = useEditorData<Taxonomies>(TAXONOMIES_PATH, 'TaxonomyEditor')
+  const [taxonomies, setTaxonomies] = useEditorData<Taxonomies>(TAXONOMIES_PATH)
 
   const [newTerm, setNewTerm] = useState('')
   const [renaming, setRenaming] = useState<{ index: number; value: string } | null>(null)
