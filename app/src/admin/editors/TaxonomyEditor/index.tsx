@@ -13,7 +13,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { useAdminSave } from '@/admin/hooks/useAdminSave'
 import { useAdminAuth } from '@/admin/components/AdminAuthContext'
 import { useEditorData } from '@/admin/hooks/useEditorData'
 import { getFile, listDir } from '@/admin/lib/github'
@@ -32,13 +31,13 @@ export default function TaxonomyEditor() {
   const { key } = useParams<{ key: string }>()
   const taxonomyKey = (key && key in TAXONOMY_LABELS ? key : 'stack') as keyof Taxonomies
   const { token } = useAdminAuth()
-  const { save, saving } = useAdminSave<Taxonomies>(TAXONOMIES_PATH)
-  // TaxonomyEditor commits immediately on every add/rename/delete via `save` above (see
-  // ARCHITECTURE.md — deliberately out of scope for the global draft/batch-save flow), so
-  // it uses `markClean` (not the raw setter) to sync local state after a successful write —
-  // this re-baselines the shared draft entry instead of leaving it falsely "dirty" for the
-  // floating Save All button, since the write already happened.
-  const [taxonomies, , , markClean] = useEditorData<Taxonomies>(TAXONOMIES_PATH)
+  // [FIX] Term add/rename/delete used to commit immediately via useAdminSave, bypassing the
+  // shared draft store entirely — so the floating "Save all" button never had anything to
+  // show here, and every action pushed a commit + deploy on its own. Now every mutation just
+  // calls the normal setter from useEditorData, which stages the change like every other
+  // editor — useEditorData already auto-registers a generic flush for this path, so no
+  // per-editor save logic is needed here anymore.
+  const [taxonomies, setTaxonomies] = useEditorData<Taxonomies>(TAXONOMIES_PATH)
 
   const [newTerm, setNewTerm] = useState('')
   const [renaming, setRenaming] = useState<{ index: number; value: string } | null>(null)
@@ -50,21 +49,23 @@ export default function TaxonomyEditor() {
 
   const terms = taxonomies[taxonomyKey]
 
-  async function persist(next: string[], message: string) {
-    if (!taxonomies) return
-    const updated = { ...taxonomies, [taxonomyKey]: next }
-    const ok = await save(updated, message)
-    if (ok) markClean(updated)
+  function persist(next: string[]) {
+    console.info(`[FIX][admin/TaxonomyEditor] staged ${taxonomyKey} change (${next.length} terms) — not pushed until Save all`)
+    // TS can't statically prove every field of Taxonomies is still present after spreading
+    // with a union-typed computed key ([taxonomyKey] is 'stack' | 'category' | 'role') —
+    // every field really is present here, all three are homogeneous string[] properties.
+    const updated: Taxonomies = { ...taxonomies, [taxonomyKey]: next } as Taxonomies
+    setTaxonomies(updated)
   }
 
-  async function handleAdd() {
+  function handleAdd() {
     const value = newTerm.trim()
     if (!value || terms.includes(value)) return
-    await persist([...terms, value], `admin: update taxonomies.json (add "${value}" to ${taxonomyKey})`)
+    persist([...terms, value])
     setNewTerm('')
   }
 
-  async function handleRenameConfirm() {
+  function handleRenameConfirm() {
     if (!renaming) return
     const value = renaming.value.trim()
     const oldValue = terms[renaming.index]
@@ -74,7 +75,7 @@ export default function TaxonomyEditor() {
       return
     }
     const next = terms.map((t, i) => (i === renaming.index ? value : t))
-    await persist(next, `admin: update taxonomies.json (rename "${oldValue}" -> "${value}" in ${taxonomyKey})`)
+    persist(next)
     setRenaming(null)
   }
 
@@ -94,10 +95,10 @@ export default function TaxonomyEditor() {
     setDeleteTarget({ term, usageCount })
   }
 
-  async function handleDeleteConfirm() {
+  function handleDeleteConfirm() {
     if (!deleteTarget) return
     const next = terms.filter((t) => t !== deleteTarget.term)
-    await persist(next, `admin: update taxonomies.json (remove "${deleteTarget.term}" from ${taxonomyKey})`)
+    persist(next)
     setDeleteTarget(null)
   }
 
@@ -118,9 +119,7 @@ export default function TaxonomyEditor() {
                 onChange={(e) => setNewTerm(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
               />
-              <Button disabled={saving} onClick={handleAdd}>
-                Добавить
-              </Button>
+              <Button onClick={handleAdd}>Добавить</Button>
             </CardContent>
           </Card>
         </div>
@@ -144,7 +143,7 @@ export default function TaxonomyEditor() {
                     <>
                       <Button
                         size="sm"
-                        disabled={saving || !renaming.value.trim() || renaming.value.trim() === terms[renaming.index]}
+                        disabled={!renaming.value.trim() || renaming.value.trim() === terms[renaming.index]}
                         onClick={handleRenameConfirm}
                       >
                         Сохранить

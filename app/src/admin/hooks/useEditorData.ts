@@ -10,12 +10,7 @@ import { resolvePendingImages } from '@/admin/lib/resolvePendingImages'
 // edit survives navigating to another admin route before the global "Save all" button
 // is clicked. The third tuple element reports whether `data` has diverged from what
 // was loaded, so callers can disable a Save-dependent UI when there's nothing to persist.
-// The fourth element, `markClean`, lets a caller that performs its own out-of-band save
-// (see TaxonomyEditor, which commits immediately on every add/rename/delete instead of
-// batching) re-baseline the entry so it doesn't show up as falsely dirty afterwards.
-export function useEditorData<T>(
-  path: string,
-): [T | null, Dispatch<SetStateAction<T | null>>, boolean, (data: T) => void] {
+export function useEditorData<T>(path: string): [T | null, Dispatch<SetStateAction<T | null>>, boolean] {
   const { token } = useAdminAuth()
   const draft = useAdminDraft()
   const data = draft.getEntry<T>(path) ?? null
@@ -39,11 +34,7 @@ export function useEditorData<T>(
     draft.setEntry(path, resolved)
   }
 
-  function markClean(next: T) {
-    draft.captureBaseline(path, next)
-  }
-
   const isDirty = data !== null && draft.isDirty(path)
 
-  return [data, setData, isDirty, markClean]
+  return [data, setData, isDirty]
 }
