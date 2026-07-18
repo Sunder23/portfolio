@@ -15,10 +15,10 @@ import { useAdminAuth } from '@/admin/components/AdminAuthContext'
 import { useAdminDraft } from '@/admin/components/AdminDraftContext'
 import { useAdminLocale, useAdminLocalized } from '@/admin/components/AdminLocaleContext'
 import { useEditorData } from '@/admin/hooks/useEditorData'
-import { createFile, deleteFile, getFile, listDir, saveFile, uploadPendingImage } from '@/admin/lib/github'
+import { commitFiles, createFile, createImageBlob, getFile, listDir, saveFile } from '@/admin/lib/github'
 import { resolvePendingImages, type PendingImage } from '@/admin/lib/resolvePendingImages'
 import { makeUniqueSlug, slugify } from '@/lib/slug'
-import { PROJECTS_DIR, TAXONOMIES_PATH, emptyProject } from '@/admin/editors/projectsData'
+import { PROJECTS_DIR, TAXONOMIES_PATH, buildProjectCommitPlan, emptyProject } from '@/admin/editors/projectsData'
 import { SUPPORTED_LOCALES } from '@/lib/locale'
 import type { Project, Taxonomies } from '@/types'
 
@@ -110,7 +110,15 @@ export function ProjectForm() {
         const newPath = `${PROJECTS_DIR}/${finalSlug}.json`
 
         try {
-          const resolvedForm = await resolvePendingImages(entry.form, (blob) => uploadPendingImage(blob, saveToken))
+          // [FIX] Staged cover/gallery images used to be uploaded as their own commit each
+          // (via uploadPendingImage) before the project JSON was saved — one project save with
+          // 2 new images produced 3 separate commits/deploys. createImageBlob only creates the
+          // Git blob (no commit); buildProjectCommitPlan decides whether it can bundle into the
+          // same commit as the JSON (via commitFiles) or fall back to the simpler
+          // saveFile/createFile when there are no staged images at all.
+          const { value: resolvedForm, imageEntries } = await resolvePendingImages(entry.form, (blob) =>
+            createImageBlob(blob, saveToken),
+          )
           // resolvePendingImages replaces every PendingImage with its uploaded path at runtime,
           // but its generic signature can't narrow cover/gallery back from `string | PendingImage`
           // to plain `string` at the type level — safe to assert here since resolution is complete.
@@ -121,17 +129,32 @@ export function ProjectForm() {
             slug: finalSlug,
           }
 
-          if (entry.sha === null) {
-            console.info(`[admin/ProjectForm] flush start ${key}, mode=create`)
-            await createFile(newPath, nextProject, `admin: update projects.json (add "${finalSlug}")`, saveToken)
-          } else if (key === newPath) {
-            console.info(`[admin/ProjectForm] flush start ${key}, mode=update`)
-            await saveFile(newPath, nextProject, `admin: update projects.json (edit "${finalSlug}")`, saveToken)
-          } else {
-            console.info(`[admin/ProjectForm] flush start ${key}, mode=rename`)
-            const message = `admin: rename project "${ownSlug}" -> "${finalSlug}"`
-            await createFile(newPath, nextProject, message, saveToken)
-            await deleteFile(key, entry.sha, message, saveToken)
+          const mode = entry.sha === null ? 'create' : key === newPath ? 'update' : 'rename'
+          const message =
+            mode === 'create'
+              ? `admin: update projects.json (add "${finalSlug}")`
+              : mode === 'update'
+                ? `admin: update projects.json (edit "${finalSlug}")`
+                : `admin: rename project "${ownSlug}" -> "${finalSlug}"`
+          console.info(`[admin/ProjectForm] flush start ${key}, mode=${mode}`)
+
+          const plan = buildProjectCommitPlan({
+            mode,
+            newPath,
+            oldPath: mode === 'rename' ? key : null,
+            project: nextProject,
+            imageEntries,
+          })
+          switch (plan.kind) {
+            case 'createFile':
+              await createFile(plan.path, plan.content, message, saveToken)
+              break
+            case 'saveFile':
+              await saveFile(plan.path, plan.content, message, saveToken)
+              break
+            case 'commitFiles':
+              await commitFiles(plan.entries, message, saveToken)
+              break
           }
           console.info(`[admin/ProjectForm] flush success ${key}`)
         } catch (err) {

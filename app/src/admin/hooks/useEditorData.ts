@@ -1,7 +1,7 @@
 import { useEffect, type Dispatch, type SetStateAction } from 'react'
 import { useAdminAuth } from '@/admin/components/AdminAuthContext'
 import { useAdminDraft } from '@/admin/components/AdminDraftContext'
-import { getFile, saveFile, uploadPendingImage } from '@/admin/lib/github'
+import { commitFiles, createImageBlob, getFile, saveFile } from '@/admin/lib/github'
 import { resolvePendingImages } from '@/admin/lib/resolvePendingImages'
 
 // Shared "load one JSON file once the token is available" pattern used by every
@@ -21,8 +21,25 @@ export function useEditorData<T>(path: string): [T | null, Dispatch<SetStateActi
       draft.captureBaseline(path, data)
       console.info(`[admin/useEditorData] baseline captured for ${path}`)
       draft.registerFlush(path, async (entryData, saveToken) => {
-        const resolved = await resolvePendingImages(entryData, (blob) => uploadPendingImage(blob, saveToken))
-        await saveFile(path, resolved, `admin: update ${path.split('/').pop()}`, saveToken)
+        const message = `admin: update ${path.split('/').pop()}`
+        // [FIX] A staged image (e.g. ProfileEditor's avatar) used to be uploaded as its own
+        // commit via uploadPendingImage before this JSON was saved — one "Save all" of a
+        // single entity could produce 2+ separate commits/deploys. Bundle them into one commit
+        // via commitFiles when there's at least one staged image; fall back to the simpler,
+        // cheaper saveFile() for the common no-image case.
+        const { value, imageEntries } = await resolvePendingImages(entryData, (blob) => createImageBlob(blob, saveToken))
+        if (imageEntries.length === 0) {
+          await saveFile(path, value, message, saveToken)
+          return
+        }
+        await commitFiles(
+          [
+            { path, content: JSON.stringify(value, null, 2) },
+            ...imageEntries.map((entry) => ({ path: entry.path, blobSha: entry.blobSha })),
+          ],
+          message,
+          saveToken,
+        )
       })
       console.info(`[admin/useEditorData] flush registered for ${path}`)
     })

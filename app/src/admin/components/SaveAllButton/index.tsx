@@ -68,6 +68,12 @@ export function SaveAllButton() {
       toast.success(`Сохранено (${savedCount}). Деплой займёт ~1–2 минуты`, {
         action: { label: 'Actions', onClick: () => window.open(ACTIONS_URL, '_blank') },
       })
+      // [FIX] Committing to GitHub doesn't mean the SPA's own state is fresh — editors keep
+      // whatever they had in memory/AdminDraftContext before the save. Reload shortly after
+      // (not waiting for the ~1-2min GitHub Pages deploy, which this page never tracks) so
+      // every open editor re-fetches from GitHub instead of showing stale local data.
+      console.info('[admin/SaveAllButton] reloading admin after successful save')
+      window.setTimeout(() => window.location.reload(), 1200)
     }
   }
 

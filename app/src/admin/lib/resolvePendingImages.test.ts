@@ -6,31 +6,48 @@ function pending(name: string): PendingImage {
 }
 
 describe('resolvePendingImages', () => {
-  it('replaces nested PendingImage leaves (cover + gallery) with uploaded paths, preserving array order', async () => {
-    const upload = vi.fn(async (blob: Blob) => `/uploads/${await blob.text()}.webp`)
+  it('replaces nested PendingImage leaves (cover + gallery) with the uploaded *public* path and collects their blob entries', async () => {
+    const upload = vi.fn(async (blob: Blob) => {
+      const name = await blob.text()
+      return { path: `app/public/uploads/${name}.webp`, publicPath: `/uploads/${name}.webp`, blobSha: `sha-${name}` }
+    })
     const input = {
       title: { uk: 'Проект' },
       cover: pending('cover'),
       gallery: ['/uploads/existing.webp', pending('gallery-1'), pending('gallery-2')],
     }
 
-    const result = await resolvePendingImages(input, upload)
+    const { value, imageEntries } = await resolvePendingImages(input, upload)
 
-    expect(result).toEqual({
+    // The JSON stores the *public* URL (what <img src> resolves to), not the repo path.
+    expect(value).toEqual({
       title: { uk: 'Проект' },
       cover: '/uploads/cover.webp',
       gallery: ['/uploads/existing.webp', '/uploads/gallery-1.webp', '/uploads/gallery-2.webp'],
     })
     expect(upload).toHaveBeenCalledTimes(3)
+    expect(imageEntries).toEqual(
+      expect.arrayContaining([
+        { path: 'app/public/uploads/cover.webp', publicPath: '/uploads/cover.webp', blobSha: 'sha-cover' },
+        { path: 'app/public/uploads/gallery-1.webp', publicPath: '/uploads/gallery-1.webp', blobSha: 'sha-gallery-1' },
+        { path: 'app/public/uploads/gallery-2.webp', publicPath: '/uploads/gallery-2.webp', blobSha: 'sha-gallery-2' },
+      ]),
+    )
+    expect(imageEntries).toHaveLength(3)
   })
 
-  it('returns the input unchanged and never calls upload when there is nothing pending', async () => {
-    const upload = vi.fn(async () => '/uploads/should-not-be-called.webp')
+  it('returns the input unchanged, an empty imageEntries list, and never calls upload when there is nothing pending', async () => {
+    const upload = vi.fn(async () => ({
+      path: 'app/public/uploads/should-not-be-called.webp',
+      publicPath: '/uploads/should-not-be-called.webp',
+      blobSha: 'unused',
+    }))
     const input = { title: { uk: 'Проект' }, cover: '/uploads/existing.webp', gallery: ['/uploads/a.webp'] }
 
-    const result = await resolvePendingImages(input, upload)
+    const { value, imageEntries } = await resolvePendingImages(input, upload)
 
-    expect(result).toEqual(input)
+    expect(value).toEqual(input)
+    expect(imageEntries).toEqual([])
     expect(upload).not.toHaveBeenCalled()
   })
 

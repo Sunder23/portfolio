@@ -205,36 +205,143 @@ export async function deleteFile(path: string, sha: string, message: string, tok
   console.info(`[admin/github] delete success ${path}`)
 }
 
-async function putBinary(path: string, base64Content: string, message: string, token: string): Promise<{ sha: string }> {
-  const response = await fetch(`${API_BASE}/repos/${OWNER}/${REPO}/contents/${path}`, {
-    method: 'PUT',
+// --- Git Data API: multi-file atomic commits -------------------------------------------------
+// The Contents API above is one PUT/DELETE = one commit = one GitHub Pages deploy. That's fine
+// for a single JSON file, but staging a project edit with 2 new gallery images used to produce
+// 3 separate commits (and 3 deploy runs) for what is, from the user's perspective, one save.
+// commitFiles() bundles any number of file writes/deletes into a single commit via the
+// lower-level Git Data primitives (blob -> tree -> commit -> ref update).
+
+const DEFAULT_BRANCH = 'main'
+
+export type CommitEntry =
+  | { path: string; content: string }
+  | { path: string; blobSha: string }
+  | { path: string; delete: true }
+
+async function createBlob(base64Content: string, token: string): Promise<string> {
+  const response = await fetch(`${API_BASE}/repos/${OWNER}/${REPO}/git/blobs`, {
+    method: 'POST',
     headers: { ...authHeaders(token), 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message, content: base64Content }),
+    body: JSON.stringify({ content: base64Content, encoding: 'base64' }),
   })
-  await assertOkResponse(response, path, 'uploading', { conflict: true })
-
+  await assertOkResponse(response, 'git/blobs', 'creating blob')
   const json = await response.json()
-  return { sha: json.content.sha }
+  return json.sha
 }
 
-// New-file create for binary assets (images) — unlike putFile/saveFile, no sha is fetched or
-// sent since uploads always target a fresh, uniquely-named path (see uploadPendingImage).
-export async function uploadImage(path: string, blob: Blob, message: string, token: string): Promise<{ sha: string }> {
-  console.info(`[admin/github] upload start ${path} (${blob.size} bytes)`)
-  const base64Content = await blobToBase64(blob)
-  return withConflictRetry(() => putBinary(path, base64Content, message, token), path, 'upload')
-}
-
-// Uploads a locally-staged image blob (see admin/lib/resolvePendingImages.ts) to a fresh
-// uniquely-named path and returns the public runtime URL to store in JSON content fields
-// (cover/gallery/avatar) — BASE_URL differs between dev ('/') and the built site ('/portfolio/'),
-// see vite.config.ts, so ProjectCard/ProjectDetail/ProfileEditor can render <img src={value}>
-// unchanged in both environments.
-export async function uploadPendingImage(blob: Blob, token: string): Promise<string> {
+// Creates a blob for a staged image without committing it — the resulting sha is included in
+// the same tree/commit as the JSON entity that references it (see resolvePendingImages.ts).
+// Returns both the repo path (used as the commit tree entry) and the public runtime URL
+// (substituted into the JSON's cover/gallery/avatar field) — BASE_URL differs between dev ('/')
+// and the built site ('/portfolio/'), see vite.config.ts.
+export async function createImageBlob(blob: Blob, token: string): Promise<{ path: string; publicPath: string; blobSha: string }> {
   const filename = `${crypto.randomUUID()}.webp`
   const path = `app/public/uploads/${filename}`
-  await uploadImage(path, blob, `chore(uploads): add ${filename}`, token)
   const publicPath = `${import.meta.env.BASE_URL}uploads/${filename}`
-  console.info(`[admin/github] uploaded pending image ${filename} -> ${publicPath}`)
-  return publicPath
+  console.info(`[admin/github] create image blob start ${filename} (${blob.size} bytes)`)
+  const blobSha = await createBlob(await blobToBase64(blob), token)
+  console.info(`[admin/github] create image blob success ${filename} -> ${blobSha}`)
+  return { path, publicPath, blobSha }
+}
+
+async function getRef(branch: string, token: string): Promise<string> {
+  const response = await fetch(`${API_BASE}/repos/${OWNER}/${REPO}/git/refs/heads/${branch}`, {
+    headers: authHeaders(token),
+  })
+  await assertOkResponse(response, `refs/heads/${branch}`, 'reading ref')
+  const json = await response.json()
+  return json.object.sha as string
+}
+
+async function getCommitTreeSha(commitSha: string, token: string): Promise<string> {
+  const response = await fetch(`${API_BASE}/repos/${OWNER}/${REPO}/git/commits/${commitSha}`, {
+    headers: authHeaders(token),
+  })
+  await assertOkResponse(response, `git/commits/${commitSha}`, 'reading commit')
+  const json = await response.json()
+  return json.tree.sha as string
+}
+
+async function createTree(baseTreeSha: string, entries: { path: string; sha: string | null }[], token: string): Promise<string> {
+  const response = await fetch(`${API_BASE}/repos/${OWNER}/${REPO}/git/trees`, {
+    method: 'POST',
+    headers: { ...authHeaders(token), 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      base_tree: baseTreeSha,
+      tree: entries.map((entry) => ({ path: entry.path, mode: '100644', type: 'blob', sha: entry.sha })),
+    }),
+  })
+  await assertOkResponse(response, 'git/trees', 'creating tree')
+  const json = await response.json()
+  return json.sha as string
+}
+
+async function createGitCommit(message: string, treeSha: string, parentSha: string, token: string): Promise<string> {
+  const response = await fetch(`${API_BASE}/repos/${OWNER}/${REPO}/git/commits`, {
+    method: 'POST',
+    headers: { ...authHeaders(token), 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message, tree: treeSha, parents: [parentSha] }),
+  })
+  await assertOkResponse(response, 'git/commits', 'creating commit')
+  const json = await response.json()
+  return json.sha as string
+}
+
+async function updateRef(branch: string, commitSha: string, token: string): Promise<void> {
+  const response = await fetch(`${API_BASE}/repos/${OWNER}/${REPO}/git/refs/heads/${branch}`, {
+    method: 'PATCH',
+    headers: { ...authHeaders(token), 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sha: commitSha, force: false }),
+  })
+  if (response.status === 401) {
+    throw new GithubAuthError()
+  }
+  // 422 = not a fast-forward (someone else committed in between reading the parent and
+  // updating the branch) — the same kind of conflict as a Contents API sha mismatch, just
+  // surfaced as a different status code by this endpoint.
+  if (response.status === 422) {
+    throw new GithubConflictError()
+  }
+  await assertOkResponse(response, `refs/heads/${branch}`, 'updating ref')
+}
+
+// Bundles any number of file writes/deletes into a single commit. `content` entries get a
+// fresh blob created for them (JSON, always UTF-8-safe base64 like putFile); `blobSha` entries
+// reuse an already-created blob (staged images, see createImageBlob); `delete` entries remove
+// the path from the tree. Retries once on a non-fast-forward ref update, same as saveFile's
+// sha-conflict retry.
+export async function commitFiles(entries: CommitEntry[], message: string, token: string): Promise<void> {
+  if (entries.length === 0) return
+
+  const paths = entries.map((entry) => entry.path).join(', ')
+  console.info(`[admin/github] commitFiles start (${entries.length}): ${paths}`)
+
+  await withConflictRetry(
+    async () => {
+      const parentSha = await getRef(DEFAULT_BRANCH, token)
+      const baseTreeSha = await getCommitTreeSha(parentSha, token)
+
+      const treeEntries = await Promise.all(
+        entries.map(async (entry) => {
+          if ('delete' in entry) {
+            return { path: entry.path, sha: null }
+          }
+          if ('blobSha' in entry) {
+            return { path: entry.path, sha: entry.blobSha }
+          }
+          const sha = await createBlob(utf8ToBase64(entry.content), token)
+          return { path: entry.path, sha }
+        }),
+      )
+
+      const newTreeSha = await createTree(baseTreeSha, treeEntries, token)
+      const commitSha = await createGitCommit(message, newTreeSha, parentSha, token)
+      await updateRef(DEFAULT_BRANCH, commitSha, token)
+    },
+    paths,
+    'commitFiles',
+  )
+
+  console.info(`[admin/github] commitFiles success: ${paths}`)
 }
