@@ -11,17 +11,13 @@
     "WPML",
     "Polylang",
     "WP-CLI",
-    "MySQL",
-    "Docker",
-    "GitHub Actions",
-    "Test"
+    "MySQL"
   ],
   "category": [
     "Web",
     "CMS",
     "E-commerce",
-    "Portfolio",
-    "123123"
+    "Portfolio"
   ],
   "role": [
     "Fullstack developer",
