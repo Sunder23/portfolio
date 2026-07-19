@@ -11,7 +11,8 @@
     "WPML",
     "Polylang",
     "WP-CLI",
-    "MySQL"
+    "MySQL",
+    "Docker"
   ],
   "category": [
     "Web",
