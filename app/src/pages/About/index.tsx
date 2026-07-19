@@ -1,20 +1,25 @@
 import { useTranslation } from 'react-i18next'
 import { Badge } from '@/components/ui/badge'
-import { getProfile, getSkills } from '@/lib/data'
+import { MarkdownContent } from '@/components/MarkdownContent'
+import { getExperience, getProfile, getSkills } from '@/lib/data'
+import { useLocale } from '@/hooks/useLocale'
 import { useLocalized } from '@/hooks/useLocalized'
 import { useAsyncData } from '@/hooks/useAsyncData'
 import { useDocumentMeta } from '@/hooks/useDocumentMeta'
+import { resolveLocalized } from '@/types'
 
 export default function About() {
   const { t } = useTranslation()
+  const locale = useLocale()
   const profile = useAsyncData(getProfile)
   const skills = useAsyncData(getSkills)
+  const experience = useAsyncData(getExperience)
 
   const bio = useLocalized(profile?.bio ?? { uk: '' })
 
   useDocumentMeta({ title: t('meta.about.title'), description: t('meta.about.description') })
 
-  if (!profile || !skills) {
+  if (!profile || !skills || !experience) {
     return <p className="text-sm text-muted-foreground">{t('common.loading')}</p>
   }
 
@@ -23,6 +28,33 @@ export default function About() {
       <h1 className="text-2xl font-medium">{t('about.title')}</h1>
 
       <p className="max-w-xl text-sm text-muted-foreground">{bio}</p>
+
+      <div className="flex flex-col gap-6">
+        <h2 className="text-lg font-medium">{t('about.experience')}</h2>
+        {experience.map((entry, index) => (
+          <div key={index} className="flex flex-col gap-2">
+            <p className="text-base font-medium">
+              {resolveLocalized(entry.position, locale)} · {entry.company}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              {resolveLocalized(entry.industry, locale)} · {resolveLocalized(entry.period, locale)}
+            </p>
+            <MarkdownContent markdown={resolveLocalized(entry.summary, locale)} />
+            <MarkdownContent markdown={resolveLocalized(entry.responsibilities, locale)} />
+            <MarkdownContent markdown={resolveLocalized(entry.achievements, locale)} />
+            <div className="flex flex-col gap-1.5">
+              <p className="text-sm font-medium">{t('common.stack')}</p>
+              <div className="flex flex-wrap gap-1.5">
+                {entry.stack.map((tech) => (
+                  <Badge key={tech} variant="outline">
+                    {tech}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
 
       <div className="flex flex-col gap-3">
         <h2 className="text-lg font-medium">{t('about.skills')}</h2>

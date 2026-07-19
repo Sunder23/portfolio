@@ -38,8 +38,8 @@ Rationale: контентна фіча поверх вже завершених 
 <!-- Commit checkpoint: tasks 1-4 -->
 
 ### Phase 2: i18n + Admin + About
-- [ ] Task 5: Додати i18n ключі (`about.experience`, `common.stack`) в `uk.json`/`ru.json`/`en.json`
-- [ ] Task 6: Створити `src/admin/editors/ExperienceEditor/index.tsx` (depends on 1)
-- [ ] Task 7: Зареєструвати редактор у `src/admin/lib/registry.ts` і `src/admin/lib/navConfig.ts` (depends on 6)
-- [ ] Task 8: Відрендерити секцію Experience на `src/pages/About/index.tsx` (depends on 1, 4, 5)
+- [x] Task 5: Додати i18n ключі (`about.experience`, `common.stack`) в `uk.json`/`ru.json`/`en.json`
+- [x] Task 6: Створити `src/admin/editors/ExperienceEditor/index.tsx` (depends on 1)
+- [x] Task 7: Зареєструвати редактор у `src/admin/lib/registry.ts` і `src/admin/lib/navConfig.ts` (depends on 6)
+- [x] Task 8: Відрендерити секцію Experience на `src/pages/About/index.tsx` (depends on 1, 4, 5)
 <!-- Commit checkpoint: tasks 5-8 -->

@@ -25,10 +25,12 @@
   "about": {
     "title": "Обо мне",
     "skills": "Навыки",
+    "experience": "Опыт работы",
     "contact": "Контакты"
   },
   "common": {
-    "loading": "Загрузка…"
+    "loading": "Загрузка…",
+    "stack": "Стек"
   },
   "theme": {
     "light": "Светлая",

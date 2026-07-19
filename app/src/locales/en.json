@@ -25,10 +25,12 @@
   "about": {
     "title": "About me",
     "skills": "Skills",
+    "experience": "Experience",
     "contact": "Contact"
   },
   "common": {
-    "loading": "Loading…"
+    "loading": "Loading…",
+    "stack": "Stack"
   },
   "theme": {
     "light": "Light",

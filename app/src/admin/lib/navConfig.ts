@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react'
-import { FolderKanban, UserRound, Wrench } from 'lucide-react'
+import { Briefcase, FolderKanban, UserRound, Wrench } from 'lucide-react'
 
 export interface AdminNavChild {
   label: string
@@ -41,5 +41,11 @@ export const navConfig: AdminNavItem[] = [
     label: 'Skills',
     icon: Wrench,
     path: '/admin/skills',
+  },
+  {
+    id: 'experience',
+    label: 'Experience',
+    icon: Briefcase,
+    path: '/admin/experience',
   },
 ]
