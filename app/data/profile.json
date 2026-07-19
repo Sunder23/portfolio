@@ -11,7 +11,7 @@
     "en": "I build custom WordPress themes and plugins in PHP: ACF/SCF, Gutenberg blocks, WooCommerce, multilingual sites with WPML/Polylang. Bulk data operations via WP-CLI, CI/CD with GitHub Actions, Docker environments for development."
   },
   "location": "Odesa",
-  "email": "sunder123@gmail.com",
+  "email": "kravchukmax85@gmail.com",
   "socials": [
     {
       "platform": "GitHub",
@@ -19,7 +19,11 @@
     },
     {
       "platform": "LinkedIn",
-      "url": "https://linkedin.com"
+      "url": "https://www.linkedin.com/in/max-kravchuk-136657249/"
+    },
+    {
+      "platform": "Telegram",
+      "url": "https://t.me/max_kravchuk_contact"
     }
   ],
   "avatar": "/portfolio/uploads/e6c14baa-8736-416c-ac37-1a672d8f2460.webp"
