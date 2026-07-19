@@ -1,4 +1,4 @@
-import type { Profile, Project, SkillCategory } from '@/types'
+import type { Experience, Profile, Project, SkillCategory } from '@/types'
 
 const projectModules = import.meta.glob<{ default: Project }>('../../data/projects/*.json', { eager: true })
 
@@ -14,4 +14,9 @@ export async function getProfile(): Promise<Profile> {
 export async function getSkills(): Promise<SkillCategory[]> {
   const data = await import('../../data/skills.json')
   return data.default as SkillCategory[]
+}
+
+export async function getExperience(): Promise<Experience[]> {
+  const data = await import('../../data/experience.json')
+  return data.default as Experience[]
 }

@@ -1,0 +1,36 @@
+[
+  {
+    "position": {
+      "uk": "WordPress розробник",
+      "ru": "WordPress разработчик",
+      "en": "WordPress Developer"
+    },
+    "company": "WebforBiz",
+    "industry": {
+      "uk": "Реклама та PR-послуги",
+      "ru": "Реклама и PR-услуги",
+      "en": "Advertising & PR services"
+    },
+    "period": {
+      "uk": "10.2021 — по поточний час (4 роки 10 місяців)",
+      "ru": "10.2021 — по настоящее время (4 года 10 месяцев)",
+      "en": "10.2021 — present (4 years 10 months)"
+    },
+    "summary": {
+      "uk": "Розробка кастомних WordPress-тем і плагінів з нуля для клієнтських проєктів (нерухомість, e-commerce, корпоративні сайти).",
+      "ru": "Разработка кастомных WordPress-тем и плагинов с нуля для клиентских проектов (недвижимость, e-commerce, корпоративные сайты).",
+      "en": "Building custom WordPress themes and plugins from scratch for client projects (real estate, e-commerce, corporate sites)."
+    },
+    "responsibilities": {
+      "uk": "- Розробка тем на базі ACF/SCF, кастомних Gutenberg-блоків, інтеграція WooCommerce\n- Верстка за макетами Figma: pixel-perfect, адаптив, анімації (GSAP)\n- Мультимовні сайти на WPML та Polylang, налаштування hreflang\n- Масові операції з даними через WP-CLI: імпорти, міграції, обробка контенту\n- Налаштування CI/CD (GitHub Actions) та Docker-оточень для розробки\n- Діагностика продуктивності: сервер, MySQL, оптимізація адмінки",
+      "ru": "- Разработка тем на базе ACF/SCF, кастомных Gutenberg-блоков, интеграция WooCommerce\n- Вёрстка по макетам Figma: pixel-perfect, адаптив, анимации (GSAP)\n- Мультиязычные сайты на WPML и Polylang, настройка hreflang\n- Массовые операции с данными через WP-CLI: импорты, миграции, обработка контента\n- Настройка CI/CD (GitHub Actions) и Docker-окружений для разработки\n- Диагностика производительности: сервер, MySQL, оптимизация админки",
+      "en": "- Theme development on ACF/SCF, custom Gutenberg blocks, WooCommerce integration\n- Pixel-perfect, responsive layouts from Figma designs with GSAP animations\n- Multilingual sites with WPML and Polylang, hreflang configuration\n- Bulk data operations via WP-CLI: imports, migrations, content processing\n- CI/CD setup (GitHub Actions) and Docker environments for development\n- Performance diagnostics: server, MySQL, admin optimization"
+    },
+    "achievements": {
+      "uk": "- Підтримую портал нерухомості на ~6 000 оголошень трьома мовами: усунув критичні проблеми продуктивності адмінки, імпортував ~20 000 зображень через WP-CLI\n- Провів security-розслідування: виявив і видалив два бекдори, посилив захист сайту\n- Мігрував сайт з Joomla на WordPress через власний Python-скрапер\n- Розробив кастомний sitemap-плагін з hreflang для Polylang",
+      "ru": "- Поддерживаю портал недвижимости на ~6 000 объявлений на трёх языках: устранил критические проблемы производительности админки, импортировал ~20 000 изображений через WP-CLI\n- Провёл security-расследование: обнаружил и удалил два бэкдора, усилил защиту сайта\n- Мигрировал сайт с Joomla на WordPress через собственный Python-скрапер\n- Разработал кастомный sitemap-плагин с hreflang для Polylang",
+      "en": "- Maintain a real estate portal with ~6,000 listings in three languages: resolved critical admin performance issues, imported ~20,000 images via WP-CLI\n- Conducted a security investigation: found and removed two backdoors, hardened site security\n- Migrated a site from Joomla to WordPress using a custom Python scraper\n- Built a custom sitemap plugin with hreflang support for Polylang"
+    },
+    "stack": ["PHP 8+", "JavaScript (ES6+)", "MySQL", "ACF/SCF", "WooCommerce", "WPML/Polylang", "WP-CLI", "Vite", "SASS", "Docker", "GitHub Actions"]
+  }
+]

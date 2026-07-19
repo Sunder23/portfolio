@@ -48,3 +48,14 @@ export interface SkillCategory {
   category: string
   items: string[]
 }
+
+export interface Experience {
+  position: Localized
+  company: string
+  industry: Localized
+  period: Localized
+  summary: Localized
+  responsibilities: Localized
+  achievements: Localized
+  stack: string[]
+}
