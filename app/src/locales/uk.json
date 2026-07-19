@@ -8,7 +8,11 @@
   "home": {
     "viewProjects": "Переглянути проєкти",
     "viewAbout": "Про мене",
-    "contactMe": "Написати мені"
+    "contactMe": "Написати мені",
+    "stackTitle": "cat skills.txt",
+    "featuredTitle": "ls ./projects --featured",
+    "experienceTitle": "history --work | tail -1",
+    "viewFullExperience": "весь досвід"
   },
   "projects": {
     "title": "Проєкти",
@@ -36,6 +40,10 @@
     "light": "Світла",
     "dark": "Темна",
     "toggleLabel": "Перемкнути тему"
+  },
+  "footer": {
+    "status": "Відкритий для нових проєктів",
+    "location": "Локація"
   },
   "meta": {
     "home": {

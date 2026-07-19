@@ -8,7 +8,11 @@
   "home": {
     "viewProjects": "View projects",
     "viewAbout": "About me",
-    "contactMe": "Contact me"
+    "contactMe": "Contact me",
+    "stackTitle": "cat skills.txt",
+    "featuredTitle": "ls ./projects --featured",
+    "experienceTitle": "history --work | tail -1",
+    "viewFullExperience": "full experience"
   },
   "projects": {
     "title": "Projects",
@@ -36,6 +40,10 @@
     "light": "Light",
     "dark": "Dark",
     "toggleLabel": "Toggle theme"
+  },
+  "footer": {
+    "status": "Available for new projects",
+    "location": "Location"
   },
   "meta": {
     "home": {

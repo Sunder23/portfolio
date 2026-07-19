@@ -12,7 +12,7 @@ export function ProjectCard({ project }: { project: Project }) {
 
   return (
     <Link to={`/${locale}/projects/${project.slug}`}>
-      <Card className="h-full transition-colors hover:bg-muted/50">
+      <Card className="h-full border border-border ring-0 transition-colors hover:border-accent hover:bg-muted/50">
         {project.cover && (
           <img src={project.cover} alt={title} loading="lazy" className="aspect-video w-full object-cover" />
         )}
@@ -28,6 +28,12 @@ export function ProjectCard({ project }: { project: Project }) {
               </Badge>
             ))}
           </div>
+          <p
+            aria-hidden
+            className="font-heading text-xs uppercase tracking-wide text-accent opacity-0 transition-opacity group-hover/card:opacity-100"
+          >
+            $ open
+          </p>
         </CardContent>
       </Card>
     </Link>

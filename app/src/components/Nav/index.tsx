@@ -27,12 +27,14 @@ export function Nav() {
               end={link.end}
               className={({ isActive }) =>
                 cn(
-                  'text-sm font-medium transition-colors',
-                  isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
+                  'font-heading text-base uppercase tracking-wide transition-colors',
+                  isActive ? 'text-accent' : 'text-muted-foreground hover:text-foreground',
                 )
               }
             >
+              <span aria-hidden>[ </span>
               {link.label}
+              <span aria-hidden> ]</span>
             </NavLink>
           ))}
         </div>

@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
+@import "@fontsource/vt323";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -115,6 +116,92 @@
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
+}
+
+/*
+ * Terminal pixel-style scope for the public site (app/src/components/PublicLayout).
+ * Applied via the `.pixel-terminal` class on PublicLayout's root element only —
+ * never on <html>/<body> — so the admin module (which never renders this class)
+ * is completely unaffected. Two variants: this block is the light "paper terminal"
+ * (dark-green-on-cream); `.dark .pixel-terminal` below is the dark "phosphor" look,
+ * layered the same way `.dark` already overrides `:root` above.
+ */
+.pixel-terminal {
+    --background: #f3efe1;
+    --foreground: #173d1c;
+    --card: #ebe4cf;
+    --card-foreground: #123015;
+    --popover: #ebe4cf;
+    --popover-foreground: #123015;
+    --primary: #173d1c;
+    --primary-foreground: #f3efe1;
+    --secondary: #ded4b0;
+    --secondary-foreground: #173d1c;
+    --muted: #e4dcc0;
+    --muted-foreground: #4a6b4f;
+    --accent: #a35a00;
+    --accent-foreground: #f3efe1;
+    --destructive: #a3271f;
+    --border: #c9bd93;
+    --input: #c9bd93;
+    --ring: #173d1c;
+    --radius: 0px;
+    --font-heading: 'VT323', ui-monospace, monospace;
+    --font-sans: ui-monospace, "Cascadia Code", "SF Mono", Consolas, "Liberation Mono", monospace;
+}
+
+.dark .pixel-terminal {
+    --background: #0a0d0a;
+    --foreground: #39ff6a;
+    --card: #0c130c;
+    --card-foreground: #c9ffd6;
+    --popover: #0c130c;
+    --popover-foreground: #c9ffd6;
+    --primary: #39ff6a;
+    --primary-foreground: #0a0d0a;
+    --secondary: #122a16;
+    --secondary-foreground: #c9ffd6;
+    --muted: #0f1a10;
+    --muted-foreground: #2f8f4d;
+    --accent: #ffb000;
+    --accent-foreground: #1a1200;
+    --destructive: #ff3355;
+    --border: #163a1f;
+    --input: #163a1f;
+    --ring: #39ff6a;
+}
+
+@keyframes term-blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+@keyframes term-scan {
+    0%, 100% {
+        opacity: 0.9;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+.scanline-overlay {
+    background-image: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0) 0px,
+        rgba(0, 0, 0, 0) 2px,
+        currentcolor 3px
+    );
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    animation: term-scan 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pixel-terminal * {
+        animation: none !important;
+    }
 }
 
 @layer base {
