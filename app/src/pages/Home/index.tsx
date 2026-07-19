@@ -47,23 +47,43 @@ export default function Home() {
 
   return (
     <div className="flex flex-1 flex-col gap-14">
-      <div className="flex flex-col items-start gap-4">
-        <h1 className="font-heading text-4xl">
-          {profile.name}
-          <TerminalCursor />
-        </h1>
-        <p className="font-heading text-lg text-accent">{title}</p>
-        <p className="max-w-xl text-sm text-muted-foreground">{bio}</p>
-        <div className="flex gap-2">
-          <Link to={`/${locale}/projects`} className={buttonVariants({ variant: 'default' })}>
-            {t('home.viewProjects')}
-          </Link>
-          <Link to={`/${locale}/about`} className={buttonVariants({ variant: 'outline' })}>
-            {t('home.viewAbout')}
-          </Link>
-          <a href={`mailto:${profile.email}`} className={buttonVariants({ variant: 'ghost' })}>
-            {t('home.contactMe')}
-          </a>
+      <div className="border border-border">
+        <div className="flex items-center gap-1.5 border-b border-border bg-muted px-3 py-2">
+          <span aria-hidden className="size-2.5 border border-border bg-destructive" />
+          <span aria-hidden className="size-2.5 border border-border bg-accent" />
+          <span aria-hidden className="size-2.5 border border-border bg-primary" />
+          <p className="font-heading ml-2 text-xs uppercase tracking-wide text-muted-foreground">
+            guest@maxkravchuk: ~
+          </p>
+        </div>
+        <div className="flex flex-col gap-6 p-6 sm:flex-row sm:items-start">
+          {profile.avatar && (
+            <figure className="shrink-0 self-center border border-border sm:self-start">
+              <img src={profile.avatar} alt={profile.name} className="size-28 object-cover sm:size-36" />
+              <figcaption className="border-t border-border px-2 py-1 text-center font-heading text-[10px] uppercase tracking-wide text-muted-foreground">
+                profile.webp
+              </figcaption>
+            </figure>
+          )}
+          <div className="flex flex-col items-start gap-4">
+            <h1 className="glow-text font-heading text-4xl text-card-foreground">
+              {profile.name}
+              <TerminalCursor />
+            </h1>
+            <p className="font-heading text-lg text-accent">{title}</p>
+            <p className="max-w-xl text-sm text-muted-foreground">{bio}</p>
+            <div className="flex gap-2">
+              <Link to={`/${locale}/projects`} className={buttonVariants({ variant: 'default' })}>
+                {t('home.viewProjects')}
+              </Link>
+              <Link to={`/${locale}/about`} className={buttonVariants({ variant: 'outline' })}>
+                {t('home.viewAbout')}
+              </Link>
+              <a href={`mailto:${profile.email}`} className={buttonVariants({ variant: 'ghost' })}>
+                {t('home.contactMe')}
+              </a>
+            </div>
+          </div>
         </div>
       </div>
 

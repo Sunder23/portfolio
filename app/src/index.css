@@ -152,22 +152,22 @@
 
 .dark .pixel-terminal {
     --background: #0a0d0a;
-    --foreground: #39ff6a;
-    --card: #0c130c;
-    --card-foreground: #c9ffd6;
-    --popover: #0c130c;
-    --popover-foreground: #c9ffd6;
-    --primary: #39ff6a;
-    --primary-foreground: #0a0d0a;
-    --secondary: #122a16;
-    --secondary-foreground: #c9ffd6;
-    --muted: #0f1a10;
-    --muted-foreground: #2f8f4d;
+    --foreground: #a9d9b4;
+    --card: #0f1811;
+    --card-foreground: #d8f5df;
+    --popover: #0f1811;
+    --popover-foreground: #d8f5df;
+    --primary: #1c4a26;
+    --primary-foreground: #eafff1;
+    --secondary: #16281a;
+    --secondary-foreground: #d8f5df;
+    --muted: #101c13;
+    --muted-foreground: #5c8a66;
     --accent: #ffb000;
     --accent-foreground: #1a1200;
     --destructive: #ff3355;
-    --border: #163a1f;
-    --input: #163a1f;
+    --border: #234a2c;
+    --input: #234a2c;
     --ring: #39ff6a;
 }
 
@@ -184,6 +184,10 @@
     50% {
         opacity: 1;
     }
+}
+
+.dark .glow-text {
+    text-shadow: 0 0 14px currentcolor;
 }
 
 .scanline-overlay {
