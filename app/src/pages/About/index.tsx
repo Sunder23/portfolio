@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Badge } from '@/components/ui/badge'
 import { MarkdownContent } from '@/components/MarkdownContent'
+import { CommandLabel } from '@/components/CommandLabel'
 import { getExperience, getProfile, getSkills } from '@/lib/data'
 import { useLocale } from '@/hooks/useLocale'
 import { useLocalized } from '@/hooks/useLocalized'
@@ -25,15 +26,20 @@ export default function About() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-medium">{t('about.title')}</h1>
+      <CommandLabel as="h1" className="text-2xl" label={t('about.title')}>
+        {t('about.commandTitle')}
+      </CommandLabel>
 
       <p className="max-w-xl text-sm text-muted-foreground">{bio}</p>
 
       <div className="flex flex-col gap-6">
-        <h2 className="text-lg font-medium">{t('about.experience')}</h2>
+        <CommandLabel label={t('about.experience')}>{t('about.experienceCommand')}</CommandLabel>
         {experience.map((entry, index) => (
-          <div key={index} className="flex flex-col gap-2">
-            <p className="text-base font-medium">
+          <div key={index} className="flex flex-col gap-3 border border-border p-4">
+            <CommandLabel as="h3" className="text-xs" label={`${resolveLocalized(entry.position, locale)} · ${entry.company}`}>
+              {`history --job=${index + 1}`}
+            </CommandLabel>
+            <p className="font-heading text-base">
               {resolveLocalized(entry.position, locale)} · {entry.company}
             </p>
             <p className="text-sm text-muted-foreground">
@@ -57,7 +63,7 @@ export default function About() {
       </div>
 
       <div className="flex flex-col gap-3">
-        <h2 className="text-lg font-medium">{t('about.skills')}</h2>
+        <CommandLabel label={t('about.skills')}>{t('about.skillsCommand')}</CommandLabel>
         {skills.map((cat) => (
           <div key={cat.category} className="flex flex-col gap-1.5">
             <p className="text-sm font-medium">{cat.category}</p>
@@ -73,23 +79,25 @@ export default function About() {
       </div>
 
       <div className="flex flex-col gap-1">
-        <h2 className="text-lg font-medium">{t('about.contact')}</h2>
-        <a
-          href={`mailto:${profile.email}`}
-          className="text-sm text-primary underline-offset-4 hover:underline"
-        >
-          {profile.email}
-        </a>
-        {profile.socials.map((social) => (
-          <a
-            key={social.platform}
-            href={social.url}
-            target="_blank"
-            rel="noreferrer"
-            className="text-sm text-primary underline-offset-4 hover:underline"
-          >
-            {social.platform}
+        <CommandLabel label={t('about.contact')}>{t('about.contactCommand')}</CommandLabel>
+        <p className="text-sm text-muted-foreground">
+          <span aria-hidden>{'> '}</span>
+          <a href={`mailto:${profile.email}`} className="hover:text-foreground hover:underline">
+            {profile.email}
           </a>
+        </p>
+        {profile.socials.map((social) => (
+          <p key={social.platform} className="text-sm text-muted-foreground">
+            <span aria-hidden>{'> '}</span>
+            <a
+              href={social.url}
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-foreground hover:underline"
+            >
+              {social.platform.toLowerCase()}
+            </a>
+          </p>
         ))}
       </div>
     </div>

@@ -16,7 +16,8 @@
   },
   "projects": {
     "title": "Проекты",
-    "empty": "Проектов пока нет"
+    "empty": "Проектов пока нет",
+    "commandTitle": "ls ./projects --published"
   },
   "projectDetail": {
     "back": "Все проекты",
@@ -30,7 +31,11 @@
     "title": "Обо мне",
     "skills": "Навыки",
     "experience": "Опыт работы",
-    "contact": "Контакты"
+    "contact": "Контакты",
+    "commandTitle": "cat about.md",
+    "experienceCommand": "history --work",
+    "skillsCommand": "cat skills.txt",
+    "contactCommand": "cat contact.txt"
   },
   "common": {
     "loading": "Загрузка…",
@@ -69,6 +74,7 @@
   },
   "contact": {
     "title": "Контакты",
+    "commandTitle": "send --message",
     "description": "Расскажите коротко о задаче — отвечу на email.",
     "name": "Имя",
     "email": "Email",

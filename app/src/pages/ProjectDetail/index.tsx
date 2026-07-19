@@ -54,19 +54,25 @@ export default function ProjectDetail() {
 
   return (
     <div className="flex flex-col gap-6">
-      <Link to={`/${locale}/projects`} className="text-sm text-muted-foreground hover:text-foreground">
-        ← {t('projectDetail.back')}
+      <Link
+        to={`/${locale}/projects`}
+        className="font-heading text-sm uppercase tracking-wide text-muted-foreground hover:text-accent"
+      >
+        <span aria-hidden>$ cd .. </span>
+        {t('projectDetail.back')}
       </Link>
 
-      <h1 className="text-2xl font-medium">{title}</h1>
+      <h1 className="font-heading text-3xl">{title}</h1>
 
-      <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-        <span>
+      <div className="flex flex-col gap-1 text-sm text-muted-foreground">
+        <p>
+          <span aria-hidden>{'> '}</span>
           {t('projectDetail.role')}: {project.role}
-        </span>
-        <span>
+        </p>
+        <p>
+          <span aria-hidden>{'> '}</span>
           {t('projectDetail.year')}: {project.year}
-        </span>
+        </p>
       </div>
 
       <div className="flex flex-wrap gap-1.5">
@@ -79,8 +85,13 @@ export default function ProjectDetail() {
 
       {project.gallery.length > 0 && (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {project.gallery.map((src) => (
-            <img key={src} src={src} alt={title} loading="lazy" className="rounded-lg object-cover" />
+          {project.gallery.map((src, index) => (
+            <figure key={src} className="border border-border">
+              <img src={src} alt={title} loading="lazy" className="aspect-video w-full object-cover" />
+              <figcaption className="border-t border-border px-2 py-1 font-heading text-xs uppercase tracking-wide text-muted-foreground">
+                {`IMG_${String(index + 1).padStart(2, '0')}.PNG`}
+              </figcaption>
+            </figure>
           ))}
         </div>
       )}
@@ -92,8 +103,9 @@ export default function ProjectDetail() {
           href={project.url}
           target="_blank"
           rel="noreferrer"
-          className={cn(buttonVariants({ variant: 'default' }), 'self-start')}
+          className={cn(buttonVariants({ variant: 'default' }), 'font-heading self-start uppercase tracking-wide')}
         >
+          <span aria-hidden>$ </span>
           {t('projectDetail.visitProject')}
         </a>
       )}

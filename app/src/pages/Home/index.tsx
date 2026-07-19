@@ -68,7 +68,7 @@ export default function Home() {
       </div>
 
       <div className="flex flex-col gap-4">
-        <CommandLabel>{t('home.stackTitle')}</CommandLabel>
+        <CommandLabel label={t('about.skills')}>{t('home.stackTitle')}</CommandLabel>
         <div className="flex flex-col gap-3">
           {skills.map((cat) => (
             <div key={cat.category} className="flex flex-col gap-1.5">
@@ -88,7 +88,7 @@ export default function Home() {
       {featured.length > 0 && (
         <div className="flex flex-col gap-4">
           <div className="flex items-baseline justify-between">
-            <CommandLabel>{t('home.featuredTitle')}</CommandLabel>
+            <CommandLabel label={t('projects.title')}>{t('home.featuredTitle')}</CommandLabel>
             <Link
               to={`/${locale}/projects`}
               className="text-xs text-muted-foreground hover:text-foreground"
@@ -107,7 +107,7 @@ export default function Home() {
       {currentJob && (
         <div className="flex flex-col gap-4">
           <div className="flex items-baseline justify-between">
-            <CommandLabel>{t('home.experienceTitle')}</CommandLabel>
+            <CommandLabel label={t('about.experience')}>{t('home.experienceTitle')}</CommandLabel>
             <Link
               to={`/${locale}/about`}
               className="text-xs text-muted-foreground hover:text-foreground"

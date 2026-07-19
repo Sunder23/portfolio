@@ -16,7 +16,8 @@
   },
   "projects": {
     "title": "Проєкти",
-    "empty": "Проєктів поки немає"
+    "empty": "Проєктів поки немає",
+    "commandTitle": "ls ./projects --published"
   },
   "projectDetail": {
     "back": "Усі проєкти",
@@ -30,7 +31,11 @@
     "title": "Про мене",
     "skills": "Навички",
     "experience": "Досвід роботи",
-    "contact": "Контакти"
+    "contact": "Контакти",
+    "commandTitle": "cat about.md",
+    "experienceCommand": "history --work",
+    "skillsCommand": "cat skills.txt",
+    "contactCommand": "cat contact.txt"
   },
   "common": {
     "loading": "Завантаження…",
@@ -69,6 +74,7 @@
   },
   "contact": {
     "title": "Контакти",
+    "commandTitle": "send --message",
     "description": "Розкажіть коротко про задачу — відповім на email.",
     "name": "Ім'я",
     "email": "Email",

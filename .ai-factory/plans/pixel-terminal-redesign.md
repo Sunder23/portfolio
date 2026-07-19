@@ -56,10 +56,10 @@ Rationale: логичное продолжение роадмапа после �
 **Фаза 2 — страницы (#9–#14)**
 9. [x] `ProjectCard` — проверка/подстройка под токены (граница + `$ open` hover-подсказка)
 10. [x] `Home` — новая структура секций (+ i18n-ключи)
-11. `Projects` — command-label заголовок
-12. `ProjectDetail` — command-style детали и рамки галереи
-13. `About` — command-labels, терминальные панели опыта
-14. `Contact` — визуал формы
+11. [x] `Projects` — command-label заголовок
+12. [x] `ProjectDetail` — command-style детали и рамки галереи
+13. [x] `About` — command-labels, терминальные панели опыта (+ `CommandLabel` получил `label`-проп для доступного имени, backfill на Home/Projects)
+14. [x] `Contact` — визуал формы
 
 **Фаза 3 — проверка и документация (#15–#16)**
 15. Ручная проверка light/dark вариантов на всех публичных роутах + регрессия админки

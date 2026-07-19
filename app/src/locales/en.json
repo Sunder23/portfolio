@@ -16,7 +16,8 @@
   },
   "projects": {
     "title": "Projects",
-    "empty": "No projects yet"
+    "empty": "No projects yet",
+    "commandTitle": "ls ./projects --published"
   },
   "projectDetail": {
     "back": "All projects",
@@ -30,7 +31,11 @@
     "title": "About me",
     "skills": "Skills",
     "experience": "Experience",
-    "contact": "Contact"
+    "contact": "Contact",
+    "commandTitle": "cat about.md",
+    "experienceCommand": "history --work",
+    "skillsCommand": "cat skills.txt",
+    "contactCommand": "cat contact.txt"
   },
   "common": {
     "loading": "Loading…",
@@ -69,6 +74,7 @@
   },
   "contact": {
     "title": "Contact",
+    "commandTitle": "send --message",
     "description": "Tell me briefly about your project — I'll reply by email.",
     "name": "Name",
     "email": "Email",

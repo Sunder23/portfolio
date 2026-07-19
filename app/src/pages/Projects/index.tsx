@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { ProjectCard } from '@/components/ProjectCard'
+import { CommandLabel } from '@/components/CommandLabel'
 import { getProjects } from '@/lib/data'
 import { useAsyncData } from '@/hooks/useAsyncData'
 import { useDocumentMeta } from '@/hooks/useDocumentMeta'
@@ -18,7 +19,9 @@ export default function Projects() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-medium">{t('projects.title')}</h1>
+      <CommandLabel as="h1" className="text-2xl" label={t('projects.title')}>
+        {t('projects.commandTitle')}
+      </CommandLabel>
       {published.length === 0 ? (
         <p className="text-sm text-muted-foreground">{t('projects.empty')}</p>
       ) : (

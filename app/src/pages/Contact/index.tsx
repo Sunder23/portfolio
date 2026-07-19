@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -8,7 +8,18 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { CommandLabel } from '@/components/CommandLabel'
 import { useDocumentMeta } from '@/hooks/useDocumentMeta'
+
+function BracketLabel({ children }: { children: ReactNode }) {
+  return (
+    <FormLabel className="font-heading text-xs uppercase tracking-wide">
+      <span aria-hidden>[ </span>
+      {children}
+      <span aria-hidden> ]</span>
+    </FormLabel>
+  )
+}
 
 export default function Contact() {
   const { t } = useTranslation()
@@ -45,7 +56,9 @@ export default function Contact() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-medium">{t('contact.title')}</h1>
+        <CommandLabel as="h1" className="text-2xl" label={t('contact.title')}>
+          {t('contact.commandTitle')}
+        </CommandLabel>
         <p className="text-sm text-muted-foreground">{t('contact.description')}</p>
       </div>
 
@@ -69,7 +82,7 @@ export default function Contact() {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t('contact.name')}</FormLabel>
+                <BracketLabel>{t('contact.name')}</BracketLabel>
                 <FormControl>
                   <Input {...field} placeholder={t('contact.namePlaceholder')} />
                 </FormControl>
@@ -83,7 +96,7 @@ export default function Contact() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t('contact.email')}</FormLabel>
+                <BracketLabel>{t('contact.email')}</BracketLabel>
                 <FormControl>
                   <Input {...field} type="email" placeholder={t('contact.emailPlaceholder')} />
                 </FormControl>
@@ -97,7 +110,7 @@ export default function Contact() {
             name="message"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t('contact.message')}</FormLabel>
+                <BracketLabel>{t('contact.message')}</BracketLabel>
                 <FormControl>
                   <Textarea {...field} placeholder={t('contact.messagePlaceholder')} rows={5} />
                 </FormControl>
@@ -106,7 +119,8 @@ export default function Contact() {
             )}
           />
 
-          <Button type="submit" className="self-start">
+          <Button type="submit" className="font-heading self-start uppercase tracking-wide">
+            <span aria-hidden>$ </span>
             {t('contact.submit')}
           </Button>
         </form>

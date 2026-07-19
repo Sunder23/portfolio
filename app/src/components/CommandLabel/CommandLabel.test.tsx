@@ -15,4 +15,10 @@ describe('CommandLabel', () => {
 
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('$ cat about.md')
   })
+
+  it('exposes a human-readable accessible name when label is given', () => {
+    render(<CommandLabel label="About me">cat about.md</CommandLabel>)
+
+    expect(screen.getByRole('heading', { name: 'About me' })).toHaveTextContent('$ cat about.md')
+  })
 })
