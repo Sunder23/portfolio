@@ -9,10 +9,46 @@
     "viewProjects": "Смотреть проекты",
     "viewAbout": "Обо мне",
     "contactMe": "Написать мне",
+    "whoamiTitle": "whoami",
+    "whoamiLabel": "Коротко обо мне",
+    "servicesLabel": "Услуги",
+    "statLocation": "Локация",
+    "statStack": "Технологий",
+    "statProjects": "Проектов",
+    "statStatus": "Статус",
+    "statStatusValue": "Доступен",
+    "servicesTitle": "ls ./services",
+    "services": {
+      "items": [
+        {
+          "title": "WordPress-темы и плагины",
+          "description": "Кастомная разработка с нуля на PHP, ACF/SCF, Gutenberg-блоки — без тяжёлых конструкторов."
+        },
+        {
+          "title": "WooCommerce-магазины",
+          "description": "Интернет-магазины под ключ: кастомная логика оплат, доставки, каталога."
+        },
+        {
+          "title": "Мультиязычные сайты",
+          "description": "WPML и Polylang, настройка hreflang, локализация контента и админки."
+        },
+        {
+          "title": "Миграции и импорт данных",
+          "description": "Перенос с других CMS, массовые операции через WP-CLI, чистка и импорт контента."
+        },
+        {
+          "title": "Производительность и безопасность",
+          "description": "Аудит и оптимизация админки и базы данных, поиск и устранение уязвимостей."
+        }
+      ]
+    },
     "stackTitle": "cat skills.txt",
     "featuredTitle": "ls ./projects --featured",
-    "experienceTitle": "history --work | tail -1",
-    "viewFullExperience": "весь опыт"
+    "experienceTitle": "history --work",
+    "viewFullExperience": "подробнее",
+    "ctaTitle": "./contact.sh",
+    "ctaHeading": "Открыт для новых проектов",
+    "ctaText": "Расскажите коротко о задаче — отвечу на email в течение дня."
   },
   "projects": {
     "title": "Проекты",
@@ -48,7 +84,9 @@
   },
   "footer": {
     "status": "Открыт для новых проектов",
-    "location": "Локация"
+    "location": "Локация",
+    "menuTitle": "Меню",
+    "contactTitle": "Контакты"
   },
   "meta": {
     "home": {

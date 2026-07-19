@@ -35,7 +35,7 @@ export default function About() {
       <div className="flex flex-col gap-6">
         <CommandLabel label={t('about.experience')}>{t('about.experienceCommand')}</CommandLabel>
         {experience.map((entry, index) => (
-          <div key={index} className="flex flex-col gap-3 border border-border p-4">
+          <div key={index} className="pixel-notch flex flex-col gap-3 border border-border p-4">
             <CommandLabel as="h3" className="text-xs" label={`${resolveLocalized(entry.position, locale)} · ${entry.company}`}>
               {`history --job=${index + 1}`}
             </CommandLabel>

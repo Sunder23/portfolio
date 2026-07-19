@@ -9,10 +9,46 @@
     "viewProjects": "Переглянути проєкти",
     "viewAbout": "Про мене",
     "contactMe": "Написати мені",
+    "whoamiTitle": "whoami",
+    "whoamiLabel": "Коротко про мене",
+    "servicesLabel": "Послуги",
+    "statLocation": "Локація",
+    "statStack": "Технологій",
+    "statProjects": "Проєктів",
+    "statStatus": "Статус",
+    "statStatusValue": "Доступний",
+    "servicesTitle": "ls ./services",
+    "services": {
+      "items": [
+        {
+          "title": "WordPress-теми та плагіни",
+          "description": "Кастомна розробка з нуля на PHP, ACF/SCF, Gutenberg-блоки — без важких конструкторів."
+        },
+        {
+          "title": "WooCommerce-магазини",
+          "description": "Інтернет-магазини під ключ: кастомна логіка оплат, доставки, каталогу."
+        },
+        {
+          "title": "Мультимовні сайти",
+          "description": "WPML та Polylang, налаштування hreflang, локалізація контенту й адмінки."
+        },
+        {
+          "title": "Міграції та імпорт даних",
+          "description": "Перенесення з інших CMS, масові операції через WP-CLI, чистка й імпорт контенту."
+        },
+        {
+          "title": "Продуктивність і безпека",
+          "description": "Аудит і оптимізація адмінки та бази даних, пошук і усунення вразливостей."
+        }
+      ]
+    },
     "stackTitle": "cat skills.txt",
     "featuredTitle": "ls ./projects --featured",
-    "experienceTitle": "history --work | tail -1",
-    "viewFullExperience": "весь досвід"
+    "experienceTitle": "history --work",
+    "viewFullExperience": "детальніше",
+    "ctaTitle": "./contact.sh",
+    "ctaHeading": "Відкритий для нових проєктів",
+    "ctaText": "Розкажіть коротко про задачу — відповім на email протягом дня."
   },
   "projects": {
     "title": "Проєкти",
@@ -48,7 +84,9 @@
   },
   "footer": {
     "status": "Відкритий для нових проєктів",
-    "location": "Локація"
+    "location": "Локація",
+    "menuTitle": "Меню",
+    "contactTitle": "Контакти"
   },
   "meta": {
     "home": {

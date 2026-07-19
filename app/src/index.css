@@ -119,56 +119,69 @@
 }
 
 /*
+ * Tailwind's text-* utilities are rem-based, which resolves against the root
+ * <html> element regardless of nesting — so scoping a font-size bump to the
+ * .pixel-terminal div itself wouldn't cascade into them. :has() lets the root
+ * pick up the larger scale only when a public (pixel-terminal) page is on
+ * screen, leaving /#/admin — which never renders that class — at the default.
+ */
+html:has(.pixel-terminal) {
+    font-size: 112.5%;
+}
+
+/*
  * Terminal pixel-style scope for the public site (app/src/components/PublicLayout).
  * Applied via the `.pixel-terminal` class on PublicLayout's root element only —
  * never on <html>/<body> — so the admin module (which never renders this class)
- * is completely unaffected. Two variants: this block is the light "paper terminal"
- * (dark-green-on-cream); `.dark .pixel-terminal` below is the dark "phosphor" look,
- * layered the same way `.dark` already overrides `:root` above.
+ * is completely unaffected. Duotone red/cream palette (ref: high-contrast pixel-art
+ * poster art — deep maroon/near-black + warm cream, one hot red spot accent). Two
+ * variants: this block is the light "paper" side (cream bg, dark maroon text);
+ * `.dark .pixel-terminal` below is the dark "blood terminal" side (near-black bg,
+ * cream text), layered the same way `.dark` already overrides `:root` above.
  */
 .pixel-terminal {
-    --background: #f3efe1;
-    --foreground: #173d1c;
-    --card: #ebe4cf;
-    --card-foreground: #123015;
-    --popover: #ebe4cf;
-    --popover-foreground: #123015;
-    --primary: #173d1c;
-    --primary-foreground: #f3efe1;
-    --secondary: #ded4b0;
-    --secondary-foreground: #173d1c;
-    --muted: #e4dcc0;
-    --muted-foreground: #4a6b4f;
-    --accent: #a35a00;
-    --accent-foreground: #f3efe1;
-    --destructive: #a3271f;
-    --border: #c9bd93;
-    --input: #c9bd93;
-    --ring: #173d1c;
+    --background: #f3dccb;
+    --foreground: #3a0a12;
+    --card: #ecd0bd;
+    --card-foreground: #24060c;
+    --popover: #ecd0bd;
+    --popover-foreground: #24060c;
+    --primary: #7a1020;
+    --primary-foreground: #f3dccb;
+    --secondary: #e2c0a8;
+    --secondary-foreground: #3a0a12;
+    --muted: #e6c7b0;
+    --muted-foreground: #8a4030;
+    --accent: #b3182f;
+    --accent-foreground: #f3dccb;
+    --destructive: #a86400;
+    --border: #d4ad8f;
+    --input: #d4ad8f;
+    --ring: #7a1020;
     --radius: 0px;
     --font-heading: 'VT323', ui-monospace, monospace;
     --font-sans: ui-monospace, "Cascadia Code", "SF Mono", Consolas, "Liberation Mono", monospace;
 }
 
 .dark .pixel-terminal {
-    --background: #0a0d0a;
-    --foreground: #a9d9b4;
-    --card: #0f1811;
-    --card-foreground: #d8f5df;
-    --popover: #0f1811;
-    --popover-foreground: #d8f5df;
-    --primary: #1c4a26;
-    --primary-foreground: #eafff1;
-    --secondary: #16281a;
-    --secondary-foreground: #d8f5df;
-    --muted: #101c13;
-    --muted-foreground: #5c8a66;
-    --accent: #ffb000;
-    --accent-foreground: #1a1200;
-    --destructive: #ff3355;
-    --border: #234a2c;
-    --input: #234a2c;
-    --ring: #39ff6a;
+    --background: #120b0a;
+    --foreground: #f4e8dc;
+    --card: #221512;
+    --card-foreground: #f4e8dc;
+    --popover: #221512;
+    --popover-foreground: #f4e8dc;
+    --primary: #c81f3a;
+    --primary-foreground: #fbeee6;
+    --secondary: #291714;
+    --secondary-foreground: #f4e8dc;
+    --muted: #1c1210;
+    --muted-foreground: #caa494;
+    --accent: #ff3b4e;
+    --accent-foreground: #1a0806;
+    --destructive: #ffb020;
+    --border: #47291f;
+    --input: #47291f;
+    --ring: #ff3b4e;
 }
 
 @keyframes term-blink {
@@ -206,6 +219,16 @@
     .pixel-terminal * {
         animation: none !important;
     }
+}
+
+/* Cuts stairstep "pixel" notches out of the four corners — panel/card frame motif. */
+.pixel-notch {
+    clip-path: polygon(
+        0 10px, 10px 10px, 10px 0,
+        calc(100% - 10px) 0, calc(100% - 10px) 10px, 100% 10px,
+        100% calc(100% - 10px), calc(100% - 10px) calc(100% - 10px), calc(100% - 10px) 100%,
+        10px 100%, 10px calc(100% - 10px), 0 calc(100% - 10px)
+    );
 }
 
 @layer base {

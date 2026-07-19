@@ -43,11 +43,26 @@ export default function Home() {
     .filter((p) => p.featured && p.published)
     .sort((a, b) => a.order - b.order)
     .slice(0, 2)
-  const currentJob = experience[0]
+  const publishedCount = projects.filter((p) => p.published).length
+  const skillsCount = skills.reduce((total, cat) => total + cat.items.length, 0)
+  const services = t('home.services.items', { returnObjects: true }) as {
+    title: string
+    description: string
+  }[]
+
+  const stats = [
+    { label: t('home.statStatus'), value: t('home.statStatusValue') },
+    { label: t('home.statLocation'), value: profile.location },
+    { label: t('home.statStack'), value: String(skillsCount) },
+    { label: t('home.statProjects'), value: String(publishedCount) },
+  ]
 
   return (
     <div className="flex flex-1 flex-col gap-14">
-      <div className="border border-border">
+      <div className="pixel-notch relative border border-border bg-card">
+        <span aria-hidden className="absolute top-0 left-0 size-1.5 bg-accent" />
+        <span aria-hidden className="absolute top-4 left-2.5 size-1.5 bg-primary" />
+        <span aria-hidden className="absolute right-3 bottom-2 size-1.5 bg-accent" />
         <div className="flex items-center gap-1.5 border-b border-border bg-muted px-3 py-2">
           <span aria-hidden className="size-2.5 border border-border bg-destructive" />
           <span aria-hidden className="size-2.5 border border-border bg-accent" />
@@ -88,6 +103,33 @@ export default function Home() {
       </div>
 
       <div className="flex flex-col gap-4">
+        <CommandLabel label={t('home.whoamiLabel')}>{t('home.whoamiTitle')}</CommandLabel>
+        <div className="pixel-notch grid grid-cols-2 gap-px border border-border bg-border sm:grid-cols-4">
+          {stats.map((stat) => (
+            <div key={stat.label} className="flex flex-col gap-1 bg-card px-4 py-3">
+              <p className="font-heading text-2xl text-accent">{stat.value}</p>
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <CommandLabel label={t('home.servicesLabel')}>{t('home.servicesTitle')}</CommandLabel>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {services.map((service, index) => (
+            <div key={service.title} className="pixel-notch flex flex-col gap-1.5 border border-border p-4">
+              <p aria-hidden className="font-heading text-xs text-accent">
+                [{String(index + 1).padStart(2, '0')}]
+              </p>
+              <p className="font-heading text-base">{service.title}</p>
+              <p className="text-sm text-muted-foreground">{service.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-4">
         <CommandLabel label={t('about.skills')}>{t('home.stackTitle')}</CommandLabel>
         <div className="flex flex-col gap-3">
           {skills.map((cat) => (
@@ -124,7 +166,7 @@ export default function Home() {
         </div>
       )}
 
-      {currentJob && (
+      {experience.length > 0 && (
         <div className="flex flex-col gap-4">
           <div className="flex items-baseline justify-between">
             <CommandLabel label={t('about.experience')}>{t('home.experienceTitle')}</CommandLabel>
@@ -135,16 +177,34 @@ export default function Home() {
               {t('home.viewFullExperience')} →
             </Link>
           </div>
-          <div className="border border-border p-4">
-            <p className="font-heading text-base">
-              {resolveLocalized(currentJob.position, locale)} · {currentJob.company}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              {resolveLocalized(currentJob.period, locale)}
-            </p>
+          <div className="flex flex-col gap-3">
+            {experience.map((job, index) => (
+              <div key={index} className="pixel-notch border border-border p-4">
+                <p className="font-heading text-base">
+                  {resolveLocalized(job.position, locale)} · {job.company}
+                </p>
+                <p className="text-sm text-muted-foreground">{resolveLocalized(job.period, locale)}</p>
+                <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+                  {resolveLocalized(job.summary, locale)}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       )}
+
+      <div className="pixel-notch flex flex-col items-start gap-3 border border-accent/50 bg-card p-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-1">
+          <p aria-hidden className="font-heading text-xs uppercase tracking-wide text-accent">
+            $ {t('home.ctaTitle')}
+          </p>
+          <p className="font-heading text-xl">{t('home.ctaHeading')}</p>
+          <p className="max-w-md text-sm text-muted-foreground">{t('home.ctaText')}</p>
+        </div>
+        <a href={`mailto:${profile.email}`} className={buttonVariants({ variant: 'default' })}>
+          {t('home.contactMe')}
+        </a>
+      </div>
     </div>
   )
 }

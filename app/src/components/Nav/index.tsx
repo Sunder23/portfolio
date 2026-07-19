@@ -17,9 +17,9 @@ export function Nav() {
   ]
 
   return (
-    <header className="border-b border-border">
-      <nav className="mx-auto flex max-w-4xl items-center justify-between px-4 py-3">
-        <div className="flex items-center gap-4">
+    <header className="sticky top-3 z-40 px-4">
+      <nav className="pixel-notch mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-3 border border-border bg-background/85 px-4 py-3 shadow-lg backdrop-blur-md">
+        <div className="flex flex-wrap items-center gap-4">
           {links.map((link) => (
             <NavLink
               key={link.to}

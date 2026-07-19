@@ -60,6 +60,7 @@
 | README | README.md | Landing page: обзор, стек, быстрый старт, ссылки на docs/ |
 | Dev workflow | docs/dev-workflow.md | Локальная разработка, проверка сборки, деплой, git-pull gotcha |
 | Admin workflow | docs/admin-workflow.md | Редактирование контента через админку, картинки, обработка ошибок |
+| Design system | docs/design-system.md | Пиксельная терминальная дизайн-система публичной части (токен-скоуп, палитра, шрифт, shared-компоненты) |
 
 ## AI Context Files
 

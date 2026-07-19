@@ -17,11 +17,11 @@ export function CommandLabel({
     <Component
       aria-label={label}
       className={cn(
-        'font-heading text-sm font-normal uppercase tracking-wide text-muted-foreground',
+        'font-heading text-lg font-normal uppercase tracking-wide text-foreground',
         className,
       )}
     >
-      <span aria-hidden>$ </span>
+      <span aria-hidden className="text-accent">$ </span>
       {children}
     </Component>
   )

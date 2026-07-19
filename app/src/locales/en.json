@@ -9,10 +9,46 @@
     "viewProjects": "View projects",
     "viewAbout": "About me",
     "contactMe": "Contact me",
+    "whoamiTitle": "whoami",
+    "whoamiLabel": "Quick facts",
+    "servicesLabel": "Services",
+    "statLocation": "Location",
+    "statStack": "Technologies",
+    "statProjects": "Projects",
+    "statStatus": "Status",
+    "statStatusValue": "Available",
+    "servicesTitle": "ls ./services",
+    "services": {
+      "items": [
+        {
+          "title": "WordPress themes & plugins",
+          "description": "Custom builds from scratch in PHP, ACF/SCF, Gutenberg blocks — no heavyweight page builders."
+        },
+        {
+          "title": "WooCommerce stores",
+          "description": "Turnkey online stores: custom payment, shipping, and catalog logic."
+        },
+        {
+          "title": "Multilingual sites",
+          "description": "WPML and Polylang, hreflang setup, localized content and admin."
+        },
+        {
+          "title": "Data migration & import",
+          "description": "Moving off other CMSs, bulk operations via WP-CLI, content cleanup and import."
+        },
+        {
+          "title": "Performance & security",
+          "description": "Admin and database audits and optimization, finding and closing vulnerabilities."
+        }
+      ]
+    },
     "stackTitle": "cat skills.txt",
     "featuredTitle": "ls ./projects --featured",
-    "experienceTitle": "history --work | tail -1",
-    "viewFullExperience": "full experience"
+    "experienceTitle": "history --work",
+    "viewFullExperience": "details",
+    "ctaTitle": "./contact.sh",
+    "ctaHeading": "Available for new projects",
+    "ctaText": "Tell me briefly about your task — I'll reply by email within a day."
   },
   "projects": {
     "title": "Projects",
@@ -48,7 +84,9 @@
   },
   "footer": {
     "status": "Available for new projects",
-    "location": "Location"
+    "location": "Location",
+    "menuTitle": "Menu",
+    "contactTitle": "Contact"
   },
   "meta": {
     "home": {

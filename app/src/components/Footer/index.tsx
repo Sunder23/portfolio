@@ -1,11 +1,17 @@
 import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { getProfile } from '@/lib/data'
 import { useAsyncData } from '@/hooks/useAsyncData'
+import { useLocale } from '@/hooks/useLocale'
+import { useLocalized } from '@/hooks/useLocalized'
+import { LocaleSwitcher } from '@/components/LocaleSwitcher'
 
 export function Footer() {
   const { t } = useTranslation()
+  const locale = useLocale()
   const profile = useAsyncData(getProfile)
+  const title = useLocalized(profile?.title ?? { uk: '' })
 
   useEffect(() => {
     if (profile) {
@@ -17,36 +23,77 @@ export function Footer() {
     return null
   }
 
+  const links = [
+    { to: `/${locale}`, label: t('nav.home'), end: true },
+    { to: `/${locale}/projects`, label: t('nav.projects'), end: false },
+    { to: `/${locale}/about`, label: t('nav.about'), end: false },
+    { to: `/${locale}/contact`, label: t('nav.contact'), end: false },
+  ]
+
   return (
-    <footer className="border-t border-border">
-      <div className="mx-auto flex max-w-4xl flex-col gap-1 px-4 py-6 font-sans text-sm text-muted-foreground">
-        <p>
-          <span aria-hidden>{'> '}</span>
-          {t('footer.status')}
-        </p>
-        <p>
-          <span aria-hidden>{'> '}</span>
-          {t('footer.location')}: {profile.location}
-        </p>
-        <p>
-          <span aria-hidden>{'> '}</span>
-          <a href={`mailto:${profile.email}`} className="hover:text-foreground hover:underline">
-            {profile.email}
-          </a>
-        </p>
-        {profile.socials.map((social) => (
-          <p key={social.platform}>
+    <footer className="mt-auto border-t border-border font-sans">
+      <div className="mx-auto flex max-w-4xl flex-col gap-8 px-4 py-10 text-sm sm:flex-row sm:justify-between">
+        <div className="flex max-w-xs flex-col gap-2">
+          <p className="font-heading text-lg text-foreground">{profile.name}_</p>
+          <p className="text-muted-foreground">{title}</p>
+          <p className="text-muted-foreground">
             <span aria-hidden>{'> '}</span>
-            <a
-              href={social.url}
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-foreground hover:underline"
-            >
-              {social.platform.toLowerCase()}
-            </a>
+            {t('footer.status')}
           </p>
-        ))}
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <p className="font-heading text-xs uppercase tracking-wide text-accent">
+            <span aria-hidden>$ </span>
+            {t('footer.menuTitle')}
+          </p>
+          <nav className="flex flex-col gap-1.5">
+            {links.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                className="text-muted-foreground hover:text-foreground hover:underline"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <p className="font-heading text-xs uppercase tracking-wide text-accent">
+            <span aria-hidden>$ </span>
+            {t('footer.contactTitle')}
+          </p>
+          <div className="flex flex-col gap-1.5 text-muted-foreground">
+            <p>
+              {t('footer.location')}: {profile.location}
+            </p>
+            <a href={`mailto:${profile.email}`} className="hover:text-foreground hover:underline">
+              {profile.email}
+            </a>
+            {profile.socials.map((social) => (
+              <a
+                key={social.platform}
+                href={social.url}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-foreground hover:underline"
+              >
+                {social.platform.toLowerCase()}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="border-t border-border">
+        <div className="mx-auto flex max-w-4xl flex-col-reverse items-center gap-3 px-4 py-4 text-xs text-muted-foreground sm:flex-row sm:justify-between">
+          <p>
+            © {new Date().getFullYear()} {profile.name}
+          </p>
+          <LocaleSwitcher />
+        </div>
       </div>
     </footer>
   )

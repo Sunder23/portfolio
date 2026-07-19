@@ -12,9 +12,14 @@ export function ProjectCard({ project }: { project: Project }) {
 
   return (
     <Link to={`/${locale}/projects/${project.slug}`}>
-      <Card className="h-full border border-border ring-0 transition-colors hover:border-accent hover:bg-muted/50">
+      <Card className="pixel-notch h-full border border-border ring-0 transition-colors hover:border-accent hover:bg-muted/50">
         {project.cover && (
-          <img src={project.cover} alt={title} loading="lazy" className="aspect-video w-full object-cover" />
+          <img
+            src={project.cover}
+            alt={title}
+            loading="lazy"
+            className="aspect-video w-full border-b border-border object-cover [filter:grayscale(1)_sepia(0.45)_saturate(1.8)_hue-rotate(-18deg)_brightness(0.82)_contrast(1.1)]"
+          />
         )}
         <CardHeader>
           <CardTitle>{title}</CardTitle>

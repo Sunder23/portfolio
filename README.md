@@ -41,5 +41,6 @@ git push origin main → GitHub Actions → GitHub Pages
 |----------|----------|
 | [docs/dev-workflow.md](./docs/dev-workflow.md) | Локальная разработка, проверка сборки, деплой, git-workflow |
 | [docs/admin-workflow.md](./docs/admin-workflow.md) | Редактирование контента через админку, загрузка картинок, обработка ошибок |
+| [docs/design-system.md](./docs/design-system.md) | Пиксельная терминальная дизайн-система публичной части |
 | [AGENTS.md](./AGENTS.md) | Структурная карта проекта для AI-агентов |
 | [PLAN.md](./PLAN.md) | Первичная детальная спецификация проекта |

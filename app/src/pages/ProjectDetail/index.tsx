@@ -86,8 +86,13 @@ export default function ProjectDetail() {
       {project.gallery.length > 0 && (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {project.gallery.map((src, index) => (
-            <figure key={src} className="border border-border">
-              <img src={src} alt={title} loading="lazy" className="aspect-video w-full object-cover" />
+            <figure key={src} className="pixel-notch border border-border">
+              <img
+                src={src}
+                alt={title}
+                loading="lazy"
+                className="aspect-video w-full object-cover [filter:grayscale(1)_sepia(0.45)_saturate(1.8)_hue-rotate(-18deg)_brightness(0.82)_contrast(1.1)]"
+              />
               <figcaption className="border-t border-border px-2 py-1 font-heading text-xs uppercase tracking-wide text-muted-foreground">
                 {`IMG_${String(index + 1).padStart(2, '0')}.PNG`}
               </figcaption>
