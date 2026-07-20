@@ -11,6 +11,8 @@ export default function TokenGate() {
   const [error, setError] = useState<string | null>(null)
   const [validating, setValidating] = useState(false)
 
+  console.debug('[refactor:admin-layout-children] TokenGate mounted')
+
   async function handleSubmit(event: FormEvent) {
     event.preventDefault()
     setError(null)

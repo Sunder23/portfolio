@@ -10,6 +10,7 @@ function isActivePath(pathname: string, target: string): boolean {
 
 export function AdminSidebar() {
   const location = useLocation()
+  console.debug('[refactor:admin-layout-children] AdminSidebar mounted')
 
   return (
     <nav className="flex w-56 shrink-0 flex-col gap-0.5 border-r bg-neutral-900 p-2 text-neutral-100">

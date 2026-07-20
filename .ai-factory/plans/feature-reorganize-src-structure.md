@@ -73,9 +73,9 @@ Success signals: Home/index.tsx разбит на секции без потер
 
 ### Phase 4: Остальной колокейт в admin/
 
-- [ ] Task 10: Перенести `AdminSidebar`, `TokenGate`, `SaveAllButton` → `admin/components/AdminLayout/*`
-- [ ] Task 11: Перенести `RichTextEditor` → `admin/components/LocalizedField/RichTextEditor/`
-- [ ] Task 12: Перенести `TaxonomyCheckboxes`, `GalleryUploadField` → `admin/editors/ProjectForm/*`
+- [x] Task 10: Перенести `AdminSidebar`, `TokenGate`, `SaveAllButton` → `admin/components/AdminLayout/*`
+- [x] Task 11: Перенести `RichTextEditor` → `admin/components/LocalizedField/RichTextEditor/`
+- [x] Task 12: Перенести `TaxonomyCheckboxes`, `GalleryUploadField` → `admin/editors/ProjectForm/*`
 <!-- Commit checkpoint: tasks 10-12 -->
 
 ### Phase 5: Уборка и верификация

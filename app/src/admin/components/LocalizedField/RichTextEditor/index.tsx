@@ -77,6 +77,8 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
     },
   })
 
+  console.debug('[refactor:rich-text-editor] mounted')
+
   // [FIX] TipTap's `content` option only seeds the editor once, at creation — it doesn't react
   // to `value` changing afterwards. LocalizedField swaps `value` when the admin switches the
   // uk/ru/en tab, but without this the editor kept showing whatever locale it mounted with.

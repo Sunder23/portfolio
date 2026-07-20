@@ -9,6 +9,8 @@ export function GalleryUploadField({
   value: (string | PendingImage)[]
   onChange: (next: (string | PendingImage)[]) => void
 }) {
+  console.debug('[refactor:project-form-children] GalleryUploadField mounted')
+
   function updateItem(index: number, item: string | PendingImage) {
     const next = [...value]
     next[index] = item

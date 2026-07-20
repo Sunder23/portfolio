@@ -14,6 +14,8 @@ export function SaveAllButton() {
   const draft = useAdminDraft()
   const [saving, setSaving] = useState(false)
 
+  console.debug('[refactor:admin-layout-children] SaveAllButton mounted')
+
   if (draft.dirtyPaths.length === 0) {
     return null
   }
