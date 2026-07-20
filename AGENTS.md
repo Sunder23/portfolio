@@ -28,9 +28,12 @@
 │   │   ├── App.tsx                 # корневой компонент — плоский файл (единственное исключение
 │   │   │                             из конвенции "компонент = папка", см. .ai-factory/ARCHITECTURE.md)
 │   │   ├── pages/                  # Home/, Projects/, ProjectDetail/, About/, Contact/, Admin/
+│   │   ├── layouts/                 # PublicLayout/ — layout-root публичной части
+│   │   ├── shared/                  # части PublicLayout (Nav/, Footer/, Scanline/) — единственный
+│   │   │                              потребитель каждого — сам layout-root, не components/
 │   │   ├── components/              # переиспользуемые UI-компоненты (+ components/ui — плоские shadcn-примитивы)
 │   │   ├── hooks/                   # useLocale, useLocalized, useAsyncData, useDocumentMeta
-│   │   ├── admin/                   # весь код админки, сгруппирован по типу: components/, hooks/, lib/ (github.ts, registry.ts, navConfig.ts), editors/
+│   │   ├── admin/                   # весь код админки, сгруппирован по типу: layouts/ (AdminLayout), shared/ (AdminSidebar/, TokenGate/, SaveAllButton/), components/, hooks/, lib/ (github.ts, registry.ts, navConfig.ts), editors/
 │   │   ├── lib/                     # data.ts — загрузка и типизация JSON, slug.ts
 │   │   └── locales/                  # словари react-i18next (uk, ru, en)
 │   ├── index.html

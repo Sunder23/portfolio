@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { AdminAuthProvider } from '@/admin/context/AdminAuthContext'
 import { AdminDraftProvider } from '@/admin/context/AdminDraftContext'
 import { AdminLocaleProvider } from '@/admin/context/AdminLocaleContext'
-import { SaveAllButton } from '@/admin/layouts/SaveAllButton'
+import { SaveAllButton } from '@/admin/shared/SaveAllButton'
 import { storePat, clearPat } from '@/admin/lib/pat'
 import { ProjectForm } from '@/admin/editors/ProjectForm'
 

@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom'
-import { Nav } from '@/components/Nav'
-import { Footer } from '@/components/Footer'
-import { Scanline } from '@/components/Scanline'
+import { Nav } from '@/shared/Nav'
+import { Footer } from '@/shared/Footer'
+import { Scanline } from '@/shared/Scanline'
 import { Toaster } from '@/components/ui/sonner'
 
 export function PublicLayout() {

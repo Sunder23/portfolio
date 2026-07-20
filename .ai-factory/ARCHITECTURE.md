@@ -29,12 +29,15 @@ app/src/
 │   │                           внутри каждого per-locale роута, см. App.tsx)
 │   └── Admin/                  # (роут /#/admin) — отдельная точка входа, см. admin/
 ├── layouts/                   # Layout-root компонент публичной части (PublicLayout/) — сосед
-│   │                           components/, не вложен внутрь него; симметричный admin-эквивалент —
-│   │                           admin/layouts/ (см. ниже)
-├── components/                # Реально shared UI-компоненты публичной части (2+ потребителя) +
-│   │                           два задокументированных исключения (Nav/Footer/Scanline — части
-│   │                           одного layout-root PublicLayout, не вкладываются друг в друга)
+│   │                           shared/ и components/, не вложен внутрь них; симметричный
+│   │                           admin-эквивалент — admin/layouts/ (см. ниже)
+├── shared/                    # Части layout-root'а: единственный потребитель каждого — сам
+│   │                           PublicLayout, но это не переиспользуемые UI-компоненты (не место
+│   │                           в components/) — см. "Колокейт компонентов" ниже
 │   ├── Nav/                     # + ThemeToggle/ вложен (единственный потребитель — Nav)
+│   ├── Footer/
+│   └── Scanline/
+├── components/                # Реально shared UI-компоненты публичной части (2+ потребителя)
 │   └── ui/                     # shadcn/ui — плоские файлы, исключены из конвенции папка-на-компонент.
 │                                 Также содержит heading.tsx (Heading, level 1-6) — единственная
 │                                 ручная (не сгенерированная shadcn CLI) добавка сюда, намеренно:
@@ -57,10 +60,14 @@ app/src/
 │   │                                на AdminDraftStore ради консистентности с Context API
 │   ├── layouts/                 # Layout-root: AdminLayout (top-bar + <AdminSidebar/> +
 │   │   │                           <AdminDraftProvider><Outlet/></AdminDraftProvider> + <SaveAllButton/>),
-│   │   │                           сосед admin/components/ — симметрично src/layouts/ (PublicLayout)
-│   │   ├── AdminSidebar/          # рендер дерева сайдбара из lib/navConfig.ts — вложен строго,
-│   │   ├── TokenGate/             # единственный потребитель каждого — AdminLayout, колокейт строгий
-│   │   └── SaveAllButton/         # (см. "Колокейт компонентов" ниже)
+│   │   │                           сосед admin/shared/ и admin/components/ — симметрично
+│   │   │                           src/layouts/ (PublicLayout)
+│   ├── shared/                  # Части AdminLayout — единственный потребитель каждого —
+│   │   │                           AdminLayout, симметрично src/shared/ (см. "Колокейт
+│   │   │                           компонентов" ниже)
+│   │   ├── AdminSidebar/          # рендер дерева сайдбара из lib/navConfig.ts
+│   │   ├── TokenGate/
+│   │   └── SaveAllButton/
 │   ├── components/              # Компоненты админки, которые НЕ определяют createContext и не
 │   │   │                           являются layout-root
 │   │   ├── LocalizedField/        # обёртка uk/ru/en-табов для локализуемых полей форм
@@ -112,31 +119,34 @@ app/src/
 **Единственное исключение из другого рода** — корневой `App.tsx`: это entry-компонент без
 колокейтед-теста, папка ради одного файла избыточна, поэтому он остаётся плоским.
 
-### Колокейт компонентов: 1 потребитель → к потребителю, 2+ → components/
+### Колокейт компонентов: 1 потребитель → к потребителю, 2+ → components/, дети layout-root'а → shared/
 
 - **Правило:** компонент с ровно одним потребителем переезжает в папку этого потребителя
   (`pages/Home/HeroSection/TerminalCursor/`, `admin/editors/ProjectForm/TaxonomyCheckboxes/` и
   т.д.); компонент с 2+ реальными потребителями остаётся в `components/` / `admin/components/`
-  как действительно переиспользуемый. Применяется строго, кроме двух исключений ниже.
-- **Исключение №1 (публичная часть):** `Nav/`, `Footer/`, `Scanline/` остаются плоско в
-  `components/`, не вкладываются под `PublicLayout/`, хотя формально у каждого один потребитель
-  (сам `PublicLayout`) — это части одного layout-root, а не самостоятельные единицы.
-- **Исключение №2 (тривиальность):** `hooks/useLocale.ts` содержит `createContext`, но не
+  как действительно переиспользуемый. Применяется строго, кроме одного класса исключений ниже.
+- **Исключение (дети layout-root'а):** компоненты, единственный потребитель которых — сам
+  layout-root страницы (`PublicLayout`, `AdminLayout`), не колокейтятся внутрь layout-root'а и
+  не смешиваются с `components/` / `admin/components/` (зарезервированы для действительно
+  переиспользуемых, 2+-потребительских компонентов) — вместо этого живут в соседней папке
+  `shared/` / `admin/shared/`:
+  - публичная часть: `shared/Nav/` (+ вложенный `ThemeToggle/`, единственный потребитель —
+    сам `Nav`), `shared/Footer/`, `shared/Scanline/` — потребляются из
+    `layouts/PublicLayout/index.tsx`;
+  - admin: `admin/shared/AdminSidebar/`, `admin/shared/TokenGate/`, `admin/shared/SaveAllButton/`
+    — потребляются из `admin/layouts/index.tsx` (`AdminLayout`).
+
+  Оба случая симметричны: `layouts/` соседствует с `shared/` и `components/`; `admin/layouts/`
+  соседствует с `admin/shared/` и `admin/components/`. `AdminLayout` сам — layout-root (аналог
+  `PublicLayout`), единственный потребитель `pages/Admin/index.tsx` по определению одного роута,
+  но не колокейтится внутрь `pages/Admin/` — по той же логике, что и `PublicLayout` в `layouts/`.
+- **Исключение (тривиальность):** `hooks/useLocale.ts` содержит `createContext`, но не
   переезжает в `context/` (правило ниже) — 10 строк без единой строки JSX, папка была бы
   избыточна.
-- **Для admin-эквивалента исключения №1** (дети `AdminLayout` — `AdminSidebar`, `TokenGate`,
-  `SaveAllButton`, каждый с единственным потребителем `AdminLayout`) осознанно НЕ сделано
-  симметричное исключение — колокейт строгий: `admin/layouts/AdminSidebar/` и т.д. живут
-  вложенными в папку самого `AdminLayout` (`admin/layouts/index.tsx`), в отличие от
-  Nav/Footer/Scanline, которые остаются плоско в `components/`. `AdminLayout` сам —
-  layout-root (аналог `PublicLayout`), единственный потребитель `pages/Admin/index.tsx` по
-  определению одного роута, поэтому не колокейтится внутрь `pages/Admin/`; вместо этого он
-  живёт в `admin/layouts/` — соседе `admin/components/`, симметрично тому, как `PublicLayout`
-  живёт в `layouts/` — соседе `components/`.
 - **Контексты — отдельное правило:** любой файл с `createContext` живёт в своей папке
   `context/` / `admin/context/`, независимо от числа потребителей (у контекстов по природе
   много потребителей через `useContext`, правило "1 потребитель" сюда неприменимо) — кроме
-  исключения №2 выше.
+  исключения (тривиальность) выше.
 
 `app/data/*.json`, `app/data/projects/*.json` и `app/public/uploads/`
 физически лежат вне `app/src/` (но внутри `app/`, не в истинном корне репо —

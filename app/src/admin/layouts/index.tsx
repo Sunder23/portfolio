@@ -12,9 +12,9 @@ import { useAdminAuth } from '@/admin/context/AdminAuthContext'
 import { AdminDraftProvider } from '@/admin/context/AdminDraftContext'
 import { useAdminLocale } from '@/admin/context/AdminLocaleContext'
 import { useSessionCheck } from '@/admin/hooks/useSessionCheck'
-import TokenGate from './TokenGate'
-import { AdminSidebar } from './AdminSidebar'
-import { SaveAllButton } from './SaveAllButton'
+import TokenGate from '@/admin/shared/TokenGate'
+import { AdminSidebar } from '@/admin/shared/AdminSidebar'
+import { SaveAllButton } from '@/admin/shared/SaveAllButton'
 import { SUPPORTED_LOCALES, getStoredLocale, DEFAULT_LOCALE } from '@/lib/locale'
 
 export default function AdminLayout() {

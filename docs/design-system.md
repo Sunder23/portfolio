@@ -36,10 +36,10 @@
 
 | Компонент | Путь | Назначение |
 |---|---|---|
-| `Scanline` | `app/src/components/Scanline` | Декоративный CRT-оверлей (scanlines), один экземпляр монтируется в `PublicLayout`. Отключает анимацию при `prefers-reduced-motion: reduce`. |
+| `Scanline` | `app/src/shared/Scanline` | Декоративный CRT-оверлей (scanlines), один экземпляр монтируется в `PublicLayout`. Отключает анимацию при `prefers-reduced-motion: reduce`. |
 | `CommandLabel` | `app/src/components/CommandLabel` | Заменяет обычные `<h1>/<h2>` на секциях: рендерит `$ <children>` в `font-heading`. Проп `label` задаёт `aria-label` — screen reader слышит человеко-читаемый текст (например «About me»), а не стилизованную команду (`cat about.md`). Используется на всех публичных страницах. |
 | `TerminalCursor` | `app/src/components/TerminalCursor` | Мигающий `_` рядом с именем в hero (Home). `aria-hidden`, анимация отключается при reduced motion. |
-| `Footer` | `app/src/components/Footer` | Футер публичной части: локация, email, соцсети из `profile.json`. Монтируется только в `PublicLayout`, в админке не используется. |
+| `Footer` | `app/src/shared/Footer` | Футер публичной части: локация, email, соцсети из `profile.json`. Монтируется только в `PublicLayout`, в админке не используется. |
 
 ## Как расширять
 
