@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes, useParams } from 'react-router-dom'
 import { AdminAuthProvider } from '@/admin/context/AdminAuthContext'
 import { AdminLocaleProvider } from '@/admin/context/AdminLocaleContext'
-import AdminLayout from '@/admin/components/AdminLayout'
+import AdminLayout from '@/admin/layouts'
 import { editorRegistry } from '@/admin/lib/registry'
 import { ProjectForm } from '@/admin/editors/ProjectForm'
 import { ProjectsList } from '@/admin/editors/ProjectsList'
