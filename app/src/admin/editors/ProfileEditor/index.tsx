@@ -53,6 +53,15 @@ export default function ProfileEditor() {
         </div>
       </div>
 
+      <div className="flex flex-col gap-1.5">
+        <Label>cv</Label>
+        <Input
+          placeholder="/uploads/cv.pdf"
+          value={profile.cv ?? ''}
+          onChange={(e) => update('cv', e.target.value)}
+        />
+      </div>
+
       <ImageUploadField label="avatar" value={profile.avatar} onChange={(path) => update('avatar', path)} />
 
       <div className="flex flex-col gap-1.5">

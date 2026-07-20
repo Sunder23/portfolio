@@ -42,6 +42,22 @@ export interface Profile {
   email: string
   socials: SocialLink[]
   avatar: string
+  cv?: string
+}
+
+export interface Testimonial {
+  name: string
+  role?: string
+  quote: Localized
+  avatar?: string
+}
+
+export interface Credential {
+  title: Localized
+  issuer: string
+  period: Localized
+  kind: 'education' | 'certificate'
+  url?: string
 }
 
 export interface SkillCategory {

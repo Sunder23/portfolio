@@ -16,7 +16,7 @@
     "en": "## About the project\n\nMaintenance and development of a WordPress real estate portal with ~6,000 listings in three languages (WPML/Polylang).\n\n- Fixed critical admin panel performance issues\n- Imported ~20,000 images via WP-CLI\n- Conducted a security investigation: found and removed two backdoors, hardened site security\n- Migrated the site from Joomla to WordPress using a custom Python scraper\n- Built a custom sitemap plugin with hreflang support for Polylang"
   },
   "stack": ["PHP", "WordPress", "ACF/SCF", "WooCommerce", "WPML", "Polylang", "WP-CLI", "MySQL", "Docker", "GitHub Actions"],
-  "category": [],
+  "category": ["Web", "CMS"],
   "role": "WordPress developer",
   "year": 2021,
   "url": "",

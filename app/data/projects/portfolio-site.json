@@ -16,7 +16,7 @@
     "en": "## About the project\n\nA portfolio site built with React + Vite + TypeScript, editable right in the browser through a built-in admin panel. Content is stored as JSON in the repository; saving from the admin panel commits through the GitHub Contents API.\n\n- Hosting: GitHub Pages\n- No server, no database\n- Multilingual: uk/ru/en"
   },
   "stack": ["React", "TypeScript", "Vite", "Tailwind CSS"],
-  "category": [],
+  "category": ["Web", "Portfolio"],
   "role": "Fullstack developer",
   "year": 2026,
   "url": "https://github.com",
