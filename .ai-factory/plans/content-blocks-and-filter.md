@@ -60,12 +60,12 @@ Rationale: Новый milestone, кандидатов среди незакры�
 
 ### Phase E — Contact
 
-14. Прямые контакты + бейдж доступности на `app/src/pages/Contact/index.tsx`.
-15. FAQ-блок на `Contact` (по образцу `home.services.items`).
+14. [x] Прямые контакты + бейдж доступности на `app/src/pages/Contact/index.tsx`.
+15. [x] FAQ-блок на `Contact` (по образцу `home.services.items`).
 
 ### Phase F — QA
 
-16. Прогон `npm run test`, ручная проверка всех комбинаций фильтра (включая нулевой результат), prev/next на границах списка, graceful-hide всех новых блоков при пустых данных, проверка uk/ru/en на отсутствующие ключи. _blockedBy: 7, 8, 10, 11, 12, 13, 14, 15_
+16. [x] Прогон `npm run test`, ручная проверка всех комбинаций фильтра (включая нулевой результат), prev/next на границах списка, graceful-hide всех новых блоков при пустых данных, проверка uk/ru/en на отсутствующие ключи. _blockedBy: 7, 8, 10, 11, 12, 13, 14, 15_
 
 ## Commit Plan
 

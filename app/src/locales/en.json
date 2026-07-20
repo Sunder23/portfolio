@@ -143,6 +143,24 @@
     "messageError": "Message must be at least 10 characters",
     "submit": "Send",
     "successTitle": "Thanks for reaching out!",
-    "successDescription": "The form isn't wired up to send yet — email me directly and I'll get back to you as soon as possible."
+    "successDescription": "The form isn't wired up to send yet — email me directly and I'll get back to you as soon as possible.",
+    "faq": {
+      "label": "FAQ",
+      "title": "cat faq.txt",
+      "items": [
+        {
+          "question": "How is pricing calculated?",
+          "answer": "Depends on the scope — send a short brief and I'll reply with an estimate within a day."
+        },
+        {
+          "question": "What does the process look like?",
+          "answer": "We briefly discuss the task, agree on scope and timeline, then I send regular updates until delivery."
+        },
+        {
+          "question": "What time zone are you in?",
+          "answer": "Odesa, UTC+2/+3 — I usually reply within the working day."
+        }
+      ]
+    }
   }
 }

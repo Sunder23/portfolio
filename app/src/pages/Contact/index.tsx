@@ -7,8 +7,11 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { Badge } from '@/components/ui/badge'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { CommandLabel } from '@/components/CommandLabel'
+import { getProfile } from '@/lib/data'
+import { useAsyncData } from '@/hooks/useAsyncData'
 import { useDocumentMeta } from '@/hooks/useDocumentMeta'
 
 function BracketLabel({ children }: { children: ReactNode }) {
@@ -23,8 +26,11 @@ function BracketLabel({ children }: { children: ReactNode }) {
 
 export default function Contact() {
   const { t } = useTranslation()
+  const profile = useAsyncData(getProfile)
 
   useDocumentMeta({ title: t('meta.contact.title'), description: t('meta.contact.description') })
+
+  const faqItems = t('contact.faq.items', { returnObjects: true }) as { question: string; answer: string }[]
 
   // Rebuilt on locale change so zod issue messages stay localized.
   const schema = useMemo(
@@ -60,6 +66,38 @@ export default function Contact() {
           {t('contact.commandTitle')}
         </CommandLabel>
         <p className="text-sm text-muted-foreground">{t('contact.description')}</p>
+      </div>
+
+      {profile && (
+        <div className="flex flex-wrap items-center gap-3">
+          <Badge variant="secondary">{t('footer.status')}</Badge>
+          <a href={`mailto:${profile.email}`} className="text-sm text-muted-foreground hover:text-foreground hover:underline">
+            {profile.email}
+          </a>
+          {profile.socials.map((social) => (
+            <a
+              key={social.platform}
+              href={social.url}
+              target="_blank"
+              rel="noreferrer"
+              className="text-sm text-muted-foreground hover:text-foreground hover:underline"
+            >
+              {social.platform.toLowerCase()}
+            </a>
+          ))}
+        </div>
+      )}
+
+      <div className="flex flex-col gap-3">
+        <CommandLabel label={t('contact.faq.label')}>{t('contact.faq.title')}</CommandLabel>
+        <div className="flex flex-col gap-3">
+          {faqItems.map((item) => (
+            <div key={item.question} className="flex flex-col gap-0.5">
+              <p className="text-sm font-medium">{item.question}</p>
+              <p className="text-sm text-muted-foreground">{item.answer}</p>
+            </div>
+          ))}
+        </div>
       </div>
 
       <Form {...form}>
