@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
-import { TerminalCursor } from '@/components/TerminalCursor'
+import { TerminalCursor } from '@/pages/Home/HeroSection/TerminalCursor'
 
 describe('TerminalCursor', () => {
   it('renders an aria-hidden blinking cursor glyph', () => {
