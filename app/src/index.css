@@ -130,7 +130,7 @@ html:has(.pixel-terminal) {
 }
 
 /*
- * Terminal pixel-style scope for the public site (app/src/components/PublicLayout).
+ * Terminal pixel-style scope for the public site (app/src/components/layouts/PublicLayout).
  * Applied via the `.pixel-terminal` class on PublicLayout's root element only —
  * never on <html>/<body> — so the admin module (which never renders this class)
  * is completely unaffected. Duotone red/cream palette (ref: high-contrast pixel-art

@@ -8,7 +8,7 @@ import About from '@/pages/About'
 import Contact from '@/pages/Contact'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, getStoredLocale, storeLocale, type Locale } from '@/lib/locale'
 import { LocaleProvider } from '@/hooks/useLocale'
-import { PublicLayout } from '@/components/PublicLayout'
+import { PublicLayout } from '@/components/layouts/PublicLayout'
 
 // Lazy-loaded so the GitHub client, marked, sonner, and every editor never
 // ship in the public bundle — only pulled in when /#/admin is visited.
