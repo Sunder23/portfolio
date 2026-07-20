@@ -13,8 +13,6 @@ export function ThemeToggle() {
     setMounted(true)
   }, [])
 
-  console.debug('[refactor:theme-toggle] mounted')
-
   if (!mounted) {
     return <div className="h-[18.4px] w-[32px]" aria-hidden="true" />
   }

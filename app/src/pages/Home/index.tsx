@@ -70,8 +70,6 @@ export default function Home() {
   const techHighlights = getTechHighlights(skills)
   const stats = buildStats(t, profile, skillsCount, publishedCount)
 
-  console.debug('[refactor:home-compose]', { sectionsRendered: 12 })
-
   return (
     <div className="flex flex-1 flex-col gap-14">
       <HeroSection profile={profile} title={title} bio={bio} locale={locale} />

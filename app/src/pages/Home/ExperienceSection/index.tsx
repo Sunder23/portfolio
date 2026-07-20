@@ -7,7 +7,6 @@ import type { Experience } from '@/types'
 
 export function ExperienceSection({ experience, locale }: { experience: Experience[]; locale: Locale }) {
   const { t } = useTranslation()
-  console.debug('[refactor:home-experience]', { count: experience.length })
 
   return (
     <div className="flex flex-col gap-4">

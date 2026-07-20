@@ -8,7 +8,6 @@ export function ServicesSection({
   services: { title: string; description: string }[]
 }) {
   const { t } = useTranslation()
-  console.debug('[refactor:home-services]', { count: services.length })
 
   return (
     <div className="flex flex-col gap-4">

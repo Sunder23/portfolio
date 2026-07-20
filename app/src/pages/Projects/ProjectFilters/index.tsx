@@ -16,7 +16,6 @@ export function ProjectFilters({
   onChange: (next: ProjectFilterState) => void
 }) {
   const { t } = useTranslation()
-  console.debug('[refactor:project-filters] mounted')
 
   const hasActiveFilter = value.role !== null || value.stack.length > 0 || value.category.length > 0
 

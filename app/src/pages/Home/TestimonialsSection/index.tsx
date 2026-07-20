@@ -12,7 +12,6 @@ export function TestimonialsSection({
   locale: Locale
 }) {
   const { t } = useTranslation()
-  console.debug('[refactor:home-testimonials]', { count: testimonials.length })
 
   return (
     <div className="flex flex-col gap-4">

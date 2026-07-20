@@ -7,7 +7,6 @@ import type { Project } from '@/types'
 
 export function FeaturedProjectsSection({ featured, locale }: { featured: Project[]; locale: Locale }) {
   const { t } = useTranslation()
-  console.debug('[refactor:home-featured]', { count: featured.length })
 
   return (
     <div className="flex flex-col gap-4">

@@ -131,8 +131,6 @@ export function AdminDraftProvider({ children }: { children: ReactNode }) {
   const flushers = useRef<Record<string, FlushFn>>({})
   const persistSeqRef = useRef(0)
 
-  console.debug('[refactor:admin-context] AdminDraftContext provider mounted')
-
   useEffect(() => {
     const seq = ++persistSeqRef.current
     void persistEntries(entries, () => persistSeqRef.current !== seq)

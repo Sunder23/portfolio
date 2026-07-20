@@ -3,7 +3,6 @@ import { CommandLabel } from '@/components/CommandLabel'
 
 export function TechHighlightsSection({ techHighlights }: { techHighlights: string[] }) {
   const { t } = useTranslation()
-  console.debug('[refactor:home-tech-highlights]', { count: techHighlights.length })
 
   return (
     <div className="flex flex-col gap-4">

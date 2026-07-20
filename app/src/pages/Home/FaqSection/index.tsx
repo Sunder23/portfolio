@@ -3,7 +3,6 @@ import { CommandLabel } from '@/components/CommandLabel'
 
 export function FaqSection({ faqItems }: { faqItems: { question: string; answer: string }[] }) {
   const { t } = useTranslation()
-  console.debug('[refactor:home-faq]', { count: faqItems.length })
 
   return (
     <div className="flex flex-col gap-4">

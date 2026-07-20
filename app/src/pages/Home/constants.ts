@@ -23,4 +23,3 @@ export function buildStats(
   ]
 }
 
-console.debug('[refactor:home-constants] loaded', { stepNumberSample: stepNumber(0) })

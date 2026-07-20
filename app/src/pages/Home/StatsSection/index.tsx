@@ -3,7 +3,6 @@ import { CommandLabel } from '@/components/CommandLabel'
 
 export function StatsSection({ stats }: { stats: { label: string; value: string }[] }) {
   const { t } = useTranslation()
-  console.debug('[refactor:home-stats]', { statsCount: stats.length })
 
   return (
     <div className="flex flex-col gap-4">

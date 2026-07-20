@@ -15,7 +15,6 @@ export function CommitsSection({
   locale: Locale
 }) {
   const { t } = useTranslation()
-  console.debug('[refactor:home-commits]', { count: commits.length })
 
   return (
     <div className="flex flex-col gap-4">

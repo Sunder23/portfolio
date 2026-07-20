@@ -4,7 +4,6 @@ import type { Profile } from '@/types'
 
 export function CtaSection({ profile }: { profile: Profile }) {
   const { t } = useTranslation()
-  console.debug('[refactor:home-cta]', { mounted: true })
 
   return (
     <div className="pixel-notch flex flex-col items-start gap-3 border border-accent/50 bg-card p-6 sm:flex-row sm:items-center sm:justify-between">

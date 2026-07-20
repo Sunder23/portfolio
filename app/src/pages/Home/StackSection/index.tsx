@@ -5,7 +5,6 @@ import type { SkillCategory } from '@/types'
 
 export function StackSection({ skills }: { skills: SkillCategory[] }) {
   const { t } = useTranslation()
-  console.debug('[refactor:home-stack]', { count: skills.length })
 
   return (
     <div className="flex flex-col gap-4">

@@ -17,7 +17,6 @@ export function HeroSection({
   locale: Locale
 }) {
   const { t } = useTranslation()
-  console.debug('[refactor:home-hero]', { mounted: true })
 
   return (
     <div className="pixel-notch relative border border-border bg-card">

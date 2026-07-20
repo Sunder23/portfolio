@@ -9,8 +9,6 @@ interface TaxonomyCheckboxesProps {
 }
 
 export function TaxonomyCheckboxes({ terms, selected, onChange, label }: TaxonomyCheckboxesProps) {
-  console.debug('[refactor:project-form-children] TaxonomyCheckboxes mounted')
-
   function toggle(term: string, checked: boolean) {
     onChange(checked ? [...selected, term] : selected.filter((t) => t !== term))
   }

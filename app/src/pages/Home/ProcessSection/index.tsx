@@ -8,7 +8,6 @@ export function ProcessSection({
   processSteps: { title: string; description: string }[]
 }) {
   const { t } = useTranslation()
-  console.debug('[refactor:home-process]', { count: processSteps.length })
 
   return (
     <div className="flex flex-col gap-4">
