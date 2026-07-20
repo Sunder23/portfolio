@@ -74,12 +74,34 @@ describe('getRecentCommits', () => {
     const first = await getRecentCommits()
 
     vi.useFakeTimers()
-    vi.setSystemTime(new Date(Date.now() + 60 * 60 * 1000))
+    vi.setSystemTime(new Date(Date.now() + 31 * 60 * 1000))
     fetchMock.mockResolvedValueOnce(jsonResponse(403, { message: 'API rate limit exceeded' }))
 
     const second = await getRecentCommits()
 
     expect(second).toEqual(first)
+    vi.useRealTimers()
+  })
+
+  it('serves from cache without refetching within the 30min freshness window', async () => {
+    fetchMock.mockResolvedValueOnce(
+      jsonResponse(200, [
+        {
+          sha: 'a3f9c2eabcdef1234567890',
+          html_url: 'https://github.com/Sunder23/portfolio/commit/a3f9c2e',
+          commit: { message: 'feat: add commits section', author: { date: '2026-07-18T12:00:00Z' } },
+        },
+      ]),
+    )
+    await getRecentCommits()
+
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(Date.now() + 20 * 60 * 1000))
+
+    const second = await getRecentCommits()
+
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+    expect(second).toHaveLength(1)
     vi.useRealTimers()
   })
 })
@@ -162,7 +184,7 @@ describe('getCommitActivity', () => {
     )
     const first = await getCommitActivity()
 
-    vi.setSystemTime(new Date(Date.now() + 60 * 60 * 1000))
+    vi.setSystemTime(new Date(Date.now() + 31 * 60 * 1000))
     fetchMock.mockResolvedValueOnce(jsonResponse(403, { message: 'API rate limit exceeded' }))
 
     const second = await getCommitActivity()

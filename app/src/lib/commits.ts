@@ -20,7 +20,9 @@ interface GithubCommitResponse {
 // GitHub returns 403 and both fetchers below silently return []/[] with no visible error.
 // We cache each response in localStorage and serve it (even if stale) whenever the network
 // call fails, so a rate limit degrades to "slightly outdated" instead of "nothing rendered".
-const CACHE_FRESH_MS = 15 * 60 * 1000
+// Refetching twice an hour keeps GitHub API usage far below the 60/hour ceiling even with
+// many visits, while still surfacing new commits reasonably promptly.
+const CACHE_FRESH_MS = 30 * 60 * 1000
 const RECENT_COMMITS_CACHE_KEY = 'commits:recent:v1'
 const COMMIT_ACTIVITY_CACHE_KEY = 'commits:activity:v1'
 
