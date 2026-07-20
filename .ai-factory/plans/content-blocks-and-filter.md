@@ -54,9 +54,9 @@ Rationale: Новый milestone, кандидатов среди незакры�
 
 ### Phase D — Home/About блоки
 
-11. Кнопка «Скачать CV» на `Home` и `About`. _blockedBy: 2_
-12. Блок отзывов на `Home` (использует `getTestimonials`). _blockedBy: 3_
-13. Блок образования/сертификатов на `About` (использует `getCredentials`). _blockedBy: 4_
+11. [x] Кнопка «Скачать CV» на `Home` и `About`. _blockedBy: 2_
+12. [x] Блок отзывов на `Home` (использует `getTestimonials`). _blockedBy: 3_
+13. [x] Блок образования/сертификатов на `About` (использует `getCredentials`). _blockedBy: 4_
 
 ### Phase E — Contact
 

@@ -12,6 +12,7 @@
     "whoamiTitle": "whoami",
     "whoamiLabel": "Quick facts",
     "servicesLabel": "Services",
+    "testimonialsLabel": "Testimonials",
     "statLocation": "Location",
     "statStack": "Technologies",
     "statProjects": "Projects",
@@ -45,6 +46,7 @@
     "stackTitle": "cat skills.txt",
     "featuredTitle": "ls ./projects --featured",
     "experienceTitle": "history --work",
+    "testimonialsTitle": "cat testimonials.txt",
     "viewFullExperience": "details",
     "ctaTitle": "./contact.sh",
     "ctaHeading": "Available for new projects",
@@ -83,11 +85,15 @@
     "commandTitle": "cat about.md",
     "experienceCommand": "history --work",
     "skillsCommand": "cat skills.txt",
-    "contactCommand": "cat contact.txt"
+    "contactCommand": "cat contact.txt",
+    "education": "Education",
+    "educationCommand": "cat education.txt",
+    "certificates": "Certificates"
   },
   "common": {
     "loading": "Loading…",
-    "stack": "Stack"
+    "stack": "Stack",
+    "downloadCv": "Download CV"
   },
   "theme": {
     "light": "Light",

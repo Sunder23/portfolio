@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { ProjectCard } from '@/components/ProjectCard'
 import { CommandLabel } from '@/components/CommandLabel'
 import { TerminalCursor } from '@/components/TerminalCursor'
-import { getExperience, getProfile, getProjects, getSkills } from '@/lib/data'
+import { getExperience, getProfile, getProjects, getSkills, getTestimonials } from '@/lib/data'
 import { useLocale } from '@/hooks/useLocale'
 import { useLocalized } from '@/hooks/useLocalized'
 import { useAsyncData } from '@/hooks/useAsyncData'
@@ -20,6 +20,7 @@ export default function Home() {
   const skills = useAsyncData(getSkills)
   const projects = useAsyncData(getProjects)
   const experience = useAsyncData(getExperience)
+  const testimonials = useAsyncData(getTestimonials)
 
   const title = useLocalized(profile?.title ?? { uk: '' })
   const bio = useLocalized(profile?.bio ?? { uk: '' })
@@ -27,15 +28,16 @@ export default function Home() {
   useDocumentMeta({ title: t('meta.home.title'), description: t('meta.home.description') })
 
   useEffect(() => {
-    if (profile && skills && projects && experience) {
+    if (profile && skills && projects && experience && testimonials) {
       console.debug('[Home] sections loaded', {
         skillsCount: skills.length,
         featuredCount: projects.filter((p) => p.featured && p.published).length,
+        testimonialsCount: testimonials.length,
       })
     }
-  }, [profile, skills, projects, experience])
+  }, [profile, skills, projects, experience, testimonials])
 
-  if (!profile || !skills || !projects || !experience) {
+  if (!profile || !skills || !projects || !experience || !testimonials) {
     return <p className="text-sm text-muted-foreground">{t('common.loading')}</p>
   }
 
@@ -97,6 +99,11 @@ export default function Home() {
               <a href={`mailto:${profile.email}`} className={buttonVariants({ variant: 'ghost' })}>
                 {t('home.contactMe')}
               </a>
+              {profile.cv && (
+                <a href={profile.cv} target="_blank" rel="noreferrer" className={buttonVariants({ variant: 'ghost' })}>
+                  {t('common.downloadCv')}
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -186,6 +193,23 @@ export default function Home() {
                 <p className="text-sm text-muted-foreground">{resolveLocalized(job.period, locale)}</p>
                 <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
                   {resolveLocalized(job.summary, locale)}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {testimonials.length > 0 && (
+        <div className="flex flex-col gap-4">
+          <CommandLabel label={t('home.testimonialsLabel')}>{t('home.testimonialsTitle')}</CommandLabel>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {testimonials.map((testimonial, index) => (
+              <div key={index} className="pixel-notch flex flex-col gap-2 border border-border p-4">
+                <p className="text-sm text-muted-foreground">“{resolveLocalized(testimonial.quote, locale)}”</p>
+                <p className="font-heading text-sm">
+                  {testimonial.name}
+                  {testimonial.role && <span className="text-muted-foreground"> · {testimonial.role}</span>}
                 </p>
               </div>
             ))}
