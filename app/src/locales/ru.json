@@ -53,7 +53,16 @@
   "projects": {
     "title": "Проекты",
     "empty": "Проектов пока нет",
-    "commandTitle": "ls ./projects --published"
+    "emptyFiltered": "Под эти фильтры проектов не нашлось",
+    "showingCount": "Показано {{count}} из {{total}}",
+    "commandTitle": "ls ./projects --published",
+    "filter": {
+      "roleLabel": "Роль",
+      "allRoles": "Все",
+      "stackLabel": "Технологии",
+      "categoryLabel": "Категории",
+      "reset": "Сбросить фильтр"
+    }
   },
   "projectDetail": {
     "back": "Все проекты",

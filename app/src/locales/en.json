@@ -53,7 +53,16 @@
   "projects": {
     "title": "Projects",
     "empty": "No projects yet",
-    "commandTitle": "ls ./projects --published"
+    "emptyFiltered": "No projects match these filters",
+    "showingCount": "Showing {{count}} of {{total}}",
+    "commandTitle": "ls ./projects --published",
+    "filter": {
+      "roleLabel": "Role",
+      "allRoles": "All",
+      "stackLabel": "Technologies",
+      "categoryLabel": "Categories",
+      "reset": "Reset filters"
+    }
   },
   "projectDetail": {
     "back": "All projects",

@@ -26,6 +26,16 @@ export function ProjectCard({ project }: { project: Project }) {
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
           <p className="text-sm text-muted-foreground">{shortDescription}</p>
+          {(project.role || project.category.length > 0) && (
+            <div className="flex flex-wrap gap-1.5">
+              {project.role && <Badge variant="secondary">{project.role}</Badge>}
+              {project.category.map((cat) => (
+                <Badge key={cat} variant="outline">
+                  {cat}
+                </Badge>
+              ))}
+            </div>
+          )}
           <div className="flex flex-wrap gap-1.5">
             {project.stack.map((tech) => (
               <Badge key={tech} variant="outline">

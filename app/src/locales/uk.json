@@ -53,7 +53,16 @@
   "projects": {
     "title": "Проєкти",
     "empty": "Проєктів поки немає",
-    "commandTitle": "ls ./projects --published"
+    "emptyFiltered": "Під ці фільтри проєктів не знайдено",
+    "showingCount": "Показано {{count}} з {{total}}",
+    "commandTitle": "ls ./projects --published",
+    "filter": {
+      "roleLabel": "Роль",
+      "allRoles": "Усі",
+      "stackLabel": "Технології",
+      "categoryLabel": "Категорії",
+      "reset": "Скинути фільтр"
+    }
   },
   "projectDetail": {
     "back": "Усі проєкти",

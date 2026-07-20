@@ -42,10 +42,10 @@ Rationale: Новый milestone, кандидатов среди незакры�
 
 ### Phase B — Фильтр Projects
 
-5. `app/src/lib/projectFilters.ts` + тесты — чистая функция фильтрации + деривация доступных опций из опубликованных проектов.
-6. `app/src/components/ProjectFilters/index.tsx` + тесты — role-tabs, stack/category chips, reset, новые i18n-ключи `projects.filter.*` в uk/ru/en. _blockedBy: 5_
-7. Подключение фильтра в `app/src/pages/Projects/index.tsx` — `useSearchParams`, счётчик «показано X из Y», отдельное пустое состояние `projects.emptyFiltered`. _blockedBy: 1, 6_
-8. Бейджи role/category на `app/src/components/ProjectCard/index.tsx`. _blockedBy: 1_
+5. [x] `app/src/lib/projectFilters.ts` + тесты — чистая функция фильтрации + деривация доступных опций из опубликованных проектов.
+6. [x] `app/src/components/ProjectFilters/index.tsx` + тесты — role-tabs, stack/category chips, reset, новые i18n-ключи `projects.filter.*` в uk/ru/en. _blockedBy: 5_
+7. [x] Подключение фильтра в `app/src/pages/Projects/index.tsx` — `useSearchParams`, счётчик «показано X из Y», отдельное пустое состояние `projects.emptyFiltered`. _blockedBy: 1, 6_
+8. [x] Бейджи role/category на `app/src/components/ProjectCard/index.tsx`. _blockedBy: 1_
 
 ### Phase C — ProjectDetail: навигация
 
