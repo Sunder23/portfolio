@@ -148,6 +148,11 @@
       "description": "Зв'яжіться з Max Kravchuk щодо вашого проєкту."
     }
   },
+  "notFound": {
+    "title": "Сторінку не знайдено",
+    "description": "Такої сторінки не існує — можливо, її перемістили або адресу введено з помилкою.",
+    "backHome": "На головну"
+  },
   "contact": {
     "title": "Контакти",
     "commandTitle": "send --message",

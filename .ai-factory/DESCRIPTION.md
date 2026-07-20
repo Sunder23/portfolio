@@ -50,10 +50,12 @@
 │       ├── App.tsx               # корневой компонент — плоский файл (единственное исключение
 │       │                           из конвенции "компонент = папка", см. ARCHITECTURE.md)
 │       ├── pages/                # Home/ (12 колокейтед секций-компонентов + constants.ts), Projects/
-│       │                           (включая ProjectFilters/), ProjectDetail/, About/, Contact/, Admin/
-│       ├── components/           # Nav/ (включая ThemeToggle/), ProjectCard/, PublicLayout/, ... —
+│       │                           (включая ProjectFilters/), ProjectDetail/, About/, Contact/,
+│       │                           NotFound/ (catch-all внутри каждого per-locale роута), Admin/
+│       ├── components/           # Nav/ (включая ThemeToggle/), ProjectCard/, layouts/PublicLayout/, ... —
 │       │                           только реально shared (2+ потребителя) + два исключения
-│       │                           (Nav/Footer/Scanline; components/ui/ — плоские shadcn-примитивы)
+│       │                           (Nav/Footer/Scanline; components/ui/ — плоские shadcn-примитивы
+│       │                           + ручной heading.tsx, единственная не-shadcn добавка туда)
 │       ├── hooks/                # useLocale (осознанное исключение из правила про context/,
 │       │                           см. ARCHITECTURE.md), useLocalized, useAsyncData, useDocumentMeta
 │       ├── admin/                # всё, что относится к админке — сгруппировано по типу

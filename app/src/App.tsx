@@ -6,6 +6,7 @@ import Projects from '@/pages/Projects'
 import ProjectDetail from '@/pages/ProjectDetail'
 import About from '@/pages/About'
 import Contact from '@/pages/Contact'
+import NotFound from '@/pages/NotFound'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, getStoredLocale, storeLocale, type Locale } from '@/lib/locale'
 import { LocaleProvider } from '@/hooks/useLocale'
 import { PublicLayout } from '@/components/layouts/PublicLayout'
@@ -50,6 +51,7 @@ function App() {
               <Route path="projects/:slug" element={<ProjectDetail />} />
               <Route path="about" element={<About />} />
               <Route path="contact" element={<Contact />} />
+              <Route path="*" element={<NotFound />} />
             </Route>
           </Route>
         ))}

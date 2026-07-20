@@ -148,6 +148,11 @@
       "description": "Get in touch with Max Kravchuk about your project."
     }
   },
+  "notFound": {
+    "title": "Page not found",
+    "description": "This page doesn't exist — it may have moved, or the address was mistyped.",
+    "backHome": "Back home"
+  },
   "contact": {
     "title": "Contact",
     "commandTitle": "send --message",
