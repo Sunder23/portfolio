@@ -1,11 +1,12 @@
 import { useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { getProfile } from '@/lib/data'
 import { useAsyncData } from '@/hooks/useAsyncData'
 import { useLocale } from '@/hooks/useLocale'
 import { useLocalized } from '@/hooks/useLocalized'
 import { LocaleSwitcher } from '@/components/LocaleSwitcher'
+import { cn } from '@/lib/utils'
 
 export function Footer() {
   const { t } = useTranslation()
@@ -49,13 +50,16 @@ export function Footer() {
           </p>
           <nav className="flex flex-col gap-1.5">
             {links.map((link) => (
-              <Link
+              <NavLink
                 key={link.to}
                 to={link.to}
-                className="text-muted-foreground hover:text-foreground hover:underline"
+                end={link.end}
+                className={({ isActive }) =>
+                  cn(isActive ? 'text-accent' : 'text-muted-foreground hover:text-foreground hover:underline')
+                }
               >
                 {link.label}
-              </Link>
+              </NavLink>
             ))}
           </nav>
         </div>
