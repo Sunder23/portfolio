@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import type { ProjectFilterOptions, ProjectFilterState } from '@/lib/projectFilters'
+import { EMPTY_PROJECT_FILTER, type ProjectFilterOptions, type ProjectFilterState } from '@/lib/projectFilters'
 
 const ALL_ROLES = '__all__'
 
@@ -90,7 +90,7 @@ export function ProjectFilters({
       )}
 
       {hasActiveFilter && (
-        <Button variant="ghost" size="sm" className="self-start" onClick={() => onChange({ role: null, stack: [], category: [] })}>
+        <Button variant="ghost" size="sm" className="self-start" onClick={() => onChange(EMPTY_PROJECT_FILTER)}>
           {t('projects.filter.reset')}
         </Button>
       )}
