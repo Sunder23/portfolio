@@ -60,11 +60,17 @@ describe('getRecentCommits', () => {
   })
 })
 
+function jsonResponseWithLink(status: number, body: unknown, link?: string): Response {
+  return new Response(JSON.stringify(body), { status, headers: link ? { link } : undefined })
+}
+
 describe('getCommitActivity', () => {
   const fetchMock = vi.fn()
 
   beforeEach(() => {
     vi.stubGlobal('fetch', fetchMock)
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-07-20T12:00:00Z'))
   })
 
   afterEach(() => {
@@ -73,45 +79,51 @@ describe('getCommitActivity', () => {
     vi.useRealTimers()
   })
 
-  it('maps a successful response into CommitActivityWeek[]', async () => {
-    fetchMock.mockResolvedValueOnce(jsonResponse(200, [{ week: 1752969600, days: [0, 1, 2, 0, 3, 0, 0] }]))
+  it('buckets commit dates from the commits endpoint into the matching week/day cell', async () => {
+    fetchMock.mockResolvedValueOnce(
+      jsonResponse(200, [
+        // 2026-07-20 is a Monday (day index 1)
+        { commit: { author: { date: '2026-07-20T09:00:00Z' } } },
+        { commit: { author: { date: '2026-07-20T15:00:00Z' } } },
+      ]),
+    )
 
     const result = await getCommitActivity()
 
-    expect(result).toEqual([
-      { weekStart: new Date(1752969600 * 1000).toISOString(), days: [0, 1, 2, 0, 3, 0, 0] },
-    ])
+    const currentWeek = result[result.length - 1]
+    expect(currentWeek.days[1]).toBe(2)
+    expect(currentWeek.days.reduce((total, count) => total + count, 0)).toBe(2)
+    expect(result).toHaveLength(53)
   })
 
-  it('retries once and succeeds after an initial 202 (stats still computing)', async () => {
-    vi.useFakeTimers()
+  it('follows Link-header pagination across multiple pages', async () => {
     fetchMock
-      .mockResolvedValueOnce(jsonResponse(202, {}))
-      .mockResolvedValueOnce(jsonResponse(200, [{ week: 1752969600, days: [1, 0, 0, 0, 0, 0, 0] }]))
+      .mockResolvedValueOnce(
+        jsonResponseWithLink(
+          200,
+          [{ commit: { author: { date: '2026-07-20T09:00:00Z' } } }],
+          '<https://api.github.com/repositories/1/commits?page=2>; rel="next"',
+        ),
+      )
+      .mockResolvedValueOnce(jsonResponse(200, [{ commit: { author: { date: '2026-07-13T09:00:00Z' } } }]))
 
-    const promise = getCommitActivity()
-    await vi.advanceTimersByTimeAsync(1500)
-    const result = await promise
+    const result = await getCommitActivity()
 
-    expect(result).toEqual([
-      { weekStart: new Date(1752969600 * 1000).toISOString(), days: [1, 0, 0, 0, 0, 0, 0] },
-    ])
     expect(fetchMock).toHaveBeenCalledTimes(2)
+    const totalCommits = result.reduce((total, week) => total + week.days.reduce((t, c) => t + c, 0), 0)
+    expect(totalCommits).toBe(2)
   })
 
-  it('returns [] when GitHub returns 202 on both attempts', async () => {
-    vi.useFakeTimers()
-    fetchMock.mockResolvedValue(jsonResponse(202, {}))
+  it('returns [] instead of a zeroed-out grid when the commits request fails', async () => {
+    fetchMock.mockResolvedValueOnce(jsonResponse(500, { message: 'Internal Server Error' }))
 
-    const promise = getCommitActivity()
-    await vi.advanceTimersByTimeAsync(1500)
-    const result = await promise
+    const result = await getCommitActivity()
 
     expect(result).toEqual([])
   })
 
-  it('returns [] on a non-OK, non-202 response', async () => {
-    fetchMock.mockResolvedValueOnce(jsonResponse(500, { message: 'Internal Server Error' }))
+  it('returns [] instead of throwing when fetch itself rejects', async () => {
+    fetchMock.mockRejectedValueOnce(new Error('network down'))
 
     const result = await getCommitActivity()
 
