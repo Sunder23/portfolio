@@ -14,11 +14,57 @@ interface GithubCommitResponse {
   }
 }
 
-export async function getRecentCommits(): Promise<CommitSummary[]> {
+// Unauthenticated GitHub REST API is capped at 60 requests/hour per IP. A page mount fires
+// two requests (recent commits + activity history), so a handful of reloads within the hour
+// (dev hot-reload, React StrictMode double-effects, repeat visits) can exhaust it — after which
+// GitHub returns 403 and both fetchers below silently return []/[] with no visible error.
+// We cache each response in localStorage and serve it (even if stale) whenever the network
+// call fails, so a rate limit degrades to "slightly outdated" instead of "nothing rendered".
+const CACHE_FRESH_MS = 15 * 60 * 1000
+const RECENT_COMMITS_CACHE_KEY = 'commits:recent:v1'
+const COMMIT_ACTIVITY_CACHE_KEY = 'commits:activity:v1'
+
+interface CacheEntry<T> {
+  fetchedAt: number
+  data: T
+}
+
+function readCache<T>(key: string): CacheEntry<T> | null {
   try {
+    const raw = localStorage.getItem(key)
+    if (!raw) return null
+    return JSON.parse(raw) as CacheEntry<T>
+  } catch (error) {
+    console.error('[FIX][commits] failed to read cache', { key, error })
+    return null
+  }
+}
+
+function writeCache<T>(key: string, data: T): void {
+  try {
+    const entry: CacheEntry<T> = { fetchedAt: Date.now(), data }
+    localStorage.setItem(key, JSON.stringify(entry))
+  } catch (error) {
+    console.error('[FIX][commits] failed to write cache', { key, error })
+  }
+}
+
+export async function getRecentCommits(): Promise<CommitSummary[]> {
+  const cached = readCache<CommitSummary[]>(RECENT_COMMITS_CACHE_KEY)
+  if (cached && Date.now() - cached.fetchedAt < CACHE_FRESH_MS) {
+    console.debug('[FIX][commits] serving recent commits from fresh cache', { count: cached.data.length })
+    return cached.data
+  }
+
+  try {
+    console.debug('[FIX][commits] fetching recent commits')
     const response = await fetch(`https://api.github.com/repos/${REPO}/commits?per_page=5`)
     if (!response.ok) {
-      console.error('[commits] failed to load recent commits', response.status, response.statusText)
+      console.error('[FIX][commits] failed to load recent commits', response.status, response.statusText)
+      if (cached) {
+        console.debug('[FIX][commits] falling back to stale cache after failed fetch', { count: cached.data.length })
+        return cached.data
+      }
       return []
     }
 
@@ -30,10 +76,15 @@ export async function getRecentCommits(): Promise<CommitSummary[]> {
       url: item.html_url,
     }))
 
-    console.debug('[commits] loaded recent commits', { count: commits.length })
+    console.debug('[FIX][commits] loaded recent commits', { count: commits.length })
+    writeCache(RECENT_COMMITS_CACHE_KEY, commits)
     return commits
   } catch (error) {
-    console.error('[commits] failed to load recent commits', error)
+    console.error('[FIX][commits] failed to load recent commits', error)
+    if (cached) {
+      console.debug('[FIX][commits] falling back to stale cache after fetch error', { count: cached.data.length })
+      return cached.data
+    }
     return []
   }
 }
@@ -97,7 +148,14 @@ function weekStartOf(date: Date): Date {
 }
 
 export async function getCommitActivity(): Promise<CommitActivityWeek[]> {
+  const cached = readCache<CommitActivityWeek[]>(COMMIT_ACTIVITY_CACHE_KEY)
+  if (cached && Date.now() - cached.fetchedAt < CACHE_FRESH_MS) {
+    console.debug('[FIX][commits] serving commit activity from fresh cache', { weeks: cached.data.length })
+    return cached.data
+  }
+
   try {
+    console.debug('[FIX][commits] fetching commit activity')
     const since = new Date(Date.now() - WEEKS_TO_SHOW * 7 * DAY_MS)
     const commitDates = await fetchCommitDatesSince(since.toISOString())
 
@@ -115,13 +173,18 @@ export async function getCommitActivity(): Promise<CommitActivityWeek[]> {
       }
     }
 
-    console.debug('[commits] built commit activity from commit history', {
+    console.debug('[FIX][commits] built commit activity from commit history', {
       weeks: weeks.length,
       commits: commitDates.length,
     })
+    writeCache(COMMIT_ACTIVITY_CACHE_KEY, weeks)
     return weeks
   } catch (error) {
-    console.error('[commits] failed to build commit activity', error)
+    console.error('[FIX][commits] failed to build commit activity', error)
+    if (cached) {
+      console.debug('[FIX][commits] falling back to stale cache after activity fetch error', { weeks: cached.data.length })
+      return cached.data
+    }
     return []
   }
 }

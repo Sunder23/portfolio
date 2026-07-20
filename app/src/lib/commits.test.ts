@@ -10,11 +10,13 @@ describe('getRecentCommits', () => {
 
   beforeEach(() => {
     vi.stubGlobal('fetch', fetchMock)
+    localStorage.clear()
   })
 
   afterEach(() => {
     fetchMock.mockReset()
     vi.unstubAllGlobals()
+    localStorage.clear()
   })
 
   it('maps a successful GitHub API response into CommitSummary[]', async () => {
@@ -58,6 +60,28 @@ describe('getRecentCommits', () => {
 
     expect(result).toEqual([])
   })
+
+  it('falls back to a stale cached value when a later fetch is rate-limited', async () => {
+    fetchMock.mockResolvedValueOnce(
+      jsonResponse(200, [
+        {
+          sha: 'a3f9c2eabcdef1234567890',
+          html_url: 'https://github.com/Sunder23/portfolio/commit/a3f9c2e',
+          commit: { message: 'feat: add commits section', author: { date: '2026-07-18T12:00:00Z' } },
+        },
+      ]),
+    )
+    const first = await getRecentCommits()
+
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(Date.now() + 60 * 60 * 1000))
+    fetchMock.mockResolvedValueOnce(jsonResponse(403, { message: 'API rate limit exceeded' }))
+
+    const second = await getRecentCommits()
+
+    expect(second).toEqual(first)
+    vi.useRealTimers()
+  })
 })
 
 function jsonResponseWithLink(status: number, body: unknown, link?: string): Response {
@@ -71,12 +95,14 @@ describe('getCommitActivity', () => {
     vi.stubGlobal('fetch', fetchMock)
     vi.useFakeTimers()
     vi.setSystemTime(new Date('2026-07-20T12:00:00Z'))
+    localStorage.clear()
   })
 
   afterEach(() => {
     fetchMock.mockReset()
     vi.unstubAllGlobals()
     vi.useRealTimers()
+    localStorage.clear()
   })
 
   it('buckets commit dates from the commits endpoint into the matching week/day cell', async () => {
@@ -128,6 +154,20 @@ describe('getCommitActivity', () => {
     const result = await getCommitActivity()
 
     expect(result).toEqual([])
+  })
+
+  it('falls back to a stale cached grid when a later fetch is rate-limited', async () => {
+    fetchMock.mockResolvedValueOnce(
+      jsonResponse(200, [{ commit: { author: { date: '2026-07-20T09:00:00Z' } } }]),
+    )
+    const first = await getCommitActivity()
+
+    vi.setSystemTime(new Date(Date.now() + 60 * 60 * 1000))
+    fetchMock.mockResolvedValueOnce(jsonResponse(403, { message: 'API rate limit exceeded' }))
+
+    const second = await getCommitActivity()
+
+    expect(second).toEqual(first)
   })
 })
 
