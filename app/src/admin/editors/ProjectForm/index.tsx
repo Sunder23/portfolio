@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Heading } from '@/components/ui/heading'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
@@ -193,7 +194,7 @@ export function ProjectForm() {
 
   return (
     <div className="flex flex-col gap-3">
-      <h2 className="text-lg font-medium">{isNew ? 'Новый проект' : 'Редактировать проект'}</h2>
+      <Heading level={2} className="text-lg font-medium">{isNew ? 'Новый проект' : 'Редактировать проект'}</Heading>
 
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
         <div className="flex min-w-0 flex-1 flex-col gap-3">

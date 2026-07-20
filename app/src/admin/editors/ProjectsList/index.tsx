@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardAction } from '@/components/ui/card'
+import { Heading } from '@/components/ui/heading'
 import { Badge } from '@/components/ui/badge'
 import {
   AlertDialog,
@@ -76,7 +77,7 @@ export function ProjectsList() {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-medium">Проекты</h2>
+        <Heading level={2} className="text-lg font-medium">Проекты</Heading>
         <Button nativeButton={false} render={<Link to="/admin/projects/new" />}>
           Добавить
         </Button>

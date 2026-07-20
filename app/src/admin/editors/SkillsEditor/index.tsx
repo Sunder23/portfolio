@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
+import { Heading } from '@/components/ui/heading'
 import { useEditorData } from '@/admin/hooks/useEditorData'
 import type { SkillCategory } from '@/types'
 
@@ -31,7 +32,7 @@ export default function SkillsEditor() {
 
   return (
     <div className="flex flex-col gap-3">
-      <h2 className="text-lg font-medium">Скиллы</h2>
+      <Heading level={2} className="text-lg font-medium">Скиллы</Heading>
 
       {categories.map((cat, index) => (
         <Card key={index}>

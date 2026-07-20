@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { Heading } from '@/components/ui/heading'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { LocalizedField } from '@/admin/components/LocalizedField'
@@ -32,7 +33,7 @@ export default function ProfileEditor() {
 
   return (
     <div className="flex flex-col gap-3">
-      <h2 className="text-lg font-medium">Профиль</h2>
+      <Heading level={2} className="text-lg font-medium">Профиль</Heading>
 
       <div className="flex flex-col gap-1.5">
         <Label>name</Label>

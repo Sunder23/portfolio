@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { Heading } from '@/components/ui/heading'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
@@ -29,7 +30,7 @@ export default function TestimonialsEditor() {
 
   return (
     <div className="flex flex-col gap-3">
-      <h2 className="text-lg font-medium">Отзывы</h2>
+      <Heading level={2} className="text-lg font-medium">Отзывы</Heading>
 
       {entries.map((entry, index) => (
         <Card key={index}>

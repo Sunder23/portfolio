@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { MarkdownContent } from '@/components/MarkdownContent'
 import { ProjectCard } from '@/components/ProjectCard'
 import { CommandLabel } from '@/components/CommandLabel'
+import { Heading } from '@/components/ui/heading'
 import { getProjects } from '@/lib/data'
 import { getAdjacentProjects, getRelatedProjects } from '@/lib/projectNavigation'
 import { useLocale } from '@/hooks/useLocale'
@@ -70,7 +71,7 @@ export default function ProjectDetail() {
         {t('projectDetail.back')}
       </Link>
 
-      <h1 className="font-heading text-3xl">{title}</h1>
+      <Heading level={1} className="font-heading text-3xl">{title}</Heading>
 
       <div className="flex flex-col gap-1 text-sm text-muted-foreground">
         <p>

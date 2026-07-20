@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { Button } from '@/components/ui/button'
+import { Heading } from '@/components/ui/heading'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useAdminAuth } from '@/admin/context/AdminAuthContext'
@@ -41,7 +42,7 @@ export default function TokenGate() {
   return (
     <div className="flex min-h-svh items-center justify-center">
       <form onSubmit={handleSubmit} className="flex w-full max-w-sm flex-col gap-3">
-        <h1 className="text-2xl font-medium">Admin</h1>
+        <Heading level={1} className="text-2xl font-medium">Admin</Heading>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="pat">GitHub fine-grained PAT</Label>
           <Input

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { buttonVariants } from '@/components/ui/button'
+import { Heading } from '@/components/ui/heading'
 import type { Locale } from '@/lib/locale'
 import type { Profile } from '@/types'
 import { TerminalCursor } from './TerminalCursor'
@@ -41,10 +42,10 @@ export function HeroSection({
           </figure>
         )}
         <div className="flex flex-col items-start gap-4">
-          <h1 className="glow-text font-heading text-4xl text-card-foreground">
+          <Heading level={1} className="glow-text font-heading text-4xl text-card-foreground">
             {profile.name}
             <TerminalCursor />
-          </h1>
+          </Heading>
           <p className="font-heading text-lg text-accent">{title}</p>
           <p className="max-w-xl text-sm text-muted-foreground">{bio}</p>
           <div className="flex gap-2">

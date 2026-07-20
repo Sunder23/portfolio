@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Heading } from '@/components/ui/heading'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -104,7 +105,7 @@ export default function TaxonomyEditor() {
 
   return (
     <div className="flex flex-col gap-3">
-      <h2 className="text-lg font-medium">{TAXONOMY_LABELS[taxonomyKey]}</h2>
+      <Heading level={2} className="text-lg font-medium">{TAXONOMY_LABELS[taxonomyKey]}</Heading>
 
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
         <div className="w-full lg:w-72 lg:shrink-0">

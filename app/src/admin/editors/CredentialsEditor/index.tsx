@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
+import { Heading } from '@/components/ui/heading'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { LocalizedField } from '@/admin/components/LocalizedField'
 import { useEditorData } from '@/admin/hooks/useEditorData'
@@ -36,7 +37,7 @@ export default function CredentialsEditor() {
 
   return (
     <div className="flex flex-col gap-3">
-      <h2 className="text-lg font-medium">Образование и сертификаты</h2>
+      <Heading level={2} className="text-lg font-medium">Образование и сертификаты</Heading>
 
       {entries.map((entry, index) => (
         <Card key={index}>
