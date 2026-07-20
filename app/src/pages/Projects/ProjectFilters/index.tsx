@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { RotateCcw } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -90,7 +91,13 @@ export function ProjectFilters({
       )}
 
       {hasActiveFilter && (
-        <Button variant="ghost" size="sm" className="self-start" onClick={() => onChange(EMPTY_PROJECT_FILTER)}>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="inline-flex items-center gap-1.5 self-start"
+          onClick={() => onChange(EMPTY_PROJECT_FILTER)}
+        >
+          <RotateCcw className="size-3.5 shrink-0" aria-hidden />
           {t('projects.filter.reset')}
         </Button>
       )}

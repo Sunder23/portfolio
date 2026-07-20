@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { Mail } from 'lucide-react'
 import { buttonVariants } from '@/components/ui/button'
 import { Heading } from '@/components/ui/heading'
 import type { Locale } from '@/lib/locale'
@@ -55,7 +56,11 @@ export function HeroSection({
             <Link to={`/${locale}/about`} className={buttonVariants({ variant: 'outline' })}>
               {t('home.viewAbout')}
             </Link>
-            <a href={`mailto:${profile.email}`} className={buttonVariants({ variant: 'ghost' })}>
+            <a
+              href={`mailto:${profile.email}`}
+              className={buttonVariants({ variant: 'ghost', className: 'inline-flex items-center gap-1.5' })}
+            >
+              <Mail className="size-4 shrink-0" aria-hidden />
               {t('home.contactMe')}
             </a>
             {profile.cv && (

@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { GitCommitHorizontal } from 'lucide-react'
 import { CommandLabel } from '@/components/CommandLabel'
 import { formatRelativeCommitDate } from '@/lib/commits'
 import type { Locale } from '@/lib/locale'
@@ -26,6 +27,7 @@ export function CommitsSection({
             key={commit.shortSha}
             className="flex flex-col gap-1 border-b border-border px-4 py-2.5 last:border-b-0 sm:flex-row sm:items-baseline sm:gap-3 md:[&:nth-child(even)]:border-l md:[&:nth-last-child(-n+2)]:border-b-0"
           >
+            <GitCommitHorizontal className="hidden size-3.5 shrink-0 text-muted-foreground sm:block" aria-hidden />
             <span className="font-heading text-xs text-accent">{commit.shortSha}</span>
             <span className="flex-1 text-sm text-card-foreground">{commit.message}</span>
             <span className="text-xs text-muted-foreground">{formatRelativeCommitDate(commit.date, locale)}</span>

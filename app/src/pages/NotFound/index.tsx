@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { Home } from 'lucide-react'
 import { buttonVariants } from '@/components/ui/button'
 import { Heading } from '@/components/ui/heading'
 import { useLocale } from '@/hooks/useLocale'
@@ -18,7 +19,11 @@ export default function NotFound() {
         {t('notFound.title')}
       </Heading>
       <p className="max-w-xl text-sm text-muted-foreground">{t('notFound.description')}</p>
-      <Link to={`/${locale}`} className={buttonVariants({ variant: 'outline' })}>
+      <Link
+        to={`/${locale}`}
+        className={buttonVariants({ variant: 'outline', className: 'inline-flex items-center gap-1.5' })}
+      >
+        <Home className="size-4 shrink-0" aria-hidden />
         {t('notFound.backHome')}
       </Link>
     </div>

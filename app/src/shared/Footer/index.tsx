@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { Mail, MapPin, Send, Link as LinkIcon } from 'lucide-react'
 import { getProfile } from '@/lib/data'
 import { useAsyncData } from '@/hooks/useAsyncData'
 import { useLocale } from '@/hooks/useLocale'
@@ -70,23 +71,33 @@ export function Footer() {
             {t('footer.contactTitle')}
           </p>
           <div className="flex flex-col gap-1.5 text-muted-foreground">
-            <p>
+            <p className="flex items-center gap-1.5">
+              <MapPin className="size-3.5 shrink-0" aria-hidden />
               {t('footer.location')}: {profile.location}
             </p>
-            <a href={`mailto:${profile.email}`} className="hover:text-foreground hover:underline">
+            <a
+              href={`mailto:${profile.email}`}
+              className="flex items-center gap-1.5 hover:text-foreground hover:underline"
+            >
+              <Mail className="size-3.5 shrink-0" aria-hidden />
               {profile.email}
             </a>
-            {profile.socials.map((social) => (
-              <a
-                key={social.platform}
-                href={social.url}
-                target="_blank"
-                rel="noreferrer"
-                className="hover:text-foreground hover:underline"
-              >
-                {social.platform.toLowerCase()}
-              </a>
-            ))}
+            {profile.socials.map((social) => {
+              const isTelegram = social.platform.toLowerCase() === 'telegram'
+              const SocialIcon = isTelegram ? Send : LinkIcon
+              return (
+                <a
+                  key={social.platform}
+                  href={social.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-1.5 hover:text-foreground hover:underline"
+                >
+                  <SocialIcon className="size-3.5 shrink-0" aria-hidden />
+                  {social.platform.toLowerCase()}
+                </a>
+              )
+            })}
           </div>
         </div>
       </div>

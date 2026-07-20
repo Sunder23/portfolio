@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { Plus, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -120,7 +121,10 @@ export default function TaxonomyEditor() {
                 onChange={(e) => setNewTerm(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
               />
-              <Button onClick={handleAdd}>Добавить</Button>
+              <Button onClick={handleAdd} className="inline-flex items-center gap-1.5">
+                <Plus className="size-3.5 shrink-0" aria-hidden />
+                Добавить
+              </Button>
             </CardContent>
           </Card>
         </div>
@@ -158,7 +162,13 @@ export default function TaxonomyEditor() {
                       <Button variant="outline" size="sm" onClick={() => setRenaming({ index, value: term })}>
                         Переименовать
                       </Button>
-                      <Button variant="destructive" size="sm" onClick={() => handleDeleteRequest(term)}>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        className="inline-flex items-center gap-1.5"
+                        onClick={() => handleDeleteRequest(term)}
+                      >
+                        <Trash2 className="size-3.5 shrink-0" aria-hidden />
                         Удалить
                       </Button>
                     </>

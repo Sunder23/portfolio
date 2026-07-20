@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Pencil, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardAction } from '@/components/ui/card'
 import { Heading } from '@/components/ui/heading'
@@ -41,12 +42,20 @@ function ProjectRow({ entry, onDelete }: { entry: ProjectEntry; onDelete: (entry
           <Button
             variant="outline"
             size="sm"
+            className="inline-flex items-center gap-1.5"
             nativeButton={false}
             render={<Link to={`/admin/projects/${entry.project.slug}`} />}
           >
+            <Pencil className="size-3.5 shrink-0" aria-hidden />
             Редактировать
           </Button>
-          <Button variant="destructive" size="sm" onClick={() => onDelete(entry)}>
+          <Button
+            variant="destructive"
+            size="sm"
+            className="inline-flex items-center gap-1.5"
+            onClick={() => onDelete(entry)}
+          >
+            <Trash2 className="size-3.5 shrink-0" aria-hidden />
             Удалить
           </Button>
         </div>

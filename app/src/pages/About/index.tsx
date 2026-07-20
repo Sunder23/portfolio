@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { Mail, Send, Link as LinkIcon } from 'lucide-react'
 import { buttonVariants } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { MarkdownContent } from '@/components/MarkdownContent'
@@ -112,25 +113,34 @@ export default function About() {
 
       <div className="flex flex-col gap-1">
         <CommandLabel label={t('about.contact')}>{t('about.contactCommand')}</CommandLabel>
-        <p className="text-sm text-muted-foreground">
+        <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
           <span aria-hidden>{'> '}</span>
-          <a href={`mailto:${profile.email}`} className="hover:text-foreground hover:underline">
+          <a
+            href={`mailto:${profile.email}`}
+            className="flex items-center gap-1.5 hover:text-foreground hover:underline"
+          >
+            <Mail className="size-3.5 shrink-0" aria-hidden />
             {profile.email}
           </a>
         </p>
-        {profile.socials.map((social) => (
-          <p key={social.platform} className="text-sm text-muted-foreground">
-            <span aria-hidden>{'> '}</span>
-            <a
-              href={social.url}
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-foreground hover:underline"
-            >
-              {social.platform.toLowerCase()}
-            </a>
-          </p>
-        ))}
+        {profile.socials.map((social) => {
+          const isTelegram = social.platform.toLowerCase() === 'telegram'
+          const SocialIcon = isTelegram ? Send : LinkIcon
+          return (
+            <p key={social.platform} className="flex items-center gap-1.5 text-sm text-muted-foreground">
+              <span aria-hidden>{'> '}</span>
+              <a
+                href={social.url}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-1.5 hover:text-foreground hover:underline"
+              >
+                <SocialIcon className="size-3.5 shrink-0" aria-hidden />
+                {social.platform.toLowerCase()}
+              </a>
+            </p>
+          )
+        })}
       </div>
     </div>
   )

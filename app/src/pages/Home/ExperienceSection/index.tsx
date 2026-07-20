@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { ArrowRight } from 'lucide-react'
 import { CommandLabel } from '@/components/CommandLabel'
 import type { Locale } from '@/lib/locale'
 import { resolveLocalized } from '@/types'
@@ -12,8 +13,12 @@ export function ExperienceSection({ experience, locale }: { experience: Experien
     <div className="flex flex-col gap-4">
       <div className="flex items-baseline justify-between">
         <CommandLabel label={t('about.experience')}>{t('home.experienceTitle')}</CommandLabel>
-        <Link to={`/${locale}/about`} className="text-xs text-muted-foreground hover:text-foreground">
-          {t('home.viewFullExperience')} →
+        <Link
+          to={`/${locale}/about`}
+          className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+        >
+          {t('home.viewFullExperience')}
+          <ArrowRight className="size-3.5 shrink-0" aria-hidden />
         </Link>
       </div>
       <div className="flex flex-col gap-3">

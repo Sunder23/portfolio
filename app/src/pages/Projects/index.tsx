@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, Filter, FilterX, Search } from 'lucide-react'
 import { ProjectCard } from '@/components/ProjectCard'
 import { ProjectFilters } from './ProjectFilters'
 import { CommandLabel } from '@/components/CommandLabel'
@@ -69,6 +69,7 @@ export default function Projects() {
                   className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'group w-full justify-between')}
                 >
                   <span className="flex items-center gap-1.5">
+                    <Filter className="size-4 shrink-0" aria-hidden />
                     {t('projects.filter.toggle')}
                     {activeFilterCount > 0 && <Badge variant="default">{activeFilterCount}</Badge>}
                   </span>
@@ -88,7 +89,10 @@ export default function Projects() {
 
           <div className="mt-6 flex flex-col gap-4 md:mt-0">
             {filtered.length === 0 ? (
-              <p className="text-sm text-muted-foreground">{t('projects.emptyFiltered')}</p>
+              <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                <FilterX className="size-4 shrink-0" aria-hidden />
+                {t('projects.emptyFiltered')}
+              </p>
             ) : (
               <>
                 <p className="text-xs text-muted-foreground">
@@ -105,7 +109,12 @@ export default function Projects() {
         </div>
       )}
 
-      {published.length === 0 && <p className="text-sm text-muted-foreground">{t('projects.empty')}</p>}
+      {published.length === 0 && (
+        <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
+          <Search className="size-4 shrink-0" aria-hidden />
+          {t('projects.empty')}
+        </p>
+      )}
     </div>
   )
 }

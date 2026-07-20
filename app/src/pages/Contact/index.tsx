@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { toast } from 'sonner'
+import { Mail, Send, Link as LinkIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -71,20 +72,29 @@ export default function Contact() {
       {profile && (
         <div className="flex flex-wrap items-center gap-3">
           <Badge variant="secondary">{t('footer.status')}</Badge>
-          <a href={`mailto:${profile.email}`} className="text-sm text-muted-foreground hover:text-foreground hover:underline">
+          <a
+            href={`mailto:${profile.email}`}
+            className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground hover:underline"
+          >
+            <Mail className="size-3.5 shrink-0" aria-hidden />
             {profile.email}
           </a>
-          {profile.socials.map((social) => (
-            <a
-              key={social.platform}
-              href={social.url}
-              target="_blank"
-              rel="noreferrer"
-              className="text-sm text-muted-foreground hover:text-foreground hover:underline"
-            >
-              {social.platform.toLowerCase()}
-            </a>
-          ))}
+          {profile.socials.map((social) => {
+            const isTelegram = social.platform.toLowerCase() === 'telegram'
+            const SocialIcon = isTelegram ? Send : LinkIcon
+            return (
+              <a
+                key={social.platform}
+                href={social.url}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground hover:underline"
+              >
+                <SocialIcon className="size-3.5 shrink-0" aria-hidden />
+                {social.platform.toLowerCase()}
+              </a>
+            )
+          })}
         </div>
       )}
 
@@ -157,8 +167,9 @@ export default function Contact() {
             )}
           />
 
-          <Button type="submit" className="font-heading self-start uppercase tracking-wide">
+          <Button type="submit" className="font-heading inline-flex items-center gap-1.5 self-start uppercase tracking-wide">
             <span aria-hidden>$ </span>
+            <Send className="size-4 shrink-0" aria-hidden />
             {t('contact.submit')}
           </Button>
         </form>

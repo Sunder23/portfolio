@@ -1,6 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowLeft, Calendar, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react'
 import { buttonVariants } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { MarkdownContent } from '@/components/MarkdownContent'
@@ -65,8 +65,9 @@ export default function ProjectDetail() {
     <div className="flex flex-col gap-6">
       <Link
         to={`/${locale}/projects`}
-        className="font-heading text-sm uppercase tracking-wide text-muted-foreground hover:text-accent"
+        className="inline-flex items-center gap-1.5 font-heading text-sm uppercase tracking-wide text-muted-foreground hover:text-accent"
       >
+        <ArrowLeft className="size-3.5 shrink-0" aria-hidden />
         <span aria-hidden>$ cd .. </span>
         {t('projectDetail.back')}
       </Link>
@@ -78,8 +79,8 @@ export default function ProjectDetail() {
           <span aria-hidden>{'> '}</span>
           {t('projectDetail.role')}: {project.role}
         </p>
-        <p>
-          <span aria-hidden>{'> '}</span>
+        <p className="flex items-center gap-1.5">
+          <Calendar className="size-3.5 shrink-0" aria-hidden />
           {t('projectDetail.year')}: {project.year}
         </p>
       </div>
@@ -117,10 +118,14 @@ export default function ProjectDetail() {
           href={project.url}
           target="_blank"
           rel="noreferrer"
-          className={cn(buttonVariants({ variant: 'default' }), 'font-heading self-start uppercase tracking-wide')}
+          className={cn(
+            buttonVariants({ variant: 'default' }),
+            'inline-flex items-center gap-1.5 font-heading self-start uppercase tracking-wide',
+          )}
         >
           <span aria-hidden>$ </span>
           {t('projectDetail.visitProject')}
+          <ExternalLink className="size-3.5 shrink-0" aria-hidden />
         </a>
       )}
 

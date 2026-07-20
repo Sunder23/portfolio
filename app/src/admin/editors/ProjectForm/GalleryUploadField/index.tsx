@@ -1,3 +1,4 @@
+import { Plus, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ImageUploadField } from '@/admin/components/ImageUploadField'
 import type { PendingImage } from '@/admin/lib/resolvePendingImages'
@@ -25,13 +26,25 @@ export function GalleryUploadField({
         {value.map((item, index) => (
           <div key={index} className="flex flex-col items-start gap-1.5">
             <ImageUploadField value={item} onChange={(path) => updateItem(index, path)} />
-            <Button variant="outline" size="sm" onClick={() => removeItem(index)}>
+            <Button
+              variant="outline"
+              size="sm"
+              className="inline-flex items-center gap-1.5"
+              onClick={() => removeItem(index)}
+            >
+              <X className="size-3.5 shrink-0" aria-hidden />
               Убрать
             </Button>
           </div>
         ))}
       </div>
-      <Button variant="outline" size="sm" className="w-fit" onClick={() => onChange([...value, ''])}>
+      <Button
+        variant="outline"
+        size="sm"
+        className="inline-flex w-fit items-center gap-1.5"
+        onClick={() => onChange([...value, ''])}
+      >
+        <Plus className="size-3.5 shrink-0" aria-hidden />
         Добавить в галерею
       </Button>
     </div>

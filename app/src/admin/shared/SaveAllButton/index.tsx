@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { Save } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useAdminAuth } from '@/admin/context/AdminAuthContext'
 import { useAdminDraft } from '@/admin/context/AdminDraftContext'
@@ -78,7 +79,12 @@ export function SaveAllButton() {
   }
 
   return (
-    <Button className="fixed right-6 bottom-6 z-50 shadow-lg" disabled={saving} onClick={handleSaveAll}>
+    <Button
+      className="fixed right-6 bottom-6 z-50 inline-flex items-center gap-1.5 shadow-lg"
+      disabled={saving}
+      onClick={handleSaveAll}
+    >
+      <Save className="size-4 shrink-0" aria-hidden />
       {saving ? 'Сохранение…' : `Сохранить всё (${draft.dirtyPaths.length})`}
     </Button>
   )
