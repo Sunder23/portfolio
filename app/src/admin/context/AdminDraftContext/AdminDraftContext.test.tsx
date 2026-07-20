@@ -1,7 +1,7 @@
 import { render, renderHook, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { AdminDraftProvider, useAdminDraft } from '@/admin/components/AdminDraftContext'
+import { AdminDraftProvider, useAdminDraft } from '@/admin/context/AdminDraftContext'
 
 const STORAGE_KEY = 'admin-draft-v1'
 

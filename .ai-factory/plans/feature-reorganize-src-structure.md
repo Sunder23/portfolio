@@ -68,7 +68,7 @@ Success signals: Home/index.tsx разбит на секции без потер
 
 ### Phase 3: Контексты → context/
 
-- [ ] Task 9: Перенести `AdminAuthContext`, `AdminLocaleContext`, `AdminDraftContext` → `admin/context/`
+- [x] Task 9: Перенести `AdminAuthContext`, `AdminLocaleContext`, `AdminDraftContext` → `admin/context/`
 <!-- Commit checkpoint: task 9 -->
 
 ### Phase 4: Остальной колокейт в admin/

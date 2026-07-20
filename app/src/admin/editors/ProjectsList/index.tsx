@@ -13,9 +13,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { useAdminAuth } from '@/admin/components/AdminAuthContext'
-import { useAdminDraft } from '@/admin/components/AdminDraftContext'
-import { useAdminLocalized } from '@/admin/components/AdminLocaleContext'
+import { useAdminAuth } from '@/admin/context/AdminAuthContext'
+import { useAdminDraft } from '@/admin/context/AdminDraftContext'
+import { useAdminLocalized } from '@/admin/context/AdminLocaleContext'
 import { deleteFile } from '@/admin/lib/github'
 import { loadProjectEntries, type ProjectEntry } from '@/admin/editors/projectsData'
 

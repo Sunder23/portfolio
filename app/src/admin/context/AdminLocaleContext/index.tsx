@@ -19,6 +19,8 @@ const AdminLocaleContext = createContext<AdminLocaleValue | null>(null)
 export function AdminLocaleProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(() => getStoredAdminLocale())
 
+  console.debug('[refactor:admin-context] AdminLocaleContext provider mounted')
+
   function setLocale(next: Locale) {
     window.localStorage.setItem(ADMIN_LOCALE_STORAGE_KEY, next)
     console.info(`[admin/locale] switched to ${next}`)

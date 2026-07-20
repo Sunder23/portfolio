@@ -8,9 +8,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useAdminAuth } from '@/admin/components/AdminAuthContext'
-import { AdminDraftProvider } from '@/admin/components/AdminDraftContext'
-import { useAdminLocale } from '@/admin/components/AdminLocaleContext'
+import { useAdminAuth } from '@/admin/context/AdminAuthContext'
+import { AdminDraftProvider } from '@/admin/context/AdminDraftContext'
+import { useAdminLocale } from '@/admin/context/AdminLocaleContext'
 import { useSessionCheck } from '@/admin/hooks/useSessionCheck'
 import TokenGate from '@/admin/components/TokenGate'
 import { AdminSidebar } from '@/admin/components/AdminSidebar'

@@ -1,6 +1,6 @@
 import { useEffect, type Dispatch, type SetStateAction } from 'react'
-import { useAdminAuth } from '@/admin/components/AdminAuthContext'
-import { useAdminDraft } from '@/admin/components/AdminDraftContext'
+import { useAdminAuth } from '@/admin/context/AdminAuthContext'
+import { useAdminDraft } from '@/admin/context/AdminDraftContext'
 import { commitFiles, createImageBlob, getFile, saveFile } from '@/admin/lib/github'
 import { resolvePendingImages } from '@/admin/lib/resolvePendingImages'
 

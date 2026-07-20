@@ -12,6 +12,8 @@ const AdminAuthContext = createContext<AdminAuthValue | null>(null)
 export function AdminAuthProvider({ children }: { children: ReactNode }) {
   const [token, setTokenState] = useState<string | null>(() => getStoredPat())
 
+  console.debug('[refactor:admin-context] AdminAuthContext provider mounted')
+
   function setToken(next: string) {
     storePat(next)
     setTokenState(next)
