@@ -62,8 +62,8 @@ Success signals: Home/index.tsx разбит на секции без потер
 
 ### Phase 2: Колокейт единственных потребителей в components/
 
-- [ ] Task 7: Перенести `ProjectFilters` → `pages/Projects/ProjectFilters/`
-- [ ] Task 8: Перенести `ThemeToggle` → `components/Nav/ThemeToggle/`
+- [x] Task 7: Перенести `ProjectFilters` → `pages/Projects/ProjectFilters/`
+- [x] Task 8: Перенести `ThemeToggle` → `components/Nav/ThemeToggle/`
 <!-- Commit checkpoint: tasks 7-8 -->
 
 ### Phase 3: Контексты → context/

@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useLocale } from '@/hooks/useLocale'
 import { LocaleSwitcher } from '@/components/LocaleSwitcher'
-import { ThemeToggle } from '@/components/ThemeToggle'
+import { ThemeToggle } from './ThemeToggle'
 import { cn } from '@/lib/utils'
 
 export function Nav() {
