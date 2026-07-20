@@ -32,7 +32,7 @@
 - **База данных:** отсутствует — JSON-файлы в `/data/` как единственный источник данных
 - **Хранилище файлов:** `/public/uploads/` в репозитории, запись через GitHub Contents API
 - **Деплой:** GitHub Actions → GitHub Pages
-- **Интеграции:** GitHub Contents API (сохранение из админки), Google Apps Script + Telegram Bot API (лиды с контактной формы)
+- **Интеграции:** GitHub Contents API (сохранение из админки), GitHub REST API — публичное чтение коммитов без токена (секция "$ git log --oneline" на главной, `src/lib/commits.ts`), Google Apps Script + Telegram Bot API (лиды с контактной формы)
 
 ## Структура репозитория
 

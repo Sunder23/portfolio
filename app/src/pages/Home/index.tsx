@@ -7,6 +7,8 @@ import { ProjectCard } from '@/components/ProjectCard'
 import { CommandLabel } from '@/components/CommandLabel'
 import { TerminalCursor } from '@/components/TerminalCursor'
 import { getExperience, getProfile, getProjects, getSkills, getTestimonials } from '@/lib/data'
+import { formatRelativeCommitDate, getCommitActivity, getRecentCommits } from '@/lib/commits'
+import { CommitActivityGrid } from '@/components/CommitActivityGrid'
 import { useLocale } from '@/hooks/useLocale'
 import { useLocalized } from '@/hooks/useLocalized'
 import { useAsyncData } from '@/hooks/useAsyncData'
@@ -21,6 +23,8 @@ export default function Home() {
   const projects = useAsyncData(getProjects)
   const experience = useAsyncData(getExperience)
   const testimonials = useAsyncData(getTestimonials)
+  const commits = useAsyncData(getRecentCommits)
+  const commitActivity = useAsyncData(getCommitActivity)
 
   const title = useLocalized(profile?.title ?? { uk: '' })
   const bio = useLocalized(profile?.bio ?? { uk: '' })
@@ -33,9 +37,11 @@ export default function Home() {
         skillsCount: skills.length,
         featuredCount: projects.filter((p) => p.featured && p.published).length,
         testimonialsCount: testimonials.length,
+        commitsCount: commits?.length,
+        commitActivityWeeks: commitActivity?.length,
       })
     }
-  }, [profile, skills, projects, experience, testimonials])
+  }, [profile, skills, projects, experience, testimonials, commits, commitActivity])
 
   if (!profile || !skills || !projects || !experience || !testimonials) {
     return <p className="text-sm text-muted-foreground">{t('common.loading')}</p>
@@ -208,6 +214,27 @@ export default function Home() {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {featured.map((project) => (
               <ProjectCard key={project.slug} project={project} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {commits && commits.length > 0 && (
+        <div className="flex flex-col gap-4">
+          <CommandLabel label={t('home.commitsLabel')}>{t('home.commitsTitle')}</CommandLabel>
+          {commitActivity && commitActivity.length > 0 && <CommitActivityGrid weeks={commitActivity} />}
+          <div className="pixel-notch flex flex-col border border-border bg-card">
+            {commits.map((commit) => (
+              <div
+                key={commit.shortSha}
+                className="flex flex-col gap-1 border-b border-border px-4 py-2.5 last:border-b-0 sm:flex-row sm:items-baseline sm:gap-3"
+              >
+                <span className="font-heading text-xs text-accent">{commit.shortSha}</span>
+                <span className="flex-1 text-sm text-card-foreground">{commit.message}</span>
+                <span className="text-xs text-muted-foreground">
+                  {formatRelativeCommitDate(commit.date, locale)}
+                </span>
+              </div>
             ))}
           </div>
         </div>

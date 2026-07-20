@@ -75,3 +75,15 @@ export interface Experience {
   achievements: Localized
   stack: string[]
 }
+
+export interface CommitSummary {
+  shortSha: string
+  message: string
+  date: string
+  url: string
+}
+
+export interface CommitActivityWeek {
+  weekStart: string
+  days: number[]
+}
