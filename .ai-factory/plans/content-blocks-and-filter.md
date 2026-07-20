@@ -49,8 +49,8 @@ Rationale: Новый milestone, кандидатов среди незакры�
 
 ### Phase C — ProjectDetail: навигация
 
-9. `app/src/lib/projectNavigation.ts` + тесты — `getAdjacentProjects`, `getRelatedProjects`.
-10. Prev/Next + «похожие проекты» в `app/src/pages/ProjectDetail/index.tsx`, новые i18n-ключи. _blockedBy: 9_
+9. [x] `app/src/lib/projectNavigation.ts` + тесты — `getAdjacentProjects`, `getRelatedProjects`.
+10. [x] Prev/Next + «похожие проекты» в `app/src/pages/ProjectDetail/index.tsx`, новые i18n-ключи. _blockedBy: 9_
 
 ### Phase D — Home/About блоки
 

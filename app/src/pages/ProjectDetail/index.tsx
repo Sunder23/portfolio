@@ -1,14 +1,19 @@
 import { Link, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { buttonVariants } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { MarkdownContent } from '@/components/MarkdownContent'
+import { ProjectCard } from '@/components/ProjectCard'
+import { CommandLabel } from '@/components/CommandLabel'
 import { getProjects } from '@/lib/data'
+import { getAdjacentProjects, getRelatedProjects } from '@/lib/projectNavigation'
 import { useLocale } from '@/hooks/useLocale'
 import { useLocalized } from '@/hooks/useLocalized'
 import { useAsyncData } from '@/hooks/useAsyncData'
 import { useDocumentMeta } from '@/hooks/useDocumentMeta'
 import { cn } from '@/lib/utils'
+import { resolveLocalized } from '@/types'
 
 // Strips common markdown syntax and trims to a reasonable meta-description length.
 function toPlainDescription(markdown: string): string {
@@ -51,6 +56,9 @@ export default function ProjectDetail() {
       </div>
     )
   }
+
+  const { prev, next } = getAdjacentProjects(projects, project.slug)
+  const related = getRelatedProjects(projects, project)
 
   return (
     <div className="flex flex-col gap-6">
@@ -113,6 +121,50 @@ export default function ProjectDetail() {
           <span aria-hidden>$ </span>
           {t('projectDetail.visitProject')}
         </a>
+      )}
+
+      {(prev || next) && (
+        <div className="flex items-stretch justify-between gap-3 border-t border-border pt-4">
+          {prev ? (
+            <Link
+              to={`/${locale}/projects/${prev.slug}`}
+              className="flex min-w-0 flex-1 flex-col gap-0.5 text-sm text-muted-foreground hover:text-foreground"
+            >
+              <span className="flex items-center gap-1 font-heading text-xs uppercase tracking-wide text-accent">
+                <ChevronLeft className="size-3.5" aria-hidden />
+                {t('projectDetail.prev')}
+              </span>
+              <span className="truncate">{resolveLocalized(prev.title, locale)}</span>
+            </Link>
+          ) : (
+            <span />
+          )}
+          {next ? (
+            <Link
+              to={`/${locale}/projects/${next.slug}`}
+              className="flex min-w-0 flex-1 flex-col items-end gap-0.5 text-right text-sm text-muted-foreground hover:text-foreground"
+            >
+              <span className="flex items-center gap-1 font-heading text-xs uppercase tracking-wide text-accent">
+                {t('projectDetail.next')}
+                <ChevronRight className="size-3.5" aria-hidden />
+              </span>
+              <span className="truncate">{resolveLocalized(next.title, locale)}</span>
+            </Link>
+          ) : (
+            <span />
+          )}
+        </div>
+      )}
+
+      {related.length > 0 && (
+        <div className="flex flex-col gap-4">
+          <CommandLabel label={t('projects.title')}>{t('projectDetail.related')}</CommandLabel>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {related.map((relatedProject) => (
+              <ProjectCard key={relatedProject.slug} project={relatedProject} />
+            ))}
+          </div>
+        </div>
       )}
     </div>
   )

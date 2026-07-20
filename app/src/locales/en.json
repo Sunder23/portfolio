@@ -70,7 +70,10 @@
     "year": "Year",
     "stack": "Stack",
     "visitProject": "Visit site",
-    "notFound": "Project not found"
+    "notFound": "Project not found",
+    "prev": "Previous project",
+    "next": "Next project",
+    "related": "Related projects"
   },
   "about": {
     "title": "About me",
