@@ -17,6 +17,7 @@ Rationale: Все milestones в ROADMAP.md либо завершены, либо
 ## Контекст
 
 Референсы в `d:/PetProjects/max_portfolio/screens/`:
+
 - `priarit.working-cases.pp.ua_wp-admin_post.php_post=494&action=edit.png` — эталон WP admin edit-страницы: основной контент + узкий сайдбар справа с блоком "Опубликовать" (кнопка сохранения, статус) и отдельным блоком "Изображение записи".
 - `sunder23.github.io_portfolio_*.png` — текущий вид админки этого проекта: все страницы (Tech Stack, Categories, Roles, Profile, Skills, ProjectsList, ProjectForm) растянуты на всю ширину окна (контент в `<main>` без max-width), у ProjectForm нет сайдбара — все поля и кнопки Сохранить/Отмена идут одной колонкой.
 
@@ -26,7 +27,7 @@ Rationale: Все milestones в ROADMAP.md либо завершены, либо
 
 Файл: `app/src/admin/components/AdminLayout/index.tsx`
 
-Обернуть `<Outlet />` в `mx-auto w-full max-w-5xl` контейнер (по аналогии с `PublicLayout` — `max-w-4xl`). Это единая точка, через которую рендерятся все страницы админки, поэтому фикс применяется сразу ко всем: Tech Stack, Categories, Roles, Profile, Skills, All Projects, ProjectForm.
+Обернуть `<Outlet />` в `mx-auto w-full max-w-6xl` контейнер (по аналогии с `PublicLayout` — `max-w-6xl`). Это единая точка, через которую рендерятся все страницы админки, поэтому фикс применяется сразу ко всем: Tech Stack, Categories, Roles, Profile, Skills, All Projects, ProjectForm.
 
 ### 2. [x] ProjectForm: WP-подобный сайдбар и двухколоночная раскладка
 
@@ -42,6 +43,7 @@ Rationale: Все milestones в ROADMAP.md либо завершены, либо
 ### 3. [x] Ручная проверка в браузере (blocked by #1, #2)
 
 `npm run dev` в `app/`, открыть `/#/admin`:
+
 - Все страницы читаемой ширины, не растянуты на весь экран.
 - ProjectForm: сайдбар с двумя карточками виден, соответствует референсу.
 - Узкий viewport: сайдбар уходит под контент, ничего не обрезается.

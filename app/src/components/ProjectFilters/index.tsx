@@ -32,11 +32,11 @@ export function ProjectFilters({
           <p className="font-heading text-xs uppercase tracking-wide text-muted-foreground">
             {t('projects.filter.roleLabel')}
           </p>
-          <Tabs value={value.role ?? ALL_ROLES} onValueChange={(v) => onChange({ ...value, role: v === ALL_ROLES ? null : (v as string) })}>
-            <TabsList>
-              <TabsTrigger value={ALL_ROLES}>{t('projects.filter.allRoles')}</TabsTrigger>
+          <Tabs orientation="vertical" value={value.role ?? ALL_ROLES} onValueChange={(v) => onChange({ ...value, role: v === ALL_ROLES ? null : (v as string) })}>
+            <TabsList className="gap-2">
+              <TabsTrigger className='bg-muted' value={ALL_ROLES}>{t('projects.filter.allRoles')}</TabsTrigger>
               {options.roles.map((role) => (
-                <TabsTrigger key={role} value={role}>
+                <TabsTrigger className='bg-muted' key={role} value={role}>
                   {role}
                 </TabsTrigger>
               ))}

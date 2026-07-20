@@ -32,7 +32,7 @@ export function Footer() {
 
   return (
     <footer className="mt-auto border-t border-border font-sans">
-      <div className="mx-auto flex max-w-4xl flex-col gap-8 px-4 py-10 text-sm sm:flex-row sm:justify-between">
+      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-10 text-sm sm:flex-row sm:justify-between">
         <div className="flex max-w-xs flex-col gap-2">
           <p className="font-heading text-lg text-foreground">{profile.name}_</p>
           <p className="text-muted-foreground">{title}</p>
@@ -88,7 +88,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-border">
-        <div className="mx-auto flex max-w-4xl flex-col-reverse items-center gap-3 px-4 py-4 text-xs text-muted-foreground sm:flex-row sm:justify-between">
+        <div className="mx-auto flex max-w-6xl flex-col-reverse items-center gap-3 px-4 py-4 text-xs text-muted-foreground sm:flex-row sm:justify-between">
           <p>
             © {new Date().getFullYear()} {profile.name}
           </p>

@@ -44,13 +44,27 @@
       ]
     },
     "stackTitle": "cat skills.txt",
+    "techLabel": "Technologies",
+    "techTitle": "top ./stack",
+    "processLabel": "How I work",
+    "processTitle": "./workflow.sh",
+    "process": {
+      "items": [
+        { "title": "Understand the task", "description": "I clarify requirements and scope before starting." },
+        { "title": "Development", "description": "I write code focused on readability, tests, and the project's architecture." },
+        { "title": "Code review", "description": "Reviewing and being reviewed is a normal part of how I work." },
+        { "title": "Deploy & support", "description": "I monitor stability after release and fix issues quickly." }
+      ]
+    },
     "featuredTitle": "ls ./projects --featured",
     "experienceTitle": "history --work",
     "testimonialsTitle": "cat testimonials.txt",
+    "faqLabel": "FAQ",
+    "faqTitle": "cat faq.txt",
     "viewFullExperience": "details",
     "ctaTitle": "./contact.sh",
-    "ctaHeading": "Available for new projects",
-    "ctaText": "Tell me briefly about your task — I'll reply by email within a day."
+    "ctaHeading": "Open to new opportunities",
+    "ctaText": "Open to new roles — email me and I'll reply within a day."
   },
   "projects": {
     "title": "Projects",
@@ -63,7 +77,8 @@
       "allRoles": "All",
       "stackLabel": "Technologies",
       "categoryLabel": "Categories",
-      "reset": "Reset filters"
+      "reset": "Reset filters",
+      "toggle": "Filters"
     }
   },
   "projectDetail": {
@@ -101,7 +116,7 @@
     "toggleLabel": "Toggle theme"
   },
   "footer": {
-    "status": "Available for new projects",
+    "status": "Open to new opportunities",
     "location": "Location",
     "menuTitle": "Menu",
     "contactTitle": "Contact"
@@ -131,13 +146,13 @@
   "contact": {
     "title": "Contact",
     "commandTitle": "send --message",
-    "description": "Tell me briefly about your project — I'll reply by email.",
+    "description": "If you have a role that might be a good fit — reach out, I'll reply by email.",
     "name": "Name",
     "email": "Email",
     "message": "Message",
     "namePlaceholder": "Your name",
     "emailPlaceholder": "you@example.com",
-    "messagePlaceholder": "Briefly describe your project",
+    "messagePlaceholder": "Briefly describe the role or opportunity",
     "nameError": "Name must be at least 2 characters",
     "emailError": "Enter a valid email address",
     "messageError": "Message must be at least 10 characters",
@@ -149,12 +164,12 @@
       "title": "cat faq.txt",
       "items": [
         {
-          "question": "How is pricing calculated?",
-          "answer": "Depends on the scope — send a short brief and I'll reply with an estimate within a day."
+          "question": "Are you currently open to new opportunities?",
+          "answer": "Yes — happy to discuss interesting offers, feel free to reach out."
         },
         {
-          "question": "What does the process look like?",
-          "answer": "We briefly discuss the task, agree on scope and timeline, then I send regular updates until delivery."
+          "question": "What's your experience and stack?",
+          "answer": "4+ years of commercial WordPress development: PHP, ACF, WooCommerce, WPML/Polylang, WP-CLI — more in the Experience section."
         },
         {
           "question": "What time zone are you in?",

@@ -191,9 +191,12 @@ html:has(.pixel-terminal) {
 }
 
 @keyframes term-scan {
-    0%, 100% {
+
+    0%,
+    100% {
         opacity: 0.9;
     }
+
     50% {
         opacity: 1;
     }
@@ -203,7 +206,7 @@ html:has(.pixel-terminal) {
     text-shadow: 0 0 14px currentcolor;
 }
 
-.scanline-overlay {
+/* .scanline-overlay {
     background-image: repeating-linear-gradient(
         0deg,
         rgba(0, 0, 0, 0) 0px,
@@ -213,7 +216,7 @@ html:has(.pixel-terminal) {
     opacity: 0.05;
     mix-blend-mode: overlay;
     animation: term-scan 6s ease-in-out infinite;
-}
+} */
 
 @media (prefers-reduced-motion: reduce) {
     .pixel-terminal * {
@@ -223,22 +226,22 @@ html:has(.pixel-terminal) {
 
 /* Cuts stairstep "pixel" notches out of the four corners — panel/card frame motif. */
 .pixel-notch {
-    clip-path: polygon(
-        0 10px, 10px 10px, 10px 0,
-        calc(100% - 10px) 0, calc(100% - 10px) 10px, 100% 10px,
-        100% calc(100% - 10px), calc(100% - 10px) calc(100% - 10px), calc(100% - 10px) 100%,
-        10px 100%, 10px calc(100% - 10px), 0 calc(100% - 10px)
-    );
+    clip-path: polygon(0 10px, 10px 10px, 10px 0,
+            calc(100% - 10px) 0, calc(100% - 10px) 10px, 100% 10px,
+            100% calc(100% - 10px), calc(100% - 10px) calc(100% - 10px), calc(100% - 10px) 100%,
+            10px 100%, 10px calc(100% - 10px), 0 calc(100% - 10px));
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+    * {
+        @apply border-border outline-ring/50;
     }
-  body {
-    @apply bg-background text-foreground;
+
+    body {
+        @apply bg-background text-foreground;
     }
-  html {
-    @apply font-sans;
+
+    html {
+        @apply font-sans;
     }
 }

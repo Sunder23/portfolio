@@ -44,13 +44,27 @@
       ]
     },
     "stackTitle": "cat skills.txt",
+    "techLabel": "Технології",
+    "techTitle": "top ./stack",
+    "processLabel": "Як я працюю",
+    "processTitle": "./workflow.sh",
+    "process": {
+      "items": [
+        { "title": "Аналіз задачі", "description": "З'ясовую вимоги та обсяг перед початком роботи." },
+        { "title": "Розробка", "description": "Пишу код з фокусом на читабельність, тести й архітектуру проєкту." },
+        { "title": "Код-рев'ю", "description": "Перевіряю і прошу перевірити рішення — звична частина робочого процесу." },
+        { "title": "Деплой і підтримка", "description": "Слідкую за стабільністю після релізу, оперативно виправляю баги." }
+      ]
+    },
     "featuredTitle": "ls ./projects --featured",
     "experienceTitle": "history --work",
     "testimonialsTitle": "cat testimonials.txt",
+    "faqLabel": "Часті запитання",
+    "faqTitle": "cat faq.txt",
     "viewFullExperience": "детальніше",
     "ctaTitle": "./contact.sh",
-    "ctaHeading": "Відкритий для нових проєктів",
-    "ctaText": "Розкажіть коротко про задачу — відповім на email протягом дня."
+    "ctaHeading": "Відкритий до нових пропозицій",
+    "ctaText": "Розглядаю цікаві пропозиції про роботу — напишіть на email, відповім протягом дня."
   },
   "projects": {
     "title": "Проєкти",
@@ -63,7 +77,8 @@
       "allRoles": "Усі",
       "stackLabel": "Технології",
       "categoryLabel": "Категорії",
-      "reset": "Скинути фільтр"
+      "reset": "Скинути фільтр",
+      "toggle": "Фільтри"
     }
   },
   "projectDetail": {
@@ -101,7 +116,7 @@
     "toggleLabel": "Перемкнути тему"
   },
   "footer": {
-    "status": "Відкритий для нових проєктів",
+    "status": "Відкритий до нових пропозицій",
     "location": "Локація",
     "menuTitle": "Меню",
     "contactTitle": "Контакти"
@@ -131,13 +146,13 @@
   "contact": {
     "title": "Контакти",
     "commandTitle": "send --message",
-    "description": "Розкажіть коротко про задачу — відповім на email.",
+    "description": "Якщо у вас є відповідна позиція — напишіть мені, відповім на email.",
     "name": "Ім'я",
     "email": "Email",
     "message": "Повідомлення",
     "namePlaceholder": "Ваше ім'я",
     "emailPlaceholder": "you@example.com",
-    "messagePlaceholder": "Коротко опишіть задачу",
+    "messagePlaceholder": "Коротко опишіть вакансію або пропозицію",
     "nameError": "Ім'я має містити щонайменше 2 символи",
     "emailError": "Введіть коректний email",
     "messageError": "Повідомлення має містити щонайменше 10 символів",
@@ -149,12 +164,12 @@
       "title": "cat faq.txt",
       "items": [
         {
-          "question": "Як рахується вартість?",
-          "answer": "Залежить від обсягу задачі — надішліть короткий брифінг, відповім з оцінкою протягом дня."
+          "question": "Ви зараз відкриті для нових пропозицій?",
+          "answer": "Так — розглядаю цікаві пропозиції, буду радий обговорити деталі."
         },
         {
-          "question": "Як проходить робота?",
-          "answer": "Коротко обговорюємо задачу, фіксуємо обсяг і терміни, далі — регулярні апдейти до здачі."
+          "question": "Який у вас досвід і стек?",
+          "answer": "Понад 4 роки комерційної WordPress-розробки: PHP, ACF, WooCommerce, WPML/Polylang, WP-CLI — детальніше в розділі «Досвід роботи»."
         },
         {
           "question": "У якому часовому поясі ви працюєте?",

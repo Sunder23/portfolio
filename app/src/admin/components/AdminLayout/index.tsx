@@ -85,7 +85,7 @@ export default function AdminLayout() {
         <div className="flex flex-1">
           <AdminSidebar />
           <main className="flex-1 overflow-y-auto p-6">
-            <div className="mx-auto w-full max-w-5xl">
+            <div className="mx-auto w-full max-w-6xl">
               <Outlet />
             </div>
           </main>

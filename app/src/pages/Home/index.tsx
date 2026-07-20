@@ -51,6 +51,12 @@ export default function Home() {
     title: string
     description: string
   }[]
+  const processSteps = t('home.process.items', { returnObjects: true }) as {
+    title: string
+    description: string
+  }[]
+  const faqItems = t('contact.faq.items', { returnObjects: true }) as { question: string; answer: string }[]
+  const techHighlights = skills.flatMap((cat) => cat.items.slice(0, 2))
 
   const stats = [
     { label: t('home.statStatus'), value: t('home.statStatusValue') },
@@ -137,6 +143,21 @@ export default function Home() {
       </div>
 
       <div className="flex flex-col gap-4">
+        <CommandLabel label={t('home.processLabel')}>{t('home.processTitle')}</CommandLabel>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {processSteps.map((step, index) => (
+            <div key={step.title} className="pixel-notch flex flex-col gap-1.5 border border-border p-4">
+              <p aria-hidden className="font-heading text-xs text-accent">
+                {String(index + 1).padStart(2, '0')} →
+              </p>
+              <p className="font-heading text-base">{step.title}</p>
+              <p className="text-sm text-muted-foreground">{step.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-4">
         <CommandLabel label={t('about.skills')}>{t('home.stackTitle')}</CommandLabel>
         <div className="flex flex-col gap-3">
           {skills.map((cat) => (
@@ -153,6 +174,25 @@ export default function Home() {
           ))}
         </div>
       </div>
+
+      {techHighlights.length > 0 && (
+        <div className="flex flex-col gap-4">
+          <CommandLabel label={t('home.techLabel')}>{t('home.techTitle')}</CommandLabel>
+          <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-8">
+            {techHighlights.map((tech) => (
+              <div
+                key={tech}
+                className="pixel-notch flex flex-col items-center justify-center gap-1 border border-border bg-card px-2 py-4 text-center"
+              >
+                <span aria-hidden className="font-heading text-lg text-accent">
+                  {tech.slice(0, 2).toUpperCase()}
+                </span>
+                <span className="text-[11px] text-muted-foreground">{tech}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {featured.length > 0 && (
         <div className="flex flex-col gap-4">
@@ -216,6 +256,18 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      <div className="flex flex-col gap-4">
+        <CommandLabel label={t('home.faqLabel')}>{t('home.faqTitle')}</CommandLabel>
+        <div className="flex flex-col gap-3">
+          {faqItems.map((item) => (
+            <div key={item.question} className="flex flex-col gap-0.5">
+              <p className="text-sm font-medium">{item.question}</p>
+              <p className="text-sm text-muted-foreground">{item.answer}</p>
+            </div>
+          ))}
+        </div>
+      </div>
 
       <div className="pixel-notch flex flex-col items-start gap-3 border border-accent/50 bg-card p-6 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
