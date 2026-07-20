@@ -23,28 +23,41 @@ app/src/
 ├── App.tsx                   # корневой компонент, рендерится из main.tsx — единственное
 │                               # намеренное исключение из конвенции "компонент = папка"
 │                               # (entry-компонент без колокейтед-теста, папка ради одного файла избыточна)
-├── pages/                    # Публичный модуль: Home/, Projects/, ProjectDetail/, About/, Contact/
+├── pages/                    # Публичный модуль: Home/ (12 колокейтед секций-компонентов,
+│   │                           см. "Колокейт компонентов" ниже), Projects/ (+ ProjectFilters/
+│   │                           вложен), ProjectDetail/, About/, Contact/
 │   └── Admin/                  # (роут /#/admin) — отдельная точка входа, см. admin/
-├── components/                # Переиспользуемые UI-компоненты публичной части (Name/index.tsx)
+├── components/                # Реально shared UI-компоненты публичной части (2+ потребителя) +
+│   │                           два задокументированных исключения (Nav/Footer/Scanline — части
+│   │                           одного layout-root PublicLayout, не вкладываются друг в друга)
+│   ├── Nav/                     # + ThemeToggle/ вложен (единственный потребитель — Nav)
 │   └── ui/                     # shadcn/ui — плоские файлы, исключены из конвенции папка-на-компонент
 ├── hooks/
 │   ├── useAsyncData.ts         # общий "fetch once on mount" хук для публичных страниц
 │   ├── useDocumentMeta.ts      # управление <title>/meta/OG-тегами
-│   ├── useLocale.ts
+│   ├── useLocale.ts             # содержит createContext, но остаётся здесь — осознанное
+│   │                             исключение из правила "createContext → context/" (см. ниже),
+│   │                             10 строк без единой строки JSX, слишком тривиален для context/
 │   └── useLocalized.ts
 ├── admin/                     # Admin-модуль — самодостаточный, не импортируется публичной частью.
 │   │                            Сгруппирован по типу, зеркалируя верхний уровень src/
-│   ├── components/              # Все компоненты админки (JSX)
-│   │   ├── AdminLayout/           # WP-подобная оболочка: top-bar + <AdminSidebar/> + <AdminDraftProvider><Outlet/></AdminDraftProvider> + <SaveAllButton/>
-│   │   ├── AdminSidebar/          # рендер дерева сайдбара из lib/navConfig.ts
-│   │   ├── AdminDraftContext/     # глобальный staging-стор (черновики правок за сессию, keyed by путь к файлу)
-│   │   ├── SaveAllButton/         # плавающая кнопка "Сохранить всё" — единственная точка сохранения, флашит все dirty-черновики по очереди
+│   ├── context/                 # Любой файл с createContext — независимо от числа потребителей
+│   │   ├── AdminAuthContext/      # сессия/PAT (setToken/logout)
 │   │   ├── AdminLocaleContext/    # глобальный языковой контекст админки (переключатель в top-bar)
-│   │   ├── TokenGate/             # авторизация (fine-grained PAT)
-│   │   ├── RichTextEditor/        # WYSIWYG (TipTap), data-driven toolbar, сериализация в markdown-строку
-│   │   ├── TaxonomyCheckboxes/    # чекбоксы для полей-таксономий (stack/category) в формах
+│   │   └── AdminDraftContext/     # глобальный staging-стор (черновики правок за сессию, keyed by
+│   │                                путь к файлу) — по факту полноценный стор, но имя не меняется
+│   │                                на AdminDraftStore ради консистентности с Context API
+│   ├── components/              # Компоненты админки, которые НЕ определяют createContext
+│   │   ├── AdminLayout/           # WP-подобная оболочка: top-bar + <AdminSidebar/> +
+│   │   │                           <AdminDraftProvider><Outlet/></AdminDraftProvider> + <SaveAllButton/>
+│   │   │   ├── AdminSidebar/        # рендер дерева сайдбара из lib/navConfig.ts — вложен строго,
+│   │   │   ├── TokenGate/           # без симметричного исключения (в отличие от Nav/Footer/Scanline
+│   │   │   └── SaveAllButton/       # в публичной части) — единственный потребитель каждого это AdminLayout
 │   │   ├── LocalizedField/        # обёртка uk/ru/en-табов для локализуемых полей форм
-│   │   ├── ImageUploadField/, GalleryUploadField/  # локальная компрессия + отложенная загрузка (PendingImage) одиночного/множественных изображений
+│   │   │   └── RichTextEditor/      # WYSIWYG (TipTap), единственный потребитель — LocalizedField
+│   │   └── ImageUploadField/      # локальная компрессия + отложенная загрузка (PendingImage)
+│   │                                одиночного изображения — реально shared (2+ потребителя:
+│   │                                GalleryUploadField и ProfileEditor), остаётся здесь
 │   ├── hooks/                   # Все хуки админки
 │   │   ├── useSessionCheck.ts     # хук проверки валидности PAT-сессии
 │   │   ├── useEditorData.ts       # общий "load one JSON, stage in AdminDraftContext, auto-register default flush" хук для редакторов-одиночек
@@ -60,6 +73,9 @@ app/src/
 │   └── editors/
 │       ├── ProfileEditor/, SkillsEditor/, TaxonomyEditor/  # редакторы-одиночки
 │       ├── ProjectsList/, ProjectForm/                      # Projects: список и форма — раздельные компоненты
+│       │   ├── TaxonomyCheckboxes/                            # чекбоксы для полей-таксономий (stack/category),
+│       │   └── GalleryUploadField/                            # компрессия + отложенная загрузка галереи —
+│       │                                                        оба вложены, единственный потребитель ProjectForm
 │       └── projectsData.ts                                  # data-хелперы Projects (не компонент, плоский файл)
 ├── lib/
 │   ├── data.ts                  # единственная точка чтения data/*.json и data/projects/*.json
@@ -72,8 +88,8 @@ app/src/
 
 Каждый `.tsx`-файл, экспортирующий React-компонент с JSX (включая context-провайдеры),
 живёт в собственной папке `ComponentName/index.tsx`. Благодаря алиасу `@/*` → `./src`
-импорт вида `@/admin/components/TokenGate` разрешается в `TokenGate/index.tsx` автоматически —
-переезд файла в папку не требует правки импортов у потребителей. Колокейтед тест —
+импорт вида `@/admin/context/AdminAuthContext` разрешается в `AdminAuthContext/index.tsx`
+автоматически — переезд файла в папку не требует правки импортов у потребителей. Колокейтед тест —
 `ComponentName/ComponentName.test.tsx` (не `index.test.tsx`, чтобы имя было видно во
 вкладках редактора и в выводе test-раннера). Хуки (`useX.ts`) и чистые модули без JSX
 (`github.ts`, `slug.ts`, `navConfig.ts`, `registry.ts`, `projectsData.ts`) остаются
@@ -82,6 +98,28 @@ app/src/
 работает `npx shadcn add`/`diff`; перенос в папки сломал бы штатное обновление через CLI.
 **Единственное исключение из другого рода** — корневой `App.tsx`: это entry-компонент без
 колокейтед-теста, папка ради одного файла избыточна, поэтому он остаётся плоским.
+
+### Колокейт компонентов: 1 потребитель → к потребителю, 2+ → components/
+
+- **Правило:** компонент с ровно одним потребителем переезжает в папку этого потребителя
+  (`pages/Home/HeroSection/TerminalCursor/`, `admin/editors/ProjectForm/TaxonomyCheckboxes/` и
+  т.д.); компонент с 2+ реальными потребителями остаётся в `components/` / `admin/components/`
+  как действительно переиспользуемый. Применяется строго, кроме двух исключений ниже.
+- **Исключение №1 (публичная часть):** `Nav/`, `Footer/`, `Scanline/` остаются плоско в
+  `components/`, не вкладываются под `PublicLayout/`, хотя формально у каждого один потребитель
+  (сам `PublicLayout`) — это части одного layout-root, а не самостоятельные единицы.
+- **Исключение №2 (тривиальность):** `hooks/useLocale.ts` содержит `createContext`, но не
+  переезжает в `context/` (правило ниже) — 10 строк без единой строки JSX, папка была бы
+  избыточна.
+- **Для admin-эквивалента исключения №1** (дети `AdminLayout` — `AdminSidebar`, `TokenGate`,
+  `SaveAllButton`, каждый с единственным потребителем `AdminLayout`) осознанно НЕ сделано
+  симметричное исключение — колокейт строгий: `admin/components/AdminLayout/AdminSidebar/` и
+  т.д. `AdminLayout` сам — layout-root (аналог `PublicLayout`), единственный потребитель
+  `pages/Admin/index.tsx` по определению одного роута, поэтому не колокейтится внутрь `pages/Admin/`.
+- **Контексты — отдельное правило:** любой файл с `createContext` живёт в своей папке
+  `context/` / `admin/context/`, независимо от числа потребителей (у контекстов по природе
+  много потребителей через `useContext`, правило "1 потребитель" сюда неприменимо) — кроме
+  исключения №2 выше.
 
 `app/data/*.json`, `app/data/projects/*.json` и `app/public/uploads/`
 физически лежат вне `app/src/` (но внутри `app/`, не в истинном корне репо —
@@ -114,7 +152,7 @@ GitHub Pages не страдает, список файлов известен �
 ## Взаимодействие модулей
 
 - Публичная часть и админка взаимодействуют только через данные (`data/*.json`, `data/projects/*.json`), не напрямую через код — это и есть граница модуля, как в классическом modular monolith, где обычно используется shared DB/API, а здесь — общий JSON + общий `lib/data.ts`.
-- Локаль — сквозной cross-cutting concern в обеих частях, но с двумя независимыми контекстами: HashRouter передаёт локаль в публичную часть через `hooks/useLocale.ts` (см. `portfolio-i18n-content`); в админке — отдельный `admin/components/AdminLocaleContext/index.tsx` с переключателем в top-bar (не читается и не пишется публичной частью, персистится под другим ключом `localStorage`). Оба используют одну и ту же pure-функцию фолбэка `resolveLocalized()` из `types.ts`.
+- Локаль — сквозной cross-cutting concern в обеих частях, но с двумя независимыми контекстами: HashRouter передаёт локаль в публичную часть через `hooks/useLocale.ts` (см. `portfolio-i18n-content`); в админке — отдельный `admin/context/AdminLocaleContext/index.tsx` с переключателем в top-bar (не читается и не пишется публичной частью, персистится под другим ключом `localStorage`). Оба используют одну и ту же pure-функцию фолбэка `resolveLocalized()` из `types.ts`.
 - Новая сущность контента добавляется без изменения общего кода: JSON-файл (или папка per-item файлов) в `data/` + тип в `types.ts` + редактор в `admin/editors/` + запись в `admin/lib/registry.ts` (для редакторов-одиночек) или в `admin/lib/navConfig.ts` (для пунктов сайдбара с собственным списком/CRUD, как Projects). `lib/data.ts` и `admin/lib/github.ts` уже дженерик по пути к файлу/папке.
 - Таксономии (`data/taxonomies.json`: `stack`, `category`, `role`) — управляемые словари для полей-чекбоксов/select в формах контента, редактируются через обобщённый `admin/editors/TaxonomyEditor.tsx` (один компонент на все три таксономии, параметризован ключом из `:key` роута). Удаление термина не каскадно правит уже сохранённые записи — только предупреждает о количестве использований.
 

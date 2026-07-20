@@ -1,8 +1,8 @@
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
-import { RichTextEditor } from '@/admin/components/RichTextEditor'
-import { useAdminLocale } from '@/admin/components/AdminLocaleContext'
+import { RichTextEditor } from './RichTextEditor'
+import { useAdminLocale } from '@/admin/context/AdminLocaleContext'
 import type { Localized } from '@/types'
 
 interface LocalizedFieldProps {

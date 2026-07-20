@@ -13,7 +13,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { useAdminAuth } from '@/admin/components/AdminAuthContext'
+import { useAdminAuth } from '@/admin/context/AdminAuthContext'
 import { useEditorData } from '@/admin/hooks/useEditorData'
 import { getFile, listDir } from '@/admin/lib/github'
 import type { Project, Taxonomies } from '@/types'

@@ -27,7 +27,7 @@
 - **i18n:** react-i18next
 - **Формы:** react-hook-form + zod (клиентская валидация, `pages/Contact.tsx`)
 - **Тесты:** Vitest + React Testing Library (`npm run test`), для ключевой логики (slug, GitHub Contents API хелперы, языковой контекст админки, чекбоксы таксономий)
-- **Markdown:** `marked` + `DOMPurify` — рендер markdown-полей (`description`, `bio`) на публичной части (`components/MarkdownContent.tsx`, используется в `ProjectDetail.tsx`); в админке те же поля редактируются визуально через TipTap (`admin/components/RichTextEditor/index.tsx` + `tiptap-markdown`), с сериализацией обратно в markdown-строку — формат хранения общий для обеих частей
+- **Markdown:** `marked` + `DOMPurify` — рендер markdown-полей (`description`, `bio`) на публичной части (`components/MarkdownContent.tsx`, используется в `ProjectDetail.tsx`); в админке те же поля редактируются визуально через TipTap (`admin/components/LocalizedField/RichTextEditor/index.tsx` + `tiptap-markdown`), с сериализацией обратно в markdown-строку — формат хранения общий для обеих частей
 - **State management:** отсутствует — React Context + fetch/import JSON
 - **База данных:** отсутствует — JSON-файлы в `/data/` как единственный источник данных
 - **Хранилище файлов:** `/public/uploads/` в репозитории, запись через GitHub Contents API
@@ -49,17 +49,23 @@
 │   └── src/
 │       ├── App.tsx               # корневой компонент — плоский файл (единственное исключение
 │       │                           из конвенции "компонент = папка", см. ARCHITECTURE.md)
-│       ├── pages/                # Home/, Projects/, ProjectDetail/, About/, Contact/, Admin/
-│       ├── components/           # Nav/, ProjectCard/, PublicLayout/, ... (+ components/ui/ — плоские shadcn-примитивы)
-│       ├── hooks/                # useLocale, useLocalized, useAsyncData, useDocumentMeta
+│       ├── pages/                # Home/ (12 колокейтед секций-компонентов + constants.ts), Projects/
+│       │                           (включая ProjectFilters/), ProjectDetail/, About/, Contact/, Admin/
+│       ├── components/           # Nav/ (включая ThemeToggle/), ProjectCard/, PublicLayout/, ... —
+│       │                           только реально shared (2+ потребителя) + два исключения
+│       │                           (Nav/Footer/Scanline; components/ui/ — плоские shadcn-примитивы)
+│       ├── hooks/                # useLocale (осознанное исключение из правила про context/,
+│       │                           см. ARCHITECTURE.md), useLocalized, useAsyncData, useDocumentMeta
 │       ├── admin/                # всё, что относится к админке — сгруппировано по типу
-│       │   ├── components/         # AdminLayout/, AdminSidebar/, AdminDraftContext/, SaveAllButton/,
-│       │   │                         AdminLocaleContext/, TokenGate/, RichTextEditor/, TaxonomyCheckboxes/,
-│       │   │                         LocalizedField/, ImageUploadField/, GalleryUploadField/
+│       │   ├── context/            # AdminAuthContext/, AdminLocaleContext/, AdminDraftContext/ —
+│       │   │                         любой createContext-файл живёт здесь, а не в components/
+│       │   ├── components/         # AdminLayout/ (+ AdminSidebar/, TokenGate/, SaveAllButton/ вложены),
+│       │   │                         LocalizedField/ (+ RichTextEditor/ вложен), ImageUploadField/
 │       │   ├── hooks/              # useSessionCheck.ts, useEditorData.ts, useAdminSave.ts
 │       │   ├── lib/                # github.ts (Contents API), resolvePendingImages.ts, navConfig.ts,
 │       │   │                         registry.ts, pat.ts, imageCompress.ts
-│       │   └── editors/            # ProfileEditor/, SkillsEditor/, TaxonomyEditor/, ProjectsList/, ProjectForm/, projectsData.ts
+│       │   └── editors/            # ProfileEditor/, SkillsEditor/, TaxonomyEditor/, ProjectsList/,
+│       │                             ProjectForm/ (+ TaxonomyCheckboxes/, GalleryUploadField/ вложены), projectsData.ts
 │       ├── lib/
 │       │   ├── data.ts           # загрузка и типизация JSON (projects/ — через import.meta.glob)
 │       │   └── slug.ts           # авто-slug из заголовка (кириллица → латиница)
@@ -77,10 +83,10 @@
 - Каждая сущность контента = тройка «JSON-файл (или папка per-item файлов) в `/data/` + тип в `types.ts` + редактор в `admin/editors/`». Добавление новой сущности (блог, отзывы, сертификаты) не требует изменения общего кода: `admin/lib/github.ts` и `lib/data.ts` работают с любым файлом/папкой по пути через дженерик-хелперы, а список разделов в сайдбаре собирается из `admin/lib/navConfig.ts` (редакторы-одиночки — из `admin/lib/registry.ts`).
 - Проекты — не единый массив, а по одному файлу на проект: `data/projects/{slug}.json`. `slug` — единственный идентификатор проекта (отдельного поля `id` нет), генерируется автоматически из заголовка (см. `lib/slug.ts`) с ручной перезаписью и дедупликацией при коллизии. Смена slug у существующего проекта = создание нового файла + удаление старого (в этом порядке, чтобы сбой между двумя запросами не терял данные).
 - Таксономии (`data/taxonomies.json`): управляемые словари `stack`/`category`/`role` — в формах проекта выбираются чекбоксами/select вместо ручного ввода текста.
-- Локализуемые поля контента — объекты вида `{ "uk": "…", "ru": "…", "en": "…" }`, тип-хелпер `Localized<T>` и общая функция фолбэка `resolveLocalized()`, используемая и публичным `useLocalized()`, и админским `useAdminLocalized()` (читает свой собственный языковой контекст — `admin/components/AdminLocaleContext/index.tsx`, независимый от локали публичной части).
-- Markdown-поля (`description`, `bio`) редактируются визуально через TipTap (`admin/components/RichTextEditor/index.tsx`), но хранятся как обычная markdown-строка — формат данных не меняется, меняется только UX редактирования.
+- Локализуемые поля контента — объекты вида `{ "uk": "…", "ru": "…", "en": "…" }`, тип-хелпер `Localized<T>` и общая функция фолбэка `resolveLocalized()`, используемая и публичным `useLocalized()`, и админским `useAdminLocalized()` (читает свой собственный языковой контекст — `admin/context/AdminLocaleContext/index.tsx`, независимый от локали публичной части).
+- Markdown-поля (`description`, `bio`) редактируются визуально через TipTap (`admin/components/LocalizedField/RichTextEditor/index.tsx`), но хранятся как обычная markdown-строка — формат данных не меняется, меняется только UX редактирования.
 - Запись файла через Contents API: `GET` за текущим `sha` → `PUT` с `{ message, content, sha }` → при 409 повторить `GET`+`PUT` один раз, иначе показать ошибку. Создание нового файла (`createFile`) не отправляет `sha`; удаление (`deleteFile`) требует его. PAT никогда не попадает в код/коммиты, хранится только в `localStorage`.
-- Сохранение в админке батчится: правки любого числа сущностей (посты, профиль, скиллы) за одну сессию копятся как черновики в `admin/components/AdminDraftContext/` (in-memory, keyed по пути файла, не переживает обновление страницы — осознанный выбор для одного пользователя) и коммитятся все разом по клику на единственную плавающую кнопку "Сохранить всё" (`admin/components/SaveAllButton/`), которая последовательно вызывает зарегистрированный `flush` каждой изменённой сущности. `TaxonomyEditor` — осознанное исключение: коммитит мгновенно на каждое действие (add/rename/delete термина), в батчинг не включён. Картинки (`cover`/`gallery`/`avatar`) не грузятся в GitHub по выбору файла — только компрессируются локально (`admin/lib/imageCompress.ts`) и хранятся как `PendingImage {blob, previewUrl}` до момента "Сохранить всё", когда `admin/lib/resolvePendingImages.ts` грузит их и подставляет реальные пути.
+- Сохранение в админке батчится: правки любого числа сущностей (посты, профиль, скиллы) за одну сессию копятся как черновики в `admin/context/AdminDraftContext/` (in-memory, keyed по пути файла, не переживает обновление страницы — осознанный выбор для одного пользователя) и коммитятся все разом по клику на единственную плавающую кнопку "Сохранить всё" (`admin/components/AdminLayout/SaveAllButton/`), которая последовательно вызывает зарегистрированный `flush` каждой изменённой сущности. `TaxonomyEditor` — осознанное исключение: коммитит мгновенно на каждое действие (add/rename/delete термина), в батчинг не включён. Картинки (`cover`/`gallery`/`avatar`) не грузятся в GitHub по выбору файла — только компрессируются локально (`admin/lib/imageCompress.ts`) и хранятся как `PendingImage {blob, previewUrl}` до момента "Сохранить всё", когда `admin/lib/resolvePendingImages.ts` грузит их и подставляет реальные пути.
 - Прямые запросы к Telegram Bot API из браузера запрещены (токен бота не должен светиться в клиентском коде) — обязателен relay на Google Apps Script.
 
 ## Нефункциональные требования

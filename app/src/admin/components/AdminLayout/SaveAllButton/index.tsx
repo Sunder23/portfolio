@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { useAdminAuth } from '@/admin/components/AdminAuthContext'
-import { useAdminDraft } from '@/admin/components/AdminDraftContext'
+import { useAdminAuth } from '@/admin/context/AdminAuthContext'
+import { useAdminDraft } from '@/admin/context/AdminDraftContext'
 import { GithubAuthError, GithubConflictError } from '@/admin/lib/github'
 import { ACTIONS_URL } from '@/admin/hooks/useAdminSave'
 
